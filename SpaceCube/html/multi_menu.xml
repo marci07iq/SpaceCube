@@ -1,0 +1,137 @@
+<body>
+	<label
+		id = "objectMultiMenuIpLabel"
+		align = "1"
+	>
+		<location>
+			<bot
+				rel="0.5"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.6"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.2"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.5"
+				abs="-5.0"
+			></right>
+	</location>Ip</label>
+	<input
+		id = "objectMultiMenuIpInput"
+		inputfunc = "multiMenuInput"
+		validatorfunc = "textValidator"
+	>
+		<location>
+			<bot
+				rel="0.4"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.5"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.2"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.5"
+				abs="-5.0"
+			></right>
+	</location>127.0.0.1</input>
+	<label
+		id = "objectMultiMenuPortLabel"
+		align = "1"
+	>
+		<location>
+			<bot
+				rel="0.5"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.6"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.5"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.7"
+				abs="-5.0"
+			></right>
+	</location>Port</label>
+	<input
+		id = "objectMultiMenuPortInput"
+		inputfunc = "multiMenuInput"
+		validatorfunc = "numericalValidator"
+	>
+		<location>
+			<bot
+				rel="0.4"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.5"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.5"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.7"
+				abs="-5.0"
+			></right>
+	</location>7743</input>
+	<button
+		id = "objectMultiMenuOkButton"
+		callback = "multiMenuInputButton"
+	>
+		<location>
+			<bot
+				rel="0.4"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.5"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.7"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.8"
+				abs="-5.0"
+			></right>
+	</location>Ok</button>
+	<button
+		id = "objectMultiMenuBackButton"
+		callback = "multiMenuBackButton"
+		trigger = "0 27"
+	>
+		<location>
+			<bot
+				rel="0.3"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.4"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.3"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.7"
+				abs="-5.0"
+			></right>
+	</location>Back</button>
+</body>

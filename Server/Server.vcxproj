@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7D7DFF0B-A781-4ED1-BB29-69D348EFE2B9}</ProjectGuid>
+    <RootNamespace>Server</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>M_SERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>M_CLIENT</UndefinePreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>M_SERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>M_CLIENT</UndefinePreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>M_SERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>M_CLIENT</UndefinePreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>M_SERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>M_CLIENT</UndefinePreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\NGin\Maths\BigFloat.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Cbignum.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Cbignums.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Ctty.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Exarray.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Prime.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\FlowSystem.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\Fraction.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\helperFunctions.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\Keyframe.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\Point.cpp" />
+    <ClCompile Include="..\..\NGin\Maths\Polynomial.cpp" />
+    <ClCompile Include="..\..\NGin\Network\Huffman.cpp" />
+    <ClCompile Include="..\..\NGin\Network\Network.cpp" />
+    <ClCompile Include="..\..\NGin\Network\NetworkData.cpp" />
+    <ClCompile Include="..\..\NGin\Scripts\Scripts.cpp" />
+    <ClCompile Include="..\Core\Definition.cpp" />
+    <ClCompile Include="..\Core\Definitions.cpp" />
+    <ClCompile Include="..\Core\Mapgen\Mapgen.cpp" />
+    <ClCompile Include="..\Core\Mapgen\Perlin.cpp" />
+    <ClCompile Include="..\Core\Terrain\Block.cpp" />
+    <ClCompile Include="..\Core\Terrain\Chunk.cpp" />
+    <ClCompile Include="..\Core\Terrain\ChunkColumn.cpp" />
+    <ClCompile Include="..\Core\Terrain\Entities.cpp" />
+    <ClCompile Include="..\Core\Terrain\Fragment.cpp" />
+    <ClCompile Include="..\Core\Terrain\Region.cpp" />
+    <ClCompile Include="..\Core\Terrain\WorldLoader.cpp" />
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\NGin\GL\freeglut.h" />
+    <ClInclude Include="..\..\NGin\GL\freeglut_ext.h" />
+    <ClInclude Include="..\..\NGin\GL\freeglut_std.h" />
+    <ClInclude Include="..\..\NGin\GL\glut.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigFloat.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbignum.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbignums.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbnl.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cios.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cthr.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Ctty.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exarray.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exdebug.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exstring.h" />
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exthread.h" />
+    <ClInclude Include="..\..\NGin\Maths\constants.h" />
+    <ClInclude Include="..\..\NGin\Maths\FlowSystem.h" />
+    <ClInclude Include="..\..\NGin\Maths\Fraction.h" />
+    <ClInclude Include="..\..\NGin\Maths\helperFunctions.h" />
+    <ClInclude Include="..\..\NGin\Maths\Keyframe.h" />
+    <ClInclude Include="..\..\NGin\Maths\Point.h" />
+    <ClInclude Include="..\..\NGin\Maths\Polynomial.h" />
+    <ClInclude Include="..\..\NGin\Maths\Types.h" />
+    <ClInclude Include="..\..\NGin\Network\Huffman.h" />
+    <ClInclude Include="..\..\NGin\Network\Network.h" />
+    <ClInclude Include="..\..\NGin\Network\NetworkData.h" />
+    <ClInclude Include="..\..\NGin\NGin\NGin.h" />
+    <ClInclude Include="..\..\NGin\rapidxml\rapidxml.hpp" />
+    <ClInclude Include="..\..\NGin\rapidxml\rapidxml_iterators.hpp" />
+    <ClInclude Include="..\..\NGin\rapidxml\rapidxml_print.hpp" />
+    <ClInclude Include="..\..\NGin\rapidxml\rapidxml_utils.hpp" />
+    <ClInclude Include="..\..\NGin\Scripts\Scripts.h" />
+    <ClInclude Include="..\Core\Definitions.h" />
+    <ClInclude Include="..\Core\Mapgen\Mapgen.h" />
+    <ClInclude Include="..\Core\Mapgen\Perlin.h" />
+    <ClInclude Include="..\Core\Terrain\Block.h" />
+    <ClInclude Include="..\Core\Terrain\Chunk.h" />
+    <ClInclude Include="..\Core\Terrain\ChunkColumn.h" />
+    <ClInclude Include="..\Core\Terrain\Entities.h" />
+    <ClInclude Include="..\Core\Terrain\Fragment.h" />
+    <ClInclude Include="..\Core\Terrain\Region.h" />
+    <ClInclude Include="..\Core\Terrain\WorldLoader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.inl" />
+    <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbnl.inl" />
+    <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbnl64.inl" />
+    <None Include="..\..\NGin\rapidxml\manual.html" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

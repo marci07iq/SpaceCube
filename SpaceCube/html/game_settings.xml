@@ -1,0 +1,45 @@
+<body>
+	<button
+		id = "objectSettingsMenuBackButton"
+		callback = "settingsMenuBackButton"
+	>
+		<location>
+			<bot
+				rel="1.0"
+				abs="-25.0"
+			></bot>
+			<top
+				rel="1.0"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.0"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.0"
+				abs="95.0"
+			></right>
+	</location>Back</button>
+	<table
+		id = "objectSettingsMenuTable"
+	>
+		<location>
+			<bot
+				rel="0.0"
+				abs="0.0"
+			></bot>
+			<top
+				rel="1.0"
+				abs="-30.0"
+			></top>
+			<left
+				rel="0.0"
+				abs="0.0"
+			></left>
+			<right
+				rel="1.0"
+				abs="0.0"
+			></right>
+	</location></table>
+</body>
