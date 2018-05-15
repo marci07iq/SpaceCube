@@ -2,7 +2,7 @@
 
 #include "../Definitions.h"
 #define EIGEN_MPL2_ONLY //Only MPL2 or better files included
-#include "../../../NGin/Maths/Eigen/Eigen"
+#include "../../NGin/Maths/Eigen/Eigen"
 
 template <typename T, int R>
 using ColVector = Eigen::Matrix<T, R, 1>;

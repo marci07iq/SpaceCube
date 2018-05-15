@@ -149,9 +149,17 @@ void Chunk::unBuildChunk() {
     glDeleteBuffers(1, &_chunk_pos_vbo);
     _chunk_pos_vbo = 0;
   }
+  if (_chunk_tex_vbo) {
+    glDeleteBuffers(1, &_chunk_tex_vbo);
+    _chunk_tex_vbo = 0;
+  }
   if (_chunk_col_vbo) {
     glDeleteBuffers(1, &_chunk_col_vbo);
     _chunk_col_vbo = 0;
+  }
+  if (_chunk_mov_vbo) {
+    glDeleteBuffers(1, &_chunk_mov_vbo);
+    _chunk_mov_vbo = 0;
   }
   if (_chunk_vao) {
     glDeleteVertexArrays(1, &_chunk_vao);
@@ -161,49 +169,68 @@ void Chunk::unBuildChunk() {
 void Chunk::buildChunk() {
   _state = Chunk_Rendered;
 
-  list<pair<QuadFace, iVec3>> quads;
+  list<QuadFace> quads;
   for (uint8_t i = 0; i < BLOCK_PER_CHUNK; i++) {
     for (uint8_t j = 0; j < BLOCK_PER_CHUNK; j++) {
       for (uint8_t k = 0; k < BLOCK_PER_CHUNK; k++) {
         BlockNeeds n = getNeed(i, j, k);
-        BlockModel& m = blockProperties[_blocks[i][j][k]._ID].getModel(_blocks[i][j][k]);
-        for (auto&& it : m.faces) {
-          if (it.type & n) {
-            quads.push_back({it, {i + BLOCK_PER_CHUNK * _cx, j + BLOCK_PER_CHUNK * _cy, k + BLOCK_PER_CHUNK * _cz }});
-          }
-        }
+        BlockPos p = { this, i,j,k, _blocks[i][j][k] };
+        blockProperties[_blocks[i][j][k]._ID].getModel(p, n, quads);
       }
     }
   }
-  float* vert = new float[quads.size() * 3*6];
-  float* col = new float[quads.size() * 4*6];
+  float* vert = new float[quads.size() * 3 * 6];
+  float* tex = new float[quads.size() * 2 * 6];
+  float* col = new float[quads.size() * 4 * 6];
+  float* mov = new float[quads.size() * 6];
   int i = 0;
   for (auto&& it : quads) {
-    vert[18 * i +  0] = it.first.vbl.x + it.second.x;
-    vert[18 * i +  1] = it.first.vbl.y + it.second.y;
-    vert[18 * i +  2] = it.first.vbl.z + it.second.z;
-    vert[18 * i +  3] = it.first.vtl.x + it.second.x;
-    vert[18 * i +  4] = it.first.vtl.y + it.second.y;
-    vert[18 * i +  5] = it.first.vtl.z + it.second.z;
-    vert[18 * i +  6] = it.first.vbr.x + it.second.x;
-    vert[18 * i +  7] = it.first.vbr.y + it.second.y;
-    vert[18 * i +  8] = it.first.vbr.z + it.second.z;
-    vert[18 * i +  9] = it.first.vtl.x + it.second.x;
-    vert[18 * i + 10] = it.first.vtl.y + it.second.y;
-    vert[18 * i + 11] = it.first.vtl.z + it.second.z;
-    vert[18 * i + 12] = it.first.vtr.x + it.second.x;
-    vert[18 * i + 13] = it.first.vtr.y + it.second.y;
-    vert[18 * i + 14] = it.first.vtr.z + it.second.z;
-    vert[18 * i + 15] = it.first.vbr.x + it.second.x;
-    vert[18 * i + 16] = it.first.vbr.y + it.second.y;
-    vert[18 * i + 17] = it.first.vbr.z + it.second.z;
+    vert[18 * i +  0] = it.vbl.x;
+    vert[18 * i +  1] = it.vbl.y;
+    vert[18 * i +  2] = it.vbl.z;
+    vert[18 * i +  3] = it.vtl.x;
+    vert[18 * i +  4] = it.vtl.y;
+    vert[18 * i +  5] = it.vtl.z;
+    vert[18 * i +  6] = it.vbr.x;
+    vert[18 * i +  7] = it.vbr.y;
+    vert[18 * i +  8] = it.vbr.z;
+    vert[18 * i +  9] = it.vtl.x;
+    vert[18 * i + 10] = it.vtl.y;
+    vert[18 * i + 11] = it.vtl.z;
+    vert[18 * i + 12] = it.vtr.x;
+    vert[18 * i + 13] = it.vtr.y;
+    vert[18 * i + 14] = it.vtr.z;
+    vert[18 * i + 15] = it.vbr.x;
+    vert[18 * i + 16] = it.vbr.y;
+    vert[18 * i + 17] = it.vbr.z;
 
-    for (int j = 0; j < 24; j += 4) {
-      col[24 * i + j + 0] = it.first.recolor.r;
-      col[24 * i + j + 1] = it.first.recolor.g;
-      col[24 * i + j + 2] = it.first.recolor.b;
-      col[24 * i + j + 3] = it.first.recolor.a;
+    tex[12 * i + 0]  = it.tbl.x;
+    tex[12 * i + 1]  = it.tbl.y;
+    tex[12 * i + 2]  = it.ttl.x;
+    tex[12 * i + 3]  = it.ttl.y;
+    tex[12 * i + 4]  = it.tbr.x;
+    tex[12 * i + 5]  = it.tbr.y;
+    tex[12 * i + 6]  = it.ttl.x;
+    tex[12 * i + 7]  = it.ttl.y;
+    tex[12 * i + 8]  = it.ttr.x;
+    tex[12 * i + 9]  = it.ttr.y;
+    tex[12 * i + 10] = it.tbr.x;
+    tex[12 * i + 11] = it.tbr.y;
+
+    for (int j = 0; j < 6; j++) {
+      col[24 * i + 4 * j + 0] = it.recolor.r;
+      col[24 * i + 4 * j + 1] = it.recolor.g;
+      col[24 * i + 4 * j + 2] = it.recolor.b;
+      col[24 * i + 4 * j + 3] = it.recolor.a;
     }
+
+    mov[6 * i + 0] = 0.01f * (it.vbl.z - 10);
+    mov[6 * i + 1] = 0.01f * (it.vtl.z - 10);
+    mov[6 * i + 2] = 0.01f * (it.vbr.z - 10);
+    mov[6 * i + 3] = 0.01f * (it.vtl.z - 10);
+    mov[6 * i + 4] = 0.01f * (it.vtr.z - 10);
+    mov[6 * i + 5] = 0.01f * (it.vbr.z - 10);
+
     ++i;
   }
 
@@ -212,12 +239,18 @@ void Chunk::buildChunk() {
   glGenBuffers(1, &_chunk_pos_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, _chunk_pos_vbo);
   glBufferData(GL_ARRAY_BUFFER, quads.size() * 3 * 6 * sizeof(float), vert, GL_STATIC_DRAW);
-  
+
+  glGenBuffers(1, &_chunk_tex_vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, _chunk_tex_vbo);
+  glBufferData(GL_ARRAY_BUFFER, quads.size() * 2 * 6 * sizeof(float), tex, GL_STATIC_DRAW);
 
   glGenBuffers(1, &_chunk_col_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, _chunk_col_vbo);
   glBufferData(GL_ARRAY_BUFFER, quads.size() * 4 * 6 * sizeof(float), col, GL_STATIC_DRAW);
 
+  glGenBuffers(1, &_chunk_mov_vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, _chunk_mov_vbo);
+  glBufferData(GL_ARRAY_BUFFER, quads.size() * 6 * sizeof(float), mov, GL_STATIC_DRAW);
 
   glGenVertexArrays(1, &_chunk_vao);
   glBindVertexArray(_chunk_vao);
@@ -225,8 +258,15 @@ void Chunk::buildChunk() {
   glBindBuffer(GL_ARRAY_BUFFER, _chunk_pos_vbo);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
   glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, _chunk_tex_vbo);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+  glEnableVertexAttribArray(2);
   glBindBuffer(GL_ARRAY_BUFFER, _chunk_col_vbo);
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+  glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+  glEnableVertexAttribArray(3);
+  glBindBuffer(GL_ARRAY_BUFFER, _chunk_mov_vbo);
+  glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, NULL);
+
 
   _quads = quads.size()*6;
 }

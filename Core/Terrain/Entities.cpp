@@ -139,7 +139,6 @@ bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkC * thisptr) {
       vSFunc(cx, Data->_children[0]);
       vSFunc(cy, Data->_children[1]);
       vSFunc(cz, Data->_children[2]);
-      cout << "Chunk " << cx << ", " << cy << ", " << cz << " loaded" << endl;
       setChunk(cx, cy, cz, 0, Data);
       return false;
       break;

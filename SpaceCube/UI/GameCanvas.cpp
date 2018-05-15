@@ -14,9 +14,14 @@ Player* user;
 
 Shader chunkShader;
 
+GLuint textures;
+GLuint texSampler;
+
 bool MainGameCanvas::lockMouse = 0;
 
 OpenGLData MainGameCanvas::view;
+
+uint64_t firstFrameTime;
 
 uint64_t lastFrameTime;
 
@@ -65,10 +70,19 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   view.read(transform);
 
   GLint loc = glGetUniformLocation(chunkShader._pID, "transform");
-
   if (loc != -1) {
     glUniformMatrix4fv(loc, 1, false, transform);
   }
+  loc = -1;
+  loc = glGetUniformLocation(chunkShader._pID, "frame_time");
+  if (loc != -1) {
+    glUniform1f(loc, (lastFrameTime - firstFrameTime) / 100000.0f );
+  }
+
+  //glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, textures);
+  glUniform1i(glGetUniformLocation(chunkShader._pID, "myTexture"), 0); // set it manually
+
 
   for (auto&& it : _fragments) {
     if(it.second) {
@@ -138,6 +152,9 @@ int MainGameCanvas::guiEventManager(gui_event evt, int mx, int my, set<key_locat
 }
 
 void bindGameScreenLabels() {
+  firstFrameTime = lastFrameTime = chrono::duration_cast< chrono::milliseconds >(
+    chrono::system_clock::now().time_since_epoch()).count();
+
   for (int cx = 0; cx < 16; cx++) {
     for (int cy = 0; cy < 16; cy++) {
 

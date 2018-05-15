@@ -13,6 +13,9 @@ extern Player* user;
 
 extern Shader chunkShader;
 
+extern GLuint textures;
+extern GLuint texSampler;
+
 namespace MainGameCanvas {
   extern int mxold;
   extern int myold;

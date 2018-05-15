@@ -152,7 +152,7 @@ void InitGraphics() {
 
 
 
-  glutInitContextVersion(4, 1);
+  glutInitContextVersion(4, 2);
   //glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
   glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
 
@@ -175,8 +175,8 @@ void InitGraphics() {
   }
   cout << "Using GLEW " << glewGetString(GLEW_VERSION) << endl;
 
-  if (GLEW_VERSION_4_1) {
-    cout << "OpenGL 4.1 supported." << endl;
+  if (GLEW_VERSION_4_2) {
+    cout << "OpenGL 4.2 supported." << endl;
   }
 
   // During init, enable debug output
@@ -191,4 +191,8 @@ void InitGraphics() {
   Graphics::addElement(objectMainWindow, objectGameSubWindow);
 
   chunkShader.create("Shaders/Chunk");
+
+  int tw, th;
+  textures = png_texture_load("Textures/All.png", tw, th);
+  cout << "Loaded texture " << textures << endl;
 }
