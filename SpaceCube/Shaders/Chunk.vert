@@ -14,5 +14,6 @@ out vec2 texture_c;
 void main() {
   colour = vertex_colour;
   texture_c = vertex_texture;
-  gl_Position = transform * (vec4(vertex_position, 1.0) + vertex_ripple * vec4(sin(vertex_ripple * 1000 * frame_time), sin(vertex_ripple * 1047.19755 * frame_time), sin(vertex_ripple * 998.268397 * frame_time), 0.0));
+  float vertexPeriod = mod(vertex_ripple, 0.01);
+  gl_Position = transform * (vec4(vertex_position, 1.0) + vertex_ripple * vec4(sin(vertexPeriod * 500 * frame_time), sin(vertexPeriod * 523.598776 * frame_time), sin(vertexPeriod * 480.832611 * frame_time), 0.0));
 }

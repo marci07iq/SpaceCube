@@ -32,6 +32,31 @@ public:
   void unlink();
   void bye(Directions fromDir, Chunk* fromChunk);
 
+  void setBlock(int bx, int by, int bz, Block to) {
+    _blocks[bx][by][bz] = to;
+#ifdef M_CLIENT
+    if (bx == 0 && _neigh[Dir_MX]) {
+      _neigh[Dir_MX]->_state = Chunk_ToRender;
+    }
+    if (bx == BLOCK_PER_CHUNK - 1 && _neigh[Dir_PX]) {
+      _neigh[Dir_PX]->_state = Chunk_ToRender;
+    }
+    if (by == 0 && _neigh[Dir_MY]) {
+      _neigh[Dir_MY]->_state = Chunk_ToRender;
+    }
+    if (by == BLOCK_PER_CHUNK - 1 && _neigh[Dir_PY]) {
+      _neigh[Dir_PY]->_state = Chunk_ToRender;
+    }
+    if (bz == 0 && _neigh[Dir_MZ]) {
+      _neigh[Dir_MZ]->_state = Chunk_ToRender;
+    }
+    if (bz == BLOCK_PER_CHUNK - 1 && _neigh[Dir_PZ]) {
+      _neigh[Dir_PZ]->_state = Chunk_ToRender;
+    }
+    _state = Chunk_ToRender;
+#endif
+  }
+
 #ifdef M_CLIENT
   GLuint _chunk_vao;
   GLuint _chunk_pos_vbo;

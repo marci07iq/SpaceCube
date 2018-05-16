@@ -52,7 +52,7 @@ public:
       -cosp * sint, -sinp*sint, -cost, 0,
       0, 0, 0, 1;
     matrix = with*matrix;
-    scale({0.1,0.1,0.1});
+    //scale({0.1,0.1,0.1});
   }
   void project(float fov, float aspectRatio, float zFar, float zNear) {
     float yScale = 1/tan(fov / 2);
@@ -68,6 +68,13 @@ public:
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 4; j++) {
         to[i*4 + j] = matrix(j,i);
+      }
+    }
+  }
+  void read(double* to) {
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4; j++) {
+        to[i * 4 + j] = matrix(j, i);
       }
     }
   }

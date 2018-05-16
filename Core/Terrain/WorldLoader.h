@@ -13,7 +13,9 @@ ChunkCol * findChunkCol(int xc, int yc, int dim);
 
 Chunk * findChunk(int xc, int yc, int zc, int dim);
 
-Block & getBlock(int xb, int yb, int zb, int dim);
+Block & getBlock(int xb, int yb, int zb, int dim, bool& success);
+
+void setBlock(iVec3 location, int dim, Block to);
 
 #ifdef M_CLIENT
 void setChunk(int xc, int yc, int zc, int dim, DataElement* data);

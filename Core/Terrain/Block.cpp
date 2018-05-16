@@ -58,7 +58,7 @@ void getSolidModel(BlockPos& b, BlockNeeds n, list<QuadFace>& addTo) {
       res.vtl = it.base.vtl + location;
       res.vtr = it.base.vtr + location;
 
-      vec2<float> texCoord = prop.getTex(b, it.texId);
+      vec2<float> texCoord = prop.getTex(b, it.faceID);
       res.tbl = (it.base.tbl + texCoord) * vec2<float>{1.0f, 0.25f} * TEXTURE_SIZE;
       res.tbr = (it.base.tbr + texCoord) * vec2<float>{1.0f, 0.25f}  * TEXTURE_SIZE;
       res.ttl = (it.base.ttl + texCoord) * vec2<float>{1.0f, 0.25f}  * TEXTURE_SIZE;
@@ -74,23 +74,48 @@ BlockNeeds getSolidNeeds(Block&) {
   return 0;
 }
 vec2<float> getSolidTex(BlockPos& b, uint32_t texID) {
-  return{ 0,texID*1.0f };
+  switch(b.b._ID) {
+    case 1:
+      return {0.0f,3.0f};
+      break;
+    case 2:
+      return{ 0.0f,2.0f };
+      break;
+    case 3:
+      switch (texID) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+          return{ 0.0f,1.0f };
+          break;
+        case 4:
+          return{ 0.0f,2.0f };
+          break;
+        case 5:
+          return{ 0.0f,0.0f };
+          break;
+      }
+      break;
+  }
+  return {0.0f, 2.5f};
 }
 
 void loadBlocks() {
-  solid_model.faces.push_back({ { { 0,1,0 },{ 0,1,1 },{ 0,0,1 },{ 0,0,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,0,0,1 }}, 1 << Dir_MX, 1});
-  solid_model.faces.push_back({ { { 1,0,0 },{ 1,0,1 },{ 1,1,1 },{ 1,1,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,0,1,1 }}, 1 << Dir_PX, 1});
-  solid_model.faces.push_back({ { { 0,0,0 },{ 0,0,1 },{ 1,0,1 },{ 1,0,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 0,1,0,1 }}, 1 << Dir_MY, 1});
-  solid_model.faces.push_back({ { { 1,1,0 },{ 1,1,1 },{ 0,1,1 },{ 0,1,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 0,1,1,1 }}, 1 << Dir_PY, 1});
-  solid_model.faces.push_back({ { { 1,1,0 },{ 1,0,0 },{ 0,0,0 },{ 0,1,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,1,0,1 }}, 1 << Dir_MZ, 2});
-  solid_model.faces.push_back({ { { 0,0,1 },{ 0,1,1 },{ 1,1,1 },{ 1,0,1 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,1,1,1 }}, 1 << Dir_PZ, 0});
   BlockProperies prop_air;
   prop_air.getModel = getEmptyModel;
   prop_air.getNeeds = getEmptyNeeds;
+  
+  solid_model.faces.push_back({ { { 0,1,0 },{ 0,1,1 },{ 0,0,1 },{ 0,0,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,0,0,1 }}, 1 << Dir_MX, 0});
+  solid_model.faces.push_back({ { { 1,0,0 },{ 1,0,1 },{ 1,1,1 },{ 1,1,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,0,1,1 }}, 1 << Dir_PX, 1});
+  solid_model.faces.push_back({ { { 0,0,0 },{ 0,0,1 },{ 1,0,1 },{ 1,0,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 0,1,0,1 }}, 1 << Dir_MY, 2});
+  solid_model.faces.push_back({ { { 1,1,0 },{ 1,1,1 },{ 0,1,1 },{ 0,1,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 0,1,1,1 }}, 1 << Dir_PY, 3});
+  solid_model.faces.push_back({ { { 1,1,0 },{ 1,0,0 },{ 0,0,0 },{ 0,1,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,1,0,1 }}, 1 << Dir_MZ, 4});
+  solid_model.faces.push_back({ { { 0,0,1 },{ 0,1,1 },{ 1,1,1 },{ 1,0,1 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,1,1,1 }}, 1 << Dir_PZ, 5});
   BlockProperies prop_sol;
   prop_sol.getModel = getSolidModel;
   prop_sol.getNeeds = getSolidNeeds;
   prop_sol.getTex = getSolidTex;
-  blockProperties = {prop_air, prop_sol};
+  blockProperties = {prop_air, prop_sol, prop_sol , prop_sol };
 }
 #endif

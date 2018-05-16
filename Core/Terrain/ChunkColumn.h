@@ -34,6 +34,9 @@ public:
   void bye(Directions fromDir, ChunkCol* fromChunk);
 
   inline Chunk* getChunk(int cz) {
-    return _chunks[cz];
+    if(0 <= cz && cz < CHUNK_PER_COLUMN) {
+      return _chunks[cz];
+    }
+    return NULL;
   }
 };

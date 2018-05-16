@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Definitions.h"
+#include "RayTrace.h"
 
 struct floatCol {
   float r, g, b, a;
@@ -24,7 +24,7 @@ struct StoredQuadFace {
   //Enabled if one is requested.
   //Example: hollow tube from x- to y+ faces will be 9.
   uint8_t type;
-  uint32_t texId;
+  uint32_t faceID;
 };
 
 struct BlockModel {

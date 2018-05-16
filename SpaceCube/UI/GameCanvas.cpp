@@ -56,27 +56,35 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
     cout << "Pos: " << user->_pos << '\t' << user->_lookDir << '\r';
   }
 
-  glDepthRange(0.1, 100);
+  glDepthRange(0, 100);
   glClear(GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
 
   chunkShader.bind();
-
-  float transform[16];
   
-  Transpose view;
-  view.createLook(user->_pos + user->_headOffset, user->_lookDir);
-  view.project(PI/2, (bx-ax)*1.0f/(by-ay), 100, 0.1);
-  view.read(transform);
+  float cameraM[16];
+
+  Transpose camview;
+  camview.createLook(user->_pos + user->_headOffset, user->_lookDir);
+  camview.project(PI/2, (bx-ax)*1.0f/(by-ay), 100, 0.01);
+  camview.read(view.projection);
+  camview.read(cameraM);
+
+
+  view.cameraEye = user->_pos;
+  view.viewport[0] = ax;
+  view.viewport[1] = ay;
+  view.viewport[2] = bx-ax;
+  view.viewport[3] = by-ay;
 
   GLint loc = glGetUniformLocation(chunkShader._pID, "transform");
   if (loc != -1) {
-    glUniformMatrix4fv(loc, 1, false, transform);
+    glUniformMatrix4fv(loc, 1, false, cameraM);
   }
   loc = -1;
   loc = glGetUniformLocation(chunkShader._pID, "frame_time");
   if (loc != -1) {
-    glUniform1f(loc, (lastFrameTime - firstFrameTime) / 100000.0f );
+    glUniform1f(loc, (lastFrameTime - firstFrameTime) / 1000.0f );
   }
 
   //glActiveTexture(GL_TEXTURE0);
@@ -147,11 +155,36 @@ int MainGameCanvas::mouseMoveManager(int x, int y, int ox, int oy, set<key_locat
 
 int MainGameCanvas::guiEventManager(gui_event evt, int mx, int my, set<key_location>& down, Canvas* me) {
   bool in = me->isIn(mx, my);
-  
+  if(evt._type == evt.evt_down && evt._key._keycode == 0 && evt._key._type == evt._key.type_mouse) {
+    GLdouble pos3D_ax = 0, pos3D_ay = 0, pos3D_az = 0;
+
+    // get 3D coordinates based on window coordinates
+
+    gluUnProject((view.viewport[0] + view.viewport[2])/2, (view.viewport[1] + view.viewport[3]) / 2, 0,
+      view.model_view, view.projection, view.viewport,
+      &pos3D_ax, &pos3D_ay, &pos3D_az);
+
+    vec3<double> rayori = { pos3D_ax, pos3D_ay, pos3D_az };
+    vec3<double> raydir = rayori - view.cameraEye;
+
+    if(raydir.sqrlen() > 0) {
+      cout << "From " << rayori << " towards " << raydir.norm() << endl;
+      raydir = raydir.norm() * 5;
+      list<iVec3> res = find_voxels(rayori, rayori + raydir);
+      for (auto&& it : res) {
+        setBlock(it, 0, {0,0});
+      }
+    }
+  }
   return 0;
 }
 
 void bindGameScreenLabels() {
+
+  Transpose iden;
+  iden.setIdentity();
+  iden.read(MainGameCanvas::view.model_view);
+
   firstFrameTime = lastFrameTime = chrono::duration_cast< chrono::milliseconds >(
     chrono::system_clock::now().time_since_epoch()).count();
 

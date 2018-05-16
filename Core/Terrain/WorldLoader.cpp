@@ -4,8 +4,12 @@ shared_mutex _fragmentsLock;
 map<world_col_t, Fragment*> _fragments;
 
 Fragment * findFragment(int xf, int yf, int dim) {
+  Fragment* f = NULL;
   _fragmentsLock.lock_shared();
-  Fragment* f = _fragments[make_pair(dim, make_pair(xf, yf))];
+  auto it = _fragments.find(make_pair(dim, make_pair(xf, yf)));
+  if(it != _fragments.end()) {
+    f = it->second;
+  }
   _fragmentsLock.unlock_shared();
   return f;
 }
@@ -37,15 +41,36 @@ Chunk * findChunk(int xc, int yc, int zc, int dim) {
   return cc->getChunk(zc);
 }
 
-Block & getBlock(int xb, int yb, int zb, int dim) {
-  return findChunk(
+Block & getBlock(int xb, int yb, int zb, int dim, bool& success) {
+  Chunk* c = findChunk(
     floorDiv(xb, BLOCK_PER_CHUNK),
     floorDiv(yb, BLOCK_PER_CHUNK),
     floorDiv(zb, BLOCK_PER_CHUNK),
-    dim)->_blocks
+    dim);
+  if(c != NULL) {
+    success = true;
+    return c->_blocks
     [modulo(xb, BLOCK_PER_CHUNK)]
-  [modulo(yb, BLOCK_PER_CHUNK)]
-  [modulo(zb, BLOCK_PER_CHUNK)];
+    [modulo(yb, BLOCK_PER_CHUNK)]
+    [modulo(zb, BLOCK_PER_CHUNK)];
+  }
+  success = false;
+}
+
+void setBlock(iVec3 location, int dim, Block to) {
+  int lbx = modulo(location.x, BLOCK_PER_CHUNK);
+  int lby = modulo(location.y, BLOCK_PER_CHUNK);
+  int lbz = modulo(location.z, BLOCK_PER_CHUNK);
+
+  int lcx = floorDiv(location.x, BLOCK_PER_CHUNK);
+  int lcy = floorDiv(location.y, BLOCK_PER_CHUNK);
+  int lcz = floorDiv(location.z, BLOCK_PER_CHUNK);
+
+  Chunk* c = findChunk(lcx, lcy, lcz, dim);
+
+  if (c != NULL) {
+    c->setBlock(lbx, lby, lbz, to);
+  }
 }
 
 #ifdef M_CLIENT
