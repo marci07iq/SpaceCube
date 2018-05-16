@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Block.h"
+#include "../Blocks/Block_Types.h"
 
 typedef void(*onEntityMove)(mVec3& to);
 

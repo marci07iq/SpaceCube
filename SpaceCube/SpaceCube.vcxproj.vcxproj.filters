@@ -22,6 +22,9 @@
     <Filter Include="Main\Render\Shaders">
       <UniqueIdentifier>{3001c654-ed5c-4884-94a0-3f368e6d3d48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Blocks">
+      <UniqueIdentifier>{560b718b-d1c7-4bb8-abb9-dd293d4a7d5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -176,6 +179,18 @@
     </ClCompile>
     <ClCompile Include="..\Core\Terrain\RayTrace.cpp">
       <Filter>Core\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Blocks\Block_Static.cpp">
+      <Filter>Core\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Blocks\Block_Liquid.cpp">
+      <Filter>Core\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Blocks\Block_Stone.cpp">
+      <Filter>Core\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NGin\Maths\BinTree.cpp">
+      <Filter>NGin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +394,21 @@
     </ClInclude>
     <ClInclude Include="..\Core\Terrain\RayTrace.h">
       <Filter>Core\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Static.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Types.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Liquid.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Stone.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NGin\Maths\BinTree.h">
+      <Filter>NGin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

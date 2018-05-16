@@ -183,7 +183,15 @@ void InitGraphics() {
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(MessageCallback, 0);
 
-
+  glDisable(GL_DITHER);
+  glDisable(GL_POINT_SMOOTH);
+  glDisable(GL_LINE_SMOOTH);
+  glDisable(GL_POLYGON_SMOOTH);
+  glHint(GL_POINT_SMOOTH, GL_DONT_CARE);
+  glHint(GL_LINE_SMOOTH, GL_DONT_CARE);
+  glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
+#define GL_MULTISAMPLE_ARB 0x809D
+  glDisable(GL_MULTISAMPLE_ARB);
 
   objectMenuSubWindow = Graphics::createPanel("objectMenuSubWindow", fullContainer, getColor("div", "bgcolor"));
   Graphics::addElement(objectMainWindow, objectMenuSubWindow);
