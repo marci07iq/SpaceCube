@@ -17,6 +17,8 @@ Block & getBlock(int xb, int yb, int zb, int dim, bool& success);
 
 void setBlock(iVec3 location, int dim, Block to);
 
+bool blockNeighbour(BlockPos& block, Directions dir, BlockPos& out);
+
 #ifdef M_CLIENT
 void setChunk(int xc, int yc, int zc, int dim, DataElement* data);
 #endif

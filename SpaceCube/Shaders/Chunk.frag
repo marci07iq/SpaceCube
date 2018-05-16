@@ -6,5 +6,5 @@ uniform sampler2D myTexture;
 out vec4 frag_colour;
 
 void main() {
-  frag_colour = texture(myTexture, texture_c);
+  frag_colour = (1-colour.a) * texture(myTexture, texture_c) + colour.a * colour;
 }

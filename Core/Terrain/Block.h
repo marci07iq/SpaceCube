@@ -28,7 +28,7 @@ struct Block {
 struct BlockPos {
   Chunk* c;
   int lbx, lby, lbz; //Local block coordinates in chunk
-  Block& b;
+  Block* b;
 };
 
 void writeBlock(unsigned char* to, int id, Block& b);
@@ -41,7 +41,7 @@ typedef void(*onBlockInteract)(BlockPos&, Entity*, int, void*);
 typedef void(*onBlockLook)(BlockPos&, Entity*, int, void*);
 typedef void(*onBlockBreak)(BlockPos&, Entity*, int, void*);
 #ifdef M_CLIENT
-typedef void(*getBlockModel)(BlockPos&, BlockNeeds, list<QuadFace>&);
+typedef void(*getBlockModel)(BlockPos[7], BlockNeeds, list<QuadFace>&);
 typedef BlockNeeds(*getBlockNeeds)(Block&);
 typedef vec2<float>(*getBlockTex)(BlockPos&, uint32_t);
 #endif
@@ -55,6 +55,7 @@ struct BlockProperies {
   getBlockModel getModel;
   getBlockNeeds getNeeds;
   getBlockTex getTex;
+  vector<int> textures;
 #endif
 };
 

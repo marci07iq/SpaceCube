@@ -29,40 +29,37 @@ void readBlock(unsigned char * from, int id, Block & b) {
 }
 
 #ifdef M_CLIENT
-BlockModel empty_model;
-BlockModel solid_model;
+map<string, BlockModel> models;
+vector<BlockModel> blockModels;
 
-void getEmptyModel(BlockPos& b, BlockNeeds n, list<QuadFace>& addTo) {
-}
 BlockNeeds getEmptyNeeds(Block&) {
   return 127;
 }
-vec2<float> getEmptyTex(BlockPos& b, uint32_t texID) {
-  return {0,0};
+BlockNeeds getSolidNeeds(Block&) {
+  return 0;
 }
 
-void getSolidModel(BlockPos& b, BlockNeeds n, list<QuadFace>& addTo) {
-  BlockProperies& prop = blockProperties[b.b._ID];
+void getStoredModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
+  BlockProperies& prop = blockProperties[b[6].b->_ID];
 
-
-  for (auto&& it : solid_model.faces) {
+  for (auto&& it : blockModels[b[6].b->_ID].faces) {
     if (it.type & n) {
       QuadFace res;
 
       fVec3 location = {
-      b.c->_cx * BLOCK_PER_CHUNK + b.lbx * 1.0f,
-      b.c->_cy * BLOCK_PER_CHUNK + b.lby * 1.0f,
-      b.c->_cz * BLOCK_PER_CHUNK + b.lbz * 1.0f};
+      b[6].c->_cx * BLOCK_PER_CHUNK + b[6].lbx * 1.0f,
+      b[6].c->_cy * BLOCK_PER_CHUNK + b[6].lby * 1.0f,
+      b[6].c->_cz * BLOCK_PER_CHUNK + b[6].lbz * 1.0f};
       res.vbl = it.base.vbl + location;
       res.vbr = it.base.vbr + location;
       res.vtl = it.base.vtl + location;
       res.vtr = it.base.vtr + location;
 
-      vec2<float> texCoord = prop.getTex(b, it.faceID);
-      res.tbl = (it.base.tbl + texCoord) * vec2<float>{1.0f, 0.25f} * TEXTURE_SIZE;
-      res.tbr = (it.base.tbr + texCoord) * vec2<float>{1.0f, 0.25f}  * TEXTURE_SIZE;
-      res.ttl = (it.base.ttl + texCoord) * vec2<float>{1.0f, 0.25f}  * TEXTURE_SIZE;
-      res.ttr = (it.base.ttr + texCoord) * vec2<float>{1.0f, 0.25f}  * TEXTURE_SIZE;
+      vec2<float> texCoord = prop.getTex(b[6], it.faceID);
+      res.tbl = (it.base.tbl + texCoord) * vec2<float>{1.0f, 0.2f} * TEXTURE_SIZE;
+      res.tbr = (it.base.tbr + texCoord) * vec2<float>{1.0f, 0.2f}  * TEXTURE_SIZE;
+      res.ttl = (it.base.ttl + texCoord) * vec2<float>{1.0f, 0.2f}  * TEXTURE_SIZE;
+      res.ttr = (it.base.ttr + texCoord) * vec2<float>{1.0f, 0.2f}  * TEXTURE_SIZE;
 
       res.recolor = it.base.recolor;
 
@@ -70,52 +67,104 @@ void getSolidModel(BlockPos& b, BlockNeeds n, list<QuadFace>& addTo) {
     }
   }
 }
-BlockNeeds getSolidNeeds(Block&) {
-  return 0;
-}
-vec2<float> getSolidTex(BlockPos& b, uint32_t texID) {
-  switch(b.b._ID) {
-    case 1:
-      return {0.0f,3.0f};
-      break;
-    case 2:
-      return{ 0.0f,2.0f };
-      break;
-    case 3:
-      switch (texID) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-          return{ 0.0f,1.0f };
-          break;
-        case 4:
-          return{ 0.0f,2.0f };
-          break;
-        case 5:
-          return{ 0.0f,0.0f };
-          break;
-      }
-      break;
+void getConnectedModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
+  BlockProperies& prop = blockProperties[b[6].b->_ID];
+
+  BlockNeeds notMe = 1 << Dir_All;
+  for (int i = 0; i < 6; i++) {
+    if (b[i].b != NULL && b[i].b->_ID != b[6].b->_ID) {
+      notMe |= 1 << i;
+    }
   }
-  return {0.0f, 2.5f};
+
+  for (auto&& it : blockModels[b[6].b->_ID].faces) {
+    if (it.type & n & notMe) {
+      QuadFace res;
+
+      fVec3 location = {
+        b[6].c->_cx * BLOCK_PER_CHUNK + b[6].lbx * 1.0f,
+        b[6].c->_cy * BLOCK_PER_CHUNK + b[6].lby * 1.0f,
+        b[6].c->_cz * BLOCK_PER_CHUNK + b[6].lbz * 1.0f };
+      res.vbl = it.base.vbl + location;
+      res.vbr = it.base.vbr + location;
+      res.vtl = it.base.vtl + location;
+      res.vtr = it.base.vtr + location;
+
+      vec2<float> texCoord = prop.getTex(b[6], it.faceID);
+      res.tbl = (it.base.tbl + texCoord) * vec2<float>{1.0f, 0.2f} *TEXTURE_SIZE;
+      res.tbr = (it.base.tbr + texCoord) * vec2<float>{1.0f, 0.2f}  *TEXTURE_SIZE;
+      res.ttl = (it.base.ttl + texCoord) * vec2<float>{1.0f, 0.2f}  *TEXTURE_SIZE;
+      res.ttr = (it.base.ttr + texCoord) * vec2<float>{1.0f, 0.2f}  *TEXTURE_SIZE;
+
+      res.recolor = it.base.recolor;
+
+      addTo.push_back(res);
+    }
+  }
+}
+
+vec2<float> getStoredTex(BlockPos& b, uint32_t texID) {
+  return {0.0f, 1.0f*blockProperties[b.b->_ID].textures[texID]};
+}
+
+
+void loadModel(string folder, string name) {
+  ifstream in(folder + name + ".modl", ios::in);
+  BlockModel m;
+  if(in.is_open()) {
+    StoredQuadFace f;
+    int type;
+    while(in >> f.base.vbl >> f.base.vtl >> f.base.vtr >> f.base.vbr >> f.base.tbl >> f.base.ttl >> f.base.ttr >> f.base.tbr >> f.base.recolor.r >> f.base.recolor.g >> f.base.recolor.b >> f.base.recolor.a >> type >> f.faceID) {
+      f.type = type;
+      m.faces.push_back(f);
+    }
+  }
+  models[name] = m;
+  in.close();
 }
 
 void loadBlocks() {
-  BlockProperies prop_air;
-  prop_air.getModel = getEmptyModel;
-  prop_air.getNeeds = getEmptyNeeds;
+  ifstream in("Textures/blocks.dat");
+
+  int id = 0;
+  string modname;
+  int needs;
+
+  while (in >> modname) {
+    blockProperties.push_back(BlockProperies());
+    blockModels.push_back(BlockModel());
+
+    if (!models.count(modname)) {
+      loadModel("Textures/", modname);
+    }
+    int size = models[modname].faces.size();
+    for (int i = 0; i < size; i++) {
+      int a;
+      in >> a;
+      blockProperties[id].textures.push_back(a);
+    }
+    blockModels[id] = models[modname];
+    ++id;
+  }
+
+  in.close();
+
+  blockProperties[0].getNeeds = getEmptyNeeds;
+  blockProperties[1].getNeeds = getSolidNeeds;
+  blockProperties[2].getNeeds = getSolidNeeds;
+  blockProperties[3].getNeeds = getSolidNeeds;
+  blockProperties[4].getNeeds = getEmptyNeeds;
   
-  solid_model.faces.push_back({ { { 0,1,0 },{ 0,1,1 },{ 0,0,1 },{ 0,0,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,0,0,1 }}, 1 << Dir_MX, 0});
-  solid_model.faces.push_back({ { { 1,0,0 },{ 1,0,1 },{ 1,1,1 },{ 1,1,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,0,1,1 }}, 1 << Dir_PX, 1});
-  solid_model.faces.push_back({ { { 0,0,0 },{ 0,0,1 },{ 1,0,1 },{ 1,0,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 0,1,0,1 }}, 1 << Dir_MY, 2});
-  solid_model.faces.push_back({ { { 1,1,0 },{ 1,1,1 },{ 0,1,1 },{ 0,1,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 0,1,1,1 }}, 1 << Dir_PY, 3});
-  solid_model.faces.push_back({ { { 1,1,0 },{ 1,0,0 },{ 0,0,0 },{ 0,1,0 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,1,0,1 }}, 1 << Dir_MZ, 4});
-  solid_model.faces.push_back({ { { 0,0,1 },{ 0,1,1 },{ 1,1,1 },{ 1,0,1 },{ 0,1 },{ 0,0 },{ 1,0 },{ 1,1 },{ 1,1,1,1 }}, 1 << Dir_PZ, 5});
-  BlockProperies prop_sol;
-  prop_sol.getModel = getSolidModel;
-  prop_sol.getNeeds = getSolidNeeds;
-  prop_sol.getTex = getSolidTex;
-  blockProperties = {prop_air, prop_sol, prop_sol , prop_sol };
+  blockProperties[0].getModel = getStoredModel;
+  blockProperties[1].getModel = getStoredModel;
+  blockProperties[2].getModel = getStoredModel;
+  blockProperties[3].getModel = getStoredModel;
+  blockProperties[4].getModel = getConnectedModel;
+
+  blockProperties[0].getTex = getStoredTex;
+  blockProperties[1].getTex = getStoredTex;
+  blockProperties[2].getTex = getStoredTex;
+  blockProperties[3].getTex = getStoredTex;
+  blockProperties[4].getTex = getStoredTex;
 }
 #endif

@@ -73,6 +73,141 @@ void setBlock(iVec3 location, int dim, Block to) {
   }
 }
 
+bool blockNeighbour(BlockPos & block, Directions dir, BlockPos & out) {
+  out.b = NULL;
+  switch (dir) {
+    case Dir_MX:
+      if (0 < block.lbx) {
+        out.lbx = block.lbx - 1;
+        out.lby = block.lby;
+        out.lbz = block.lbz;
+        out.c = block.c;
+        out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+        return true;
+      } else {
+        Chunk* c = block.c->getNeigh(dir);
+        if (c != NULL) {
+          out.lbx = BLOCK_PER_CHUNK - 1;
+          out.lby = block.lby;
+          out.lbz = block.lbz;
+          out.c = c;
+          out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+          return true;
+        }
+      }
+      return false;
+      break;
+    case Dir_PX:
+      if (block.lbx < BLOCK_PER_CHUNK - 1) {
+        out.lbx = block.lbx + 1;
+        out.lby = block.lby;
+        out.lbz = block.lbz;
+        out.c = block.c;
+        out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+        return true;
+      } else {
+        Chunk* c = block.c->getNeigh(dir);
+        if (c != NULL) {
+          out.lbx = 0;
+          out.lby = block.lby;
+          out.lbz = block.lbz;
+          out.c = c;
+          out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+          return true;
+        }
+      }
+      return false;
+      break;
+
+    case Dir_MY:
+      if (0 < block.lby) {
+        out.lbx = block.lbx;
+        out.lby = block.lby - 1;
+        out.lbz = block.lbz;
+        out.c = block.c;
+        out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+        return true;
+      } else {
+        Chunk* c = block.c->getNeigh(dir);
+        if (c != NULL) {
+          out.lbx = block.lbx;
+          out.lby = BLOCK_PER_CHUNK - 1;
+          out.lbz = block.lbz;
+          out.c = c;
+          out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+          return true;
+        }
+      }
+      return false;
+      break;
+    case Dir_PY:
+      if (block.lby < BLOCK_PER_CHUNK - 1) {
+        out.lbx = block.lbx;
+        out.lby = block.lby + 1;
+        out.lbz = block.lbz;
+        out.c = block.c;
+        out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+        return true;
+      } else {
+        Chunk* c = block.c->getNeigh(dir);
+        if (c != NULL) {
+          out.lbx = block.lbx;
+          out.lby = 0;
+          out.lbz = block.lbz;
+          out.c = c;
+          out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+          return true;
+        }
+      }
+      return false;
+      break;
+
+    case Dir_MZ:
+      if (0 < block.lbz) {
+        out.lbx = block.lbx;
+        out.lby = block.lby;
+        out.lbz = block.lbz - 1;
+        out.c = block.c;
+        out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+        return true;
+      } else {
+        Chunk* c = block.c->getNeigh(dir);
+        if (c != NULL) {
+          out.lbx = block.lbx;
+          out.lby = block.lby;
+          out.lbz = BLOCK_PER_CHUNK - 1;
+          out.c = c;
+          out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+          return true;
+        }
+      }
+      return false;
+      break;
+    case Dir_PZ:
+      if (block.lbz < BLOCK_PER_CHUNK - 1) {
+        out.lbx = block.lbx;
+        out.lby = block.lby;
+        out.lbz = block.lbz + 1;
+        out.c = block.c;
+        out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+        return true;
+      } else {
+        Chunk* c = block.c->getNeigh(dir);
+        if (c != NULL) {
+          out.lbx = block.lbx;
+          out.lby = block.lby;
+          out.lbz = 0;
+          out.c = c;
+          out.b = &(out.c->_blocks[out.lbx][out.lby][out.lbz]);
+          return true;
+        }
+      }
+      return false;
+      break;
+  }
+  return false;
+}
+
 #ifdef M_CLIENT
 void setChunk(int cx, int cy, int cz, int dim, DataElement * data) {
   int fx = floorDiv(cx, COLUMN_PER_FRAGMENT);
@@ -133,8 +268,8 @@ ChunkCol* findLoadColumn(int xc, int yc, int dim) {
 
 void initMapgen() {
   Mapgen::noise_weights = {
-    { 4, 2 },
-    { 16, 8 },
+    { 4, 1 },
+    { 16, 6 },
     { 64, 32}
   };
 }

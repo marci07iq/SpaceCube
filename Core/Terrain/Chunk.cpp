@@ -169,13 +169,21 @@ void Chunk::unBuildChunk() {
 void Chunk::buildChunk() {
   _state = Chunk_Rendered;
 
+  BlockPos neighbours[7];
+
   list<QuadFace> quads;
   for (uint8_t i = 0; i < BLOCK_PER_CHUNK; i++) {
     for (uint8_t j = 0; j < BLOCK_PER_CHUNK; j++) {
       for (uint8_t k = 0; k < BLOCK_PER_CHUNK; k++) {
-        BlockNeeds n = getNeed(i, j, k);
-        BlockPos p = { this, i,j,k, _blocks[i][j][k] };
-        blockProperties[_blocks[i][j][k]._ID].getModel(p, n, quads);
+        neighbours[6] = { this, i,j,k, &(_blocks[i][j][k]) };
+        BlockNeeds n = 1 << Dir_All;
+        for (int l = 0; l < 6; l++) {
+          bool b = blockNeighbour(neighbours[6], static_cast<Directions>(l), neighbours[l]);
+          if(b) {
+            n |= (1 << l) & blockProperties[neighbours[l].b->_ID].getNeeds(*neighbours[l].b);
+          }
+        }
+        blockProperties[_blocks[i][j][k]._ID].getModel(neighbours, n, quads);
       }
     }
   }
@@ -267,6 +275,10 @@ void Chunk::buildChunk() {
   glBindBuffer(GL_ARRAY_BUFFER, _chunk_mov_vbo);
   glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, NULL);
 
+  delete[quads.size() * 3 * 6] vert;
+  delete[quads.size() * 2 * 6] tex;
+  delete[quads.size() * 4 * 6] col;
+  delete[quads.size() * 6] mov;
 
   _quads = quads.size()*6;
 }

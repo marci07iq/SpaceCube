@@ -56,7 +56,7 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
     cout << "Pos: " << user->_pos << '\t' << user->_lookDir << '\r';
   }
 
-  glDepthRange(0, 100);
+  glDepthRange(0.01, 256);
   glClear(GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
 
@@ -66,7 +66,7 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
 
   Transpose camview;
   camview.createLook(user->_pos + user->_headOffset, user->_lookDir);
-  camview.project(PI/2, (bx-ax)*1.0f/(by-ay), 100, 0.01);
+  camview.project(PI/2, (bx-ax)*1.0f/(by-ay), 256, 0.01);
   camview.read(view.projection);
   camview.read(cameraM);
 

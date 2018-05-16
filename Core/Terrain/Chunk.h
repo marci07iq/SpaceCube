@@ -32,6 +32,10 @@ public:
   void unlink();
   void bye(Directions fromDir, Chunk* fromChunk);
 
+  Chunk* getNeigh(Directions dir) {
+    return _neigh[dir];
+  }
+
   void setBlock(int bx, int by, int bz, Block to) {
     _blocks[bx][by][bz] = to;
 #ifdef M_CLIENT

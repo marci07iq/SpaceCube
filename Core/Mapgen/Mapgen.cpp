@@ -44,11 +44,20 @@ void Mapgen::generateFragment(int fx, int fy) {
       for (int k = 0; k <= heightmap[i][j] - 4; k++) {
         res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 1;
       }
-      for (int k = max(0.0f,heightmap[i][j] - 3); k <= heightmap[i][j] - 1; k++) {
-        res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 2;
+      if(heightmap[i][j] > 17) {
+        for (int k = max(0.0f,heightmap[i][j] - 3); k <= heightmap[i][j] - 1; k++) {
+          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 2;
+        }
+        for (int k = max(0.0f, heightmap[i][j]); k <= heightmap[i][j]; k++) {
+          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 3;
+        }
+      } else {
+        for (int k = max(0.0f, heightmap[i][j] - 3); k <= heightmap[i][j]; k++) {
+          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 1;
+        }
       }
-      for (int k = max(0.0f, heightmap[i][j]); k <= heightmap[i][j]; k++) {
-        res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 3;
+      for (int k = heightmap[i][j] + 1; k <= 16; k++) {
+        res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 4;
       }
     }
   }
