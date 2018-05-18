@@ -18,9 +18,9 @@ using RowVector = Eigen::Matrix<T, 1, C>;
 
 uint32_t crc32c(uint32_t crc, const unsigned char *buf, size_t len);
 
-union tri_int {
-  uint8_t b[12];
-  int i[3];
+union quad_int {
+  uint8_t b[16];
+  int i[4];
 };
 
 double locationRandom(int seed, int x, int y);

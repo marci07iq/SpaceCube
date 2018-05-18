@@ -18,7 +18,7 @@ void Mapgen::generateFragment(int fx, int fy) {
 
   for (int i = 0; i < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; i++) {
     for (int j = 0; j < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; j++) {
-      heightmap[i][j] = 20;
+      heightmap[i][j] = 70;
     }
   }
 
@@ -32,8 +32,8 @@ void Mapgen::generateFragment(int fx, int fy) {
     for (int i = 0; i < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; i++) {
       for (int j = 0; j < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; j++) {
         heightmap[i][j] += perlin.getAt(
-          i*1.0 / it.first,
-          j*1.0 / it.first)
+          (i + fx * COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK - perlin._xo * it.first)*1.0 / it.first,
+          (j + fy * COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK - perlin._yo * it.first)*1.0 / it.first)
           * it.second;
       }
     }
@@ -41,22 +41,22 @@ void Mapgen::generateFragment(int fx, int fy) {
 
   for (int i = 0; i < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; i++) {
     for (int j = 0; j < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; j++) {
-      for (int k = 0; k <= heightmap[i][j] - 4; k++) {
+      for (int k = 0; k <= heightmap[i][j] - 4 && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
         res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 1;
       }
-      if(heightmap[i][j] > 17) {
-        for (int k = max(0.0f,heightmap[i][j] - 3); k <= heightmap[i][j] - 1; k++) {
+      if(heightmap[i][j] > 61) {
+        for (int k = max(0.0f,heightmap[i][j] - 3); k <= heightmap[i][j] - 1 && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
           res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 2;
         }
-        for (int k = max(0.0f, heightmap[i][j]); k <= heightmap[i][j]; k++) {
+        for (int k = max(0.0f, heightmap[i][j]); k <= heightmap[i][j] && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
           res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 3;
         }
       } else {
-        for (int k = max(0.0f, heightmap[i][j] - 3); k <= heightmap[i][j]; k++) {
+        for (int k = max(0.0f, heightmap[i][j] - 3); k <= heightmap[i][j] && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
           res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 1;
         }
       }
-      for (int k = heightmap[i][j] + 1; k <= 16; k++) {
+      for (int k = max(0.0f, heightmap[i][j] + 1); k <= 60; k++) {
         res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 4;
       }
     }

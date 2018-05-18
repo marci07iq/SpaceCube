@@ -1,11 +1,6 @@
 #pragma once
 
-#ifdef M_CLIENT
 #include "BlockModel.h"
-#endif
-#ifdef M_SERVER
-#include "../Definitions.h"
-#endif
 
 class Fragment;
 class ChunkCol;
@@ -40,6 +35,7 @@ typedef void(*onBlockTick)(BlockPos&);
 typedef void(*onBlockInteract)(BlockPos&, Entity*, int, void*);
 typedef void(*onBlockLook)(BlockPos&, Entity*, int, void*);
 typedef void(*onBlockBreak)(BlockPos&, Entity*, int, void*);
+typedef void(*getBlockPhysics)(BlockPos[7], list<PhysCube>& l);
 #ifdef M_CLIENT
 typedef void(*getBlockModel)(BlockPos[7], BlockNeeds, list<QuadFace>&);
 typedef BlockNeeds(*getBlockNeeds)(Block&);
@@ -51,6 +47,7 @@ struct BlockProperies {
   onBlockInteract onInteract;
   onBlockLook onLook;
   onBlockBreak onBreak;
+  getBlockPhysics getPhysics;
 #ifdef M_CLIENT
   getBlockModel getModel;
   getBlockNeeds getNeeds;

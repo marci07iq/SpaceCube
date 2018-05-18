@@ -57,6 +57,7 @@ public:
   }
 
   void bind();
+  void unbind();
 
   ~Shader();
 };

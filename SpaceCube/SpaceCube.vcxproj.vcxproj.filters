@@ -25,6 +25,9 @@
     <Filter Include="Core\Blocks">
       <UniqueIdentifier>{560b718b-d1c7-4bb8-abb9-dd293d4a7d5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Physics">
+      <UniqueIdentifier>{3efb9dc0-c3a2-42c3-b102-2f6e85909d5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -191,6 +194,9 @@
     </ClCompile>
     <ClCompile Include="..\NGin\Maths\BinTree.cpp">
       <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Physics\Physics.cpp">
+      <Filter>Core\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -409,6 +415,9 @@
     </ClInclude>
     <ClInclude Include="..\NGin\Maths\BinTree.h">
       <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Physics\Physics.h">
+      <Filter>Core\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

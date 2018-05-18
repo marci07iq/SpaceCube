@@ -32,29 +32,33 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   uint64_t frameTime = chrono::duration_cast< chrono::milliseconds >(
     chrono::system_clock::now().time_since_epoch()).count();
 
-  sVec3 userMove = {user->_lookDir.x, user->_lookDir.y, 0};
+  sVec3 userMove = { user->getLook().x, user->getLook().y, 0};
+  mpsVec3 resVel = mpsVec3(0);
   if(userMove.sqrlen() > 0) {
     userMove.norm();
     if (isDown(down, key_location(key('w', 0)))) {
-      user->_pos += userMove * user->_speed * (frameTime - lastFrameTime) / 1000.0;
+      resVel += (userMove * user->getSpeed());
     }
     if (isDown(down, key_location(key('d', 0)))) {
-      user->_pos += crs(userMove, {0,0,1}) * user->_speed * (frameTime - lastFrameTime) / 1000.0;
+      resVel += (crs(userMove, {0,0,1}) * user->getSpeed());
     }
     if (isDown(down, key_location(key('s', 0)))) {
-      user->_pos -= userMove * user->_speed * (frameTime - lastFrameTime) / 1000.0;
+      resVel += (-userMove * user->getSpeed());
     }
     if (isDown(down, key_location(key('a', 0)))) {
-      user->_pos -= crs(userMove, { 0,0,1 }) * user->_speed * (frameTime - lastFrameTime) / 1000.0;
+      resVel += (-crs(userMove, { 0,0,1 }) * user->getSpeed());
     }
     if (isDown(down, key_location(key(' ', 0)))) {
-      user->_pos += fVec3({ 0,0,1 }) * user->_speed * (frameTime - lastFrameTime) / 1000.0;
+      resVel += (fVec3(0,0,1) * user->getSpeed());
     }
     if (isDown(down, key_location(key(112, 1)))) {
-      user->_pos -= fVec3({ 0,0,1 }) * user->_speed * (frameTime - lastFrameTime) / 1000.0;
+      resVel += (-fVec3(0,0,1) * user->getSpeed());
     }
-    cout << "Pos: " << user->_pos << '\t' << user->_lookDir << '\r';
   }
+
+  user->setVel(resVel);
+
+  tickPhysics((frameTime - lastFrameTime) / 1000.0);
 
   glDepthRange(0.01, 256);
   glClear(GL_DEPTH_BUFFER_BIT);
@@ -65,13 +69,13 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   float cameraM[16];
 
   Transpose camview;
-  camview.createLook(user->_pos + user->_headOffset, user->_lookDir);
+  camview.createLook(user->getHead(), user->getLook());
   camview.project(PI/2, (bx-ax)*1.0f/(by-ay), 256, 0.01);
   camview.read(view.projection);
   camview.read(cameraM);
 
 
-  view.cameraEye = user->_pos;
+  view.cameraEye = user->getHead();
   view.viewport[0] = ax;
   view.viewport[1] = ay;
   view.viewport[2] = bx-ax;
@@ -117,9 +121,26 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
     }
   }
 
+  chunkShader.unbind();
+
   glFlush();
 
   Graphics::resetViewport();
+
+  mVec3 head = user->getHead();
+  renderBitmapString(10,10,"Pos: " + to_string(head.x) + " " + to_string(head.y) + " " + to_string(head.z), 0xffff00ff, false);
+
+  setColor(0xffffffff);
+  glBegin(GL_QUADS);
+  glVertex2d((ax + bx) / 2.0 - 10, (ay + by) / 2.0 + 1);
+  glVertex2d((ax + bx) / 2.0 - 10, (ay + by) / 2.0 - 1);
+  glVertex2d((ax + bx) / 2.0 + 10, (ay + by) / 2.0 - 1);
+  glVertex2d((ax + bx) / 2.0 + 10, (ay + by) / 2.0 + 1);
+  glVertex2d((ax + bx) / 2.0 + 1, (ay + by) / 2.0 - 10);
+  glVertex2d((ax + bx) / 2.0 - 1, (ay + by) / 2.0 - 10);
+  glVertex2d((ax + bx) / 2.0 - 1, (ay + by) / 2.0 + 10);
+  glVertex2d((ax + bx) / 2.0 + 1, (ay + by) / 2.0 + 10);
+  glEnd();
 
   lastFrameTime = frameTime;
 
@@ -139,8 +160,7 @@ int MainGameCanvas::mouseMoveManager(int x, int y, int ox, int oy, set<key_locat
     glutWarpPointer(100, glutGet(GLUT_WINDOW_HEIGHT) - 100);
 
     polar_vec3 pos;
-    pos.fromCartesian(user->_lookDir);
-    user->_lookDir = pos.toCartesian();
+    pos.fromCartesian(user->getLook());
 
     pos.phi -= 0.01*dx;
     pos.theta -= 0.01*dy;
@@ -148,7 +168,9 @@ int MainGameCanvas::mouseMoveManager(int x, int y, int ox, int oy, set<key_locat
  
     pos.reNormalize();
 
-    user->_lookDir = pos.toCartesian();
+    sVec3 dir = pos.toCartesian();
+
+    user->EntityTryLook(dir);
   }
   return 0;
 }
@@ -168,7 +190,6 @@ int MainGameCanvas::guiEventManager(gui_event evt, int mx, int my, set<key_locat
     vec3<double> raydir = rayori - view.cameraEye;
 
     if(raydir.sqrlen() > 0) {
-      cout << "From " << rayori << " towards " << raydir.norm() << endl;
       raydir = raydir.norm() * 5;
       list<iVec3> res = find_voxels(rayori, rayori + raydir);
       for (auto&& it : res) {
@@ -188,7 +209,7 @@ void bindGameScreenLabels() {
   firstFrameTime = lastFrameTime = chrono::duration_cast< chrono::milliseconds >(
     chrono::system_clock::now().time_since_epoch()).count();
 
-  for (int cx = 0; cx < 16; cx++) {
+  /*for (int cx = 0; cx < 16; cx++) {
     for (int cy = 0; cy < 16; cy++) {
 
       DataElement* res = new DataElement();
@@ -202,5 +223,5 @@ void bindGameScreenLabels() {
       
       Connection->SendData(res, PacketChunk);
     }
-  }
+  }*/
 }

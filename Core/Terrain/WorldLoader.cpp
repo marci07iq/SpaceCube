@@ -1,18 +1,11 @@
 #include "WorldLoader.h"
 
+#ifdef M_CLIENT
+#include "../../SpaceCube/UI/Render.h"
+#endif
+
 shared_mutex _fragmentsLock;
 map<world_col_t, Fragment*> _fragments;
-
-Fragment * findFragment(int xf, int yf, int dim) {
-  Fragment* f = NULL;
-  _fragmentsLock.lock_shared();
-  auto it = _fragments.find(make_pair(dim, make_pair(xf, yf)));
-  if(it != _fragments.end()) {
-    f = it->second;
-  }
-  _fragmentsLock.unlock_shared();
-  return f;
-}
 
 void addFragment(Fragment * frag) {
   _fragmentsLock.lock();
@@ -20,7 +13,31 @@ void addFragment(Fragment * frag) {
   _fragmentsLock.unlock();
 }
 
-ChunkCol * findChunkCol(int xc, int yc, int dim) {
+Fragment* findFragment(int fx, int fy, int dim) {
+  Fragment* f = NULL;
+  _fragmentsLock.lock_shared();
+  auto it = _fragments.find(make_pair(dim, make_pair(fx, fy)));
+  if(it != _fragments.end()) {
+    f = it->second;
+  }
+  _fragmentsLock.unlock_shared();
+  return f;
+}
+
+Fragment* findLoadFragment(int fx, int fy, int dim) {
+  Fragment* f = findFragment(fx, fy, dim);
+  if(f == NULL) {
+    f = new Fragment(fx, fy, dim);
+#ifdef M_SERVER
+    f->load();
+#endif
+    addFragment(f);
+    f->link();
+  }
+  return f;
+}
+
+ChunkCol* findChunkCol(int xc, int yc, int dim) {
   Fragment* f = findFragment(
     floorDiv(xc, COLUMN_PER_FRAGMENT),
     floorDiv(yc, COLUMN_PER_FRAGMENT),
@@ -33,6 +50,32 @@ ChunkCol * findChunkCol(int xc, int yc, int dim) {
   modulo(yc, COLUMN_PER_FRAGMENT));
 }
 
+ChunkCol* findLoadChunkCol(int cx, int cy, int dim) {
+  int fx = floorDiv(cx, COLUMN_PER_FRAGMENT);
+  int fy = floorDiv(cy, COLUMN_PER_FRAGMENT);
+  Fragment* f = findLoadFragment(fx, fy, dim);
+  ChunkCol* cc = f->getChunkCol(
+    modulo(cx, COLUMN_PER_FRAGMENT),
+    modulo(cy, COLUMN_PER_FRAGMENT));
+#ifdef M_CLIENT
+  if(cc == NULL) {
+    cc = new ChunkCol(cx, cy, f);
+    f->setChunkCol(modulo(cx, COLUMN_PER_FRAGMENT), modulo(cy, COLUMN_PER_FRAGMENT), cc);
+    cc->link();
+    DataElement* res = new DataElement();
+    DataElement* nd;
+    nd = new DataElement();
+    vGFunc(cx, nd);
+    res->addChild(nd);
+    nd = new DataElement();
+    vGFunc(cy, nd);
+    res->addChild(nd);
+    Connection->SendData(res, PacketChunk);
+  }
+#endif
+  return cc;
+}
+
 Chunk * findChunk(int xc, int yc, int zc, int dim) {
   ChunkCol* cc = findChunkCol(xc, yc, dim);
   if (cc == NULL) {
@@ -41,7 +84,7 @@ Chunk * findChunk(int xc, int yc, int zc, int dim) {
   return cc->getChunk(zc);
 }
 
-Block & getBlock(int xb, int yb, int zb, int dim, bool& success) {
+BlockPos & getBlock(int xb, int yb, int zb, int dim, bool& success) {
   Chunk* c = findChunk(
     floorDiv(xb, BLOCK_PER_CHUNK),
     floorDiv(yb, BLOCK_PER_CHUNK),
@@ -49,10 +92,16 @@ Block & getBlock(int xb, int yb, int zb, int dim, bool& success) {
     dim);
   if(c != NULL) {
     success = true;
-    return c->_blocks
-    [modulo(xb, BLOCK_PER_CHUNK)]
-    [modulo(yb, BLOCK_PER_CHUNK)]
-    [modulo(zb, BLOCK_PER_CHUNK)];
+    return BlockPos{
+      c,
+      modulo(xb, BLOCK_PER_CHUNK),
+      modulo(yb, BLOCK_PER_CHUNK),
+      modulo(zb, BLOCK_PER_CHUNK),
+      &(c->_blocks
+      [modulo(xb, BLOCK_PER_CHUNK)]
+      [modulo(yb, BLOCK_PER_CHUNK)]
+      [modulo(zb, BLOCK_PER_CHUNK)])
+    };
   }
   success = false;
 }
@@ -207,14 +256,12 @@ bool blockNeighbour(BlockPos & block, Directions dir, BlockPos & out) {
   }
   return false;
 }
-
 #ifdef M_CLIENT
 void setChunk(int cx, int cy, int cz, int dim, DataElement * data) {
   int fx = floorDiv(cx, COLUMN_PER_FRAGMENT);
   int fy = floorDiv(cy, COLUMN_PER_FRAGMENT);
   int lccx = modulo(cx, COLUMN_PER_FRAGMENT);
   int lccy = modulo(cy, COLUMN_PER_FRAGMENT);
-
 
   bool frag_new = false;
   bool chunk_col_new = false;
@@ -252,25 +299,14 @@ void setChunk(int cx, int cy, int cz, int dim, DataElement * data) {
 #endif
 
 #ifdef M_SERVER
-ChunkCol* findLoadColumn(int xc, int yc, int dim) {
-  int xf = floorDiv(xc, COLUMN_PER_FRAGMENT);
-  int yf = floorDiv(yc, COLUMN_PER_FRAGMENT);
-  Fragment* f = findFragment(xf, yf, dim);
-  if (f == NULL) {
-    f = new Fragment(xf, yf, dim);
-    addFragment(f);
-    f->load();
-  }
-  return f->getChunkCol(
-    modulo(xc, COLUMN_PER_FRAGMENT),
-    modulo(yc, COLUMN_PER_FRAGMENT));
-}
 
 void initMapgen() {
   Mapgen::noise_weights = {
-    { 4, 1 },
-    { 16, 6 },
-    { 64, 32}
+    { 4, 0.8 },
+    { 16, 3 },
+    { 64, 20},
+    { 256, 70 },
+    { 1024, 160 }
   };
 }
 #endif

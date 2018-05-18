@@ -23,6 +23,10 @@ void Shader::bind() {
   glUseProgram(_pID);
 }
 
+void Shader::unbind() {
+  glUseProgram(0);
+}
+
 Shader::~Shader() {
   cout << "Delete shader program " << _pID << endl;
   glDetachShader(_pID, _v_shaderID);

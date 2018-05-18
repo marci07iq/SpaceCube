@@ -7,6 +7,8 @@ private:
   Chunk* _chunks[CHUNK_PER_COLUMN];
   int _ccx, _ccy;
   Fragment* _frag;
+
+  list<guid_t> _loaders;
 public:
   ChunkCol* _neigh[4] = { NULL, NULL, NULL, NULL };
 

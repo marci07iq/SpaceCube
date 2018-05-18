@@ -25,10 +25,10 @@ void getStoredModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
       res.vtr = it.base.vtr + location;
 
       vec2<float> texCoord = prop.getTex(b[6], it.faceID);
-      res.tbl = (it.base.tbl + texCoord) * vec2<float>{0.0625f, 0.0625f} *TEXTURE_SIZE;
-      res.tbr = (it.base.tbr + texCoord) * vec2<float>{0.0625f, 0.0625f}  *TEXTURE_SIZE;
-      res.ttl = (it.base.ttl + texCoord) * vec2<float>{0.0625f, 0.0625f}  *TEXTURE_SIZE;
-      res.ttr = (it.base.ttr + texCoord) * vec2<float>{0.0625f, 0.0625f}  *TEXTURE_SIZE;
+      res.tbl = (it.base.tbl + texCoord) *TEXTURE_SIZE;
+      res.tbr = (it.base.tbr + texCoord) *TEXTURE_SIZE;
+      res.ttl = (it.base.ttl + texCoord) *TEXTURE_SIZE;
+      res.ttr = (it.base.ttr + texCoord) *TEXTURE_SIZE;
 
       res.recolor = it.base.recolor;
 

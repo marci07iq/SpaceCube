@@ -1,18 +1,71 @@
 #include "WorldLoader.h"
+#include "Entities.h"
 
-void Entity::EntityTryMoveWith(mVec3 & with) {
+/*void Entity::EntityTryMoveWith(mVec3 with) {
   _pos += with;
-  onMove(_pos);
+  if(onMove) {
+    onMove(_pos);
+  }
 }
 
-void Entity::EntityTryMoveTo(mVec3 & to) {
+void Entity::EntityTryMoveTo(mVec3 to) {
   _pos = to;
-  onMove(_pos);
+  if (onMove) {
+    onMove(_pos);
+  }
+}*/
+
+void Entity::setPos(mVec3 pos) {
+#ifdef M_CLIENT
+  int ncx = floor(pos.x / BLOCK_PER_CHUNK);
+  int ncy = floor(pos.y / BLOCK_PER_CHUNK);
+  int ocx = floor(_pos.x / BLOCK_PER_CHUNK);
+  int ocy = floor(_pos.y / BLOCK_PER_CHUNK);
+  /*if (ncx < ocx) {
+    for (int wcy = ncy - CHUNK_LOAD_RADIUS; wcy < ncy + CHUNK_LOAD_RADIUS; wcy++) {
+      findLoadChunkCol(ncx - CHUNK_LOAD_RADIUS, wcy, _dim);
+    }
+  }
+  if (ncy > ocy) {
+    for (int wcx = ncx - CHUNK_LOAD_RADIUS; wcx < ncx + CHUNK_LOAD_RADIUS; wcx++) {
+      findLoadChunkCol(wcx, ncy + CHUNK_LOAD_RADIUS, _dim);
+    }
+  }
+
+  if (ncx > ocx) {
+    for (int wcy = ncy + CHUNK_LOAD_RADIUS; wcy > ncy + CHUNK_LOAD_RADIUS; wcy--) {
+      findLoadChunkCol(ncx + CHUNK_LOAD_RADIUS, wcy, _dim);
+    }
+  }
+  if (ncy < ocy) {
+    for (int wcx = ncx + CHUNK_LOAD_RADIUS; wcx > ncx + CHUNK_LOAD_RADIUS; wcx--) {
+      findLoadChunkCol(wcx, ncy - CHUNK_LOAD_RADIUS, _dim);
+    }
+  }*/
+  if(ncx != ocx || ncy != ocy) {
+    for (int wcx = ncx - CHUNK_LOAD_RADIUS; wcx <= ncx + CHUNK_LOAD_RADIUS; wcx++) {
+      for (int wcy = ncy - CHUNK_LOAD_RADIUS; wcy <= ncy + CHUNK_LOAD_RADIUS; wcy++) {
+        findLoadChunkCol(wcx, wcy, _dim);
+      }
+    }
+  }
+  _pos = pos;
+#endif
 }
 
-void Entity::EntityTryLook(sVec3 & at) {
+void Entity::movPos(mVec3 pos) {
+  setPos(_pos + pos);
+}
+
+void Entity::setVel(mpsVec3 vel) {
+  _velocity = vel;
+}
+
+void Entity::EntityTryLook(sVec3 at) {
   _lookDir = at;
-  onLook(_lookDir);
+  if(onLook) {
+    onLook(_lookDir);
+  }
 }
 
 Entity::Entity(guid_t guid) {
@@ -63,6 +116,16 @@ void Entity::get(DataElement * to) {
   to->addChild(ne);
 }
 
+PhysCube Entity::getPhysCube() {
+  PhysCube ans;
+  ans.bounce = 0;
+  ans.drag = 1;
+  ans.invMass = 1 / _mass;
+  ans.nc = _pos - _size;
+  ans.pc = _pos + _size;
+  return ans;
+}
+
 Player::Player(guid_t guid) : Entity(guid) {
   //_guid = guid;
 }
@@ -74,7 +137,7 @@ void Player::loadFile() {
   } else {
     _lookDir = fVec3(0.3,0.3,-0.9).norm();
     _pos ={0, 0, 50};
-    _speed = 10;
+    _speed = 50;
     saveFile();
   }
   delete me;
@@ -118,7 +181,7 @@ bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkS * thisptr, Net
       vSFunc(cx, Data->_children[0]);
       vSFunc(cz, Data->_children[1]);
 
-      ChunkCol* cc = findLoadColumn(cx, cz, 0);
+      ChunkCol* cc = findLoadChunkCol(cx, cz, 0);
       for (int k = 0; k < CHUNK_PER_COLUMN; k++) {
         if (cc->getChunk(k) != NULL) {
           sendChunk(cc->getChunk(k));
@@ -146,3 +209,5 @@ bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkC * thisptr) {
   return false;
 }
 #endif
+
+set<Entity*> entities;
