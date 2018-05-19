@@ -96,6 +96,39 @@ void Fragment::prepareFile(fstream & reg, int & fileSize) {
   reg.write(res, fileSize);
   delete[fileSize] res;
 }
+vector<pair<int, int>> loadHeader(fstream & reg) {
+  reg.seekg(0);
+  vector<pair<int, int>> res(COLUMN_PER_FRAGMENT * COLUMN_PER_FRAGMENT);
+  for (int i = 0; i < COLUMN_PER_FRAGMENT * COLUMN_PER_FRAGMENT; i++) {
+    reg.read(reinterpret_cast<char *>(&res[i].first), sizeof(res[i].first));
+    reg.read(reinterpret_cast<char *>(&res[i].second), sizeof(res[i].second));
+  }
+  return res;
+}
+int allocatePos(vector<pair<int, int>>& header, int len) {
+  map<int, int> segs;
+  segs[0] = 1;
+  segs[COLUMN_PER_FRAGMENT * COLUMN_PER_FRAGMENT * 8] = -1;
+  for (int i = 0; i < COLUMN_PER_FRAGMENT * COLUMN_PER_FRAGMENT; i++) {
+    segs[header[i].first]++;
+    segs[header[i].first + header[i].second]--;
+  }
+
+  int lastid = 0;
+  int in = 0;
+  for (auto&& it : segs) {
+    if(in == 0) {
+      if (it.first - lastid > len) {
+        return lastid;
+      }
+    }
+    if (in != 0) {
+      lastid = it.first;
+    }
+    in += it.second;
+  }
+  return lastid;
+}
 
 void Fragment::save() {
   int rx = floorDiv(_fx, FRAGMENT_PER_REGION);
@@ -107,19 +140,21 @@ void Fragment::save() {
   cout << "Fragment " << lfx << " " << lfy << endl;
   string fname = "dim_" + to_string(_dim) + "_" + to_string(rx) + "_" + to_string(ry) + ".map";
   fstream reg;
+
+  //Read file size
   reg.open(fname, ios::in | ios::out | ios::app);
   reg.seekg(0, ios::end);
   int fileSize = reg.tellg();
   reg.close();
 
   reg.open(fname, ios::in | ios::out | ios::binary);
-
+  
+  //Create empty header if needed
   if (fileSize <= 0) {
     prepareFile(reg, fileSize);
   }
 
-  reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
-
+  //Encode data
   DataPair* in = new DataPair(6*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK);
 
   for (int ci = 0; ci < COLUMN_PER_FRAGMENT; ci++) {
@@ -138,34 +173,33 @@ void Fragment::save() {
     }
   }
 
+  //Compress data
   DataPair** out = new DataPair*;
   compress(in, out);
   delete in;
 
-  int pos, len;
-  reg.read(reinterpret_cast<char *>(&pos), sizeof(pos));
-  reg.read(reinterpret_cast<char *>(&len), sizeof(len));
-
-  if (pos != 0) {
-    /*if (len == 6*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK) {
-      reg.seekg(pos);
-      reg.write(reinterpret_cast<char*>((*out)->_data)), (*out)->_len));
-    } else {
-      //Corrupt file;
-      throw 1;
-    }*/
-  } else {
-    pos = fileSize;
-    len = (*out)->_len;
-    reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
-    reg.write(reinterpret_cast<char *>(&pos), sizeof(pos));
-    reg.write(reinterpret_cast<char *>(&len), sizeof(len));
-    reg.seekg(pos);
-    reg.write(reinterpret_cast<char*>((*out)->_data), len);
+  //0 out this fragment data
+  reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
+  for(int i = 0; i < 8; i++) {
+    reg.write("", 1);
   }
+  
+  //Allocate new position
+  vector<pair<int, int>> header = loadHeader(reg);
+  int len = (*out)->_len;
+  int pos = allocatePos(header, len);
+  
+  //Set new position
+  reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
+  reg.write(reinterpret_cast<char *>(&pos), sizeof(pos));
+  reg.write(reinterpret_cast<char *>(&len), sizeof(len));
+  
+  //Write data
+  reg.seekg(pos);
+  reg.write(reinterpret_cast<char*>((*out)->_data), len);
 
+  //Cleanup
   delete out;
-
   reg.close();
 }
 
@@ -176,23 +210,29 @@ void Fragment::load() {
   int lfy = modulo(_fy, FRAGMENT_PER_REGION);
   string fname = "dim_" + to_string(_dim) + "_" + to_string(rx) + "_" + to_string(ry) + ".map";
   ifstream reg(fname, ios::in | ios::binary);
+
+  //If file exists
   if (reg.good()) {
-    reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
+    //Load header data
     int pos, len;
+    reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
     reg.read(reinterpret_cast<char *>(&pos), sizeof(pos));
     reg.read(reinterpret_cast<char *>(&len), sizeof(len));
 
+    //If exists, load
     if (pos != 0) {
-      reg.seekg(pos);
 
+      //Read compressed
       DataPair* in = new DataPair(len);
+      reg.seekg(pos);
       reg.read(reinterpret_cast<char*>(in->_data), in->_len);
 
+      //Decode
       DataPair** out = new DataPair*;
       decompress(in, out);
-
       delete in;
 
+      //Write blocks
       for (int ci = 0; ci < COLUMN_PER_FRAGMENT; ci++) {
         for (int cj = 0; cj < COLUMN_PER_FRAGMENT; cj++) {
           ChunkCol* ncc = new ChunkCol(_fx * CHUNK_PER_COLUMN + ci, _fy * CHUNK_PER_COLUMN + cj, this);
@@ -213,11 +253,14 @@ void Fragment::load() {
         }
       }
 
+      //Clean up
       delete out;
       link();
       return;
     }
   }
+
+  //Clean up
   reg.close();
 
   Mapgen gen;
