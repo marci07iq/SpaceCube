@@ -170,6 +170,7 @@
     <ClCompile Include="..\Core\Terrain\Region.cpp" />
     <ClCompile Include="..\Core\Terrain\WorldLoader.cpp" />
     <ClCompile Include="..\NGin\Maths\BinTree.cpp" />
+    <ClCompile Include="..\NGin\Network\Compress.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Shaders\Shader.cpp" />
     <ClCompile Include="UI\GameCanvas.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="..\Core\Terrain\Region.h" />
     <ClInclude Include="..\Core\Terrain\WorldLoader.h" />
     <ClInclude Include="..\NGin\Maths\BinTree.h" />
+    <ClInclude Include="..\NGin\Network\Compress.h" />
     <ClInclude Include="Shaders\Shader.h" />
     <ClInclude Include="UI\GameCanvas.h" />
     <ClInclude Include="UI\Render.h" />

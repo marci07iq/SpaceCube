@@ -198,6 +198,9 @@
     <ClCompile Include="..\Core\Physics\Physics.cpp">
       <Filter>Core\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\NGin\Network\Compress.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NGin\GUI\Button.h">
@@ -418,6 +421,9 @@
     </ClInclude>
     <ClInclude Include="..\Core\Physics\Physics.h">
       <Filter>Core\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NGin\Network\Compress.h">
+      <Filter>NGin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

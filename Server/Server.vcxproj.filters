@@ -90,9 +90,6 @@
     <ClCompile Include="..\Core\Terrain\WorldLoader.cpp">
       <Filter>Core\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\NGin\Network\Huffman.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
     <ClCompile Include="..\Core\Mapgen\Mapgen.cpp">
       <Filter>Core\Mapgen</Filter>
     </ClCompile>
@@ -103,6 +100,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\Core\Definitions.cpp" />
+    <ClCompile Include="..\NGin\Network\Compress.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NGin\Network\Network.h">
@@ -225,14 +225,14 @@
     <ClInclude Include="..\Core\Terrain\WorldLoader.h">
       <Filter>Core\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NGin\Network\Huffman.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
     <ClInclude Include="..\Core\Mapgen\Mapgen.h">
       <Filter>Core\Mapgen</Filter>
     </ClInclude>
     <ClInclude Include="..\Core\Mapgen\Perlin.h">
       <Filter>Core\Mapgen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NGin\Network\Compress.h">
+      <Filter>NGin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

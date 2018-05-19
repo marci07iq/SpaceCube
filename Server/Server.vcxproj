@@ -131,7 +131,6 @@
     <ClCompile Include="..\..\NGin\Maths\Keyframe.cpp" />
     <ClCompile Include="..\..\NGin\Maths\Point.cpp" />
     <ClCompile Include="..\..\NGin\Maths\Polynomial.cpp" />
-    <ClCompile Include="..\..\NGin\Network\Huffman.cpp" />
     <ClCompile Include="..\..\NGin\Network\Network.cpp" />
     <ClCompile Include="..\..\NGin\Network\NetworkData.cpp" />
     <ClCompile Include="..\..\NGin\Scripts\Scripts.cpp" />
@@ -146,6 +145,7 @@
     <ClCompile Include="..\Core\Terrain\Fragment.cpp" />
     <ClCompile Include="..\Core\Terrain\Region.cpp" />
     <ClCompile Include="..\Core\Terrain\WorldLoader.cpp" />
+    <ClCompile Include="..\NGin\Network\Compress.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -173,7 +173,6 @@
     <ClInclude Include="..\..\NGin\Maths\Point.h" />
     <ClInclude Include="..\..\NGin\Maths\Polynomial.h" />
     <ClInclude Include="..\..\NGin\Maths\Types.h" />
-    <ClInclude Include="..\..\NGin\Network\Huffman.h" />
     <ClInclude Include="..\..\NGin\Network\Network.h" />
     <ClInclude Include="..\..\NGin\Network\NetworkData.h" />
     <ClInclude Include="..\..\NGin\NGin\NGin.h" />
@@ -192,6 +191,7 @@
     <ClInclude Include="..\Core\Terrain\Fragment.h" />
     <ClInclude Include="..\Core\Terrain\Region.h" />
     <ClInclude Include="..\Core\Terrain\WorldLoader.h" />
+    <ClInclude Include="..\NGin\Network\Compress.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.inl" />

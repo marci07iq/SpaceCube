@@ -120,7 +120,7 @@ void Fragment::save() {
 
   reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
 
-  unsigned char* rawdata = new unsigned char[6*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK];
+  DataPair* in = new DataPair(6*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK);
 
   for (int ci = 0; ci < COLUMN_PER_FRAGMENT; ci++) {
     for (int cj = 0; cj < COLUMN_PER_FRAGMENT; cj++) {
@@ -130,7 +130,7 @@ void Fragment::save() {
             for (int bk = 0; bk < BLOCK_PER_CHUNK; bk++) {
               int rawid = bk + BLOCK_PER_CHUNK * (bj + BLOCK_PER_CHUNK * (bi + BLOCK_PER_CHUNK * (ck + CHUNK_PER_COLUMN * (cj + COLUMN_PER_FRAGMENT * (ci)))));
               rawid *= 6;
-              writeBlock(rawdata, rawid, _cols[ci][cj]->getChunk(ck)->_blocks[bi][bj][bk]);
+              writeBlock(in->_data, rawid, _cols[ci][cj]->getChunk(ck)->_blocks[bi][bj][bk]);
             }
           }
         }
@@ -138,29 +138,34 @@ void Fragment::save() {
     }
   }
 
+  DataPair** out = new DataPair*;
+  compress(in, out);
+  delete in;
+
   int pos, len;
   reg.read(reinterpret_cast<char *>(&pos), sizeof(pos));
   reg.read(reinterpret_cast<char *>(&len), sizeof(len));
 
   if (pos != 0) {
-    if (len == 6*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK) {
+    /*if (len == 6*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK) {
       reg.seekg(pos);
-      reg.write(reinterpret_cast<char*>(rawdata), len);
+      reg.write(reinterpret_cast<char*>((*out)->_data)), (*out)->_len));
     } else {
       //Corrupt file;
       throw 1;
-    }
+    }*/
   } else {
     pos = fileSize;
-    len = 6*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK;
+    len = (*out)->_len;
     reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
     reg.write(reinterpret_cast<char *>(&pos), sizeof(pos));
     reg.write(reinterpret_cast<char *>(&len), sizeof(len));
     reg.seekg(pos);
-    reg.write(reinterpret_cast<char*>(rawdata), len);
+    reg.write(reinterpret_cast<char*>((*out)->_data), len);
   }
 
-  delete[6*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK] rawdata;
+  delete out;
+
   reg.close();
 }
 
@@ -180,12 +185,13 @@ void Fragment::load() {
     if (pos != 0) {
       reg.seekg(pos);
 
-      char* bytes = new char[len];
+      DataPair* in = new DataPair(len);
+      reg.read(reinterpret_cast<char*>(in->_data), in->_len);
 
-      reg.read(bytes, len);
+      DataPair** out = new DataPair*;
+      decompress(in, out);
 
-      unsigned char* rawdata = reinterpret_cast<unsigned char*>(bytes);
-      int rawlen = len;
+      delete in;
 
       for (int ci = 0; ci < COLUMN_PER_FRAGMENT; ci++) {
         for (int cj = 0; cj < COLUMN_PER_FRAGMENT; cj++) {
@@ -197,7 +203,7 @@ void Fragment::load() {
                 for (int bk = 0; bk < BLOCK_PER_CHUNK; bk++) {
                   int rawid = bk + BLOCK_PER_CHUNK * (bj + BLOCK_PER_CHUNK * (bi + BLOCK_PER_CHUNK * (ck + CHUNK_PER_COLUMN * (cj + COLUMN_PER_FRAGMENT * (ci)))));
                   rawid *= 6;
-                  readBlock(rawdata, rawid, nc->_blocks[bi][bj][bk]);
+                  readBlock((*out)->_data, rawid, nc->_blocks[bi][bj][bk]);
                 }
               }
             }
@@ -207,7 +213,7 @@ void Fragment::load() {
         }
       }
 
-      delete[len] bytes;
+      delete out;
       link();
       return;
     }
