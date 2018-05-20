@@ -1,5 +1,19 @@
 #include "WorldLoader.h"
 
+ChunkCol::~ChunkCol() {
+  for (int i = 0; i < CHUNK_PER_COLUMN; i++) {
+    if (_chunks[i] != NULL) {
+      delete _chunks[i];
+    }
+  }
+  for (int i = 0; i < 4; i++) {
+    if (_neigh[i] != NULL) {
+      _neigh[i]->bye(static_cast<Directions>(i ^ 1), this);
+    }
+  }
+  _frag->setChunkCol(modulo(_ccx, COLUMN_PER_FRAGMENT), modulo(_ccy, COLUMN_PER_FRAGMENT), NULL);
+}
+
 void ChunkCol::get(DataElement* to) {
   for (int c = 0; c < CHUNK_PER_COLUMN; c++) {
     DataElement* nce = new DataElement();

@@ -5,11 +5,11 @@
 class ChunkCol {
 private:
   Chunk* _chunks[CHUNK_PER_COLUMN];
-  int _ccx, _ccy;
-  Fragment* _frag;
-
   list<guid_t> _loaders;
 public:
+  int _ccx, _ccy;
+  Fragment* _frag;
+ 
   ChunkCol* _neigh[4] = { NULL, NULL, NULL, NULL };
 
   ChunkCol(int ccx, int ccy, Fragment* frag) {
@@ -23,6 +23,8 @@ public:
     }
     _frag = frag;
   }
+
+  ~ChunkCol();
 
   void get(DataElement* to);
 

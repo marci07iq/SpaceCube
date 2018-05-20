@@ -309,4 +309,25 @@ void initMapgen() {
     { 1024, 160 }
   };
 }
+
+/*struct chunkRequest {
+  guid_t _from;
+  int _ccx, _ccy;
+  int _dim;
+  enum RequestType {
+    Send,     //Load if needed, then send.
+    TryDelete //Save and delete if unused.
+  };
+  RequestType _type;
+};
+list<chunkRequest> _requests;
+mutex _requestsLock;
+void registerRequest(int ccx, int ccy, int dim, guid_t from, chunkRequest::RequestType type) {
+  _requestsLock.lock();
+  _requests.push_back({from, ccx, ccy, dim, type});
+  _requestsLock.unlock();
+}
+void requestLoop() {
+  for(auto&& it : req)
+}*/
 #endif

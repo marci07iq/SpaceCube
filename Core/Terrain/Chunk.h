@@ -22,6 +22,7 @@ public:
   ChunkCol* _col;
   ChunkState _state;
   Chunk(int cx, int cy, int cz, ChunkCol* col);
+  ~Chunk();
 
   void set(DataElement* from);
   void get(DataElement* to);

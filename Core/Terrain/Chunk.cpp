@@ -11,6 +11,17 @@ Chunk::Chunk(int cx, int cy, int cz, ChunkCol* col) {
   _col = col;
 }
 
+Chunk::~Chunk() {
+  for (int i = 0; i < 6; i++) {
+    if (_neigh[i] != NULL) {
+      _neigh[i]->bye(static_cast<Directions>(i ^ 1), this);
+    }
+  }
+#ifdef M_CLIENT
+  unBuildChunk();
+#endif
+}
+
 void Chunk::set(DataElement* from) {
   for (int i = 0; i < BLOCK_PER_CHUNK; i++) {
     for (int j = 0; j < BLOCK_PER_CHUNK; j++) {

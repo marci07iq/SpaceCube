@@ -22,8 +22,8 @@ extern string mapname;
 const int MAP_X = 1 << 25; //2^24
 const int MAP_Y = 1 << 24; //2^25
 
-const int CHUNK_LOAD_RADIUS = 8;
-const int CHUNK_UNLOAD_RADIUS = 12;
+const int CHUNK_LOAD_RADIUS = 6;
+const int CHUNK_UNLOAD_RADIUS = 10;
 
 enum PacketIdsL {
   PacketChunk = 2,

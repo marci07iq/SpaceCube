@@ -27,6 +27,8 @@ void setChunk(int cx, int cy, int cz, int dim, DataElement * data);
 #endif
 
 #ifdef M_SERVER
-
 void initMapgen();
+
+/*void registerRequest(int ccx, int ccy, int dim, guid_t sendTo);
+void requestLoop();*/
 #endif

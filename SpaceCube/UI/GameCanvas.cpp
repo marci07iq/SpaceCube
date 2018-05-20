@@ -102,16 +102,20 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
         for (int j = 0; j < COLUMN_PER_FRAGMENT; j++) {
           ChunkCol* cc = it.second->getChunkCol(i,j);
           if(cc != NULL) {
-            for (int k = 0; k < CHUNK_PER_COLUMN; k++) {
-              Chunk* c = cc->getChunk(k);
+            if (abs(cc->_ccx - floor(user->getCenter().x / BLOCK_PER_CHUNK)) > CHUNK_UNLOAD_RADIUS || abs(cc->_ccy - floor(user->getCenter().y / BLOCK_PER_CHUNK)) > CHUNK_UNLOAD_RADIUS) {
+              delete cc;
+            } else {
+              for (int k = 0; k < CHUNK_PER_COLUMN; k++) {
+                Chunk* c = cc->getChunk(k);
 
-              if(c != NULL) {
-                if (c->_state == Chunk_ToRender) {
-                  c->buildChunk();
-                }
-                if(c->_state == Chunk_Rendered && c->_quads) {
-                  glBindVertexArray(c->_chunk_vao);
-                  glDrawArrays(GL_TRIANGLES, 0, c->_quads);
+                if(c != NULL) {
+                  if (c->_state == Chunk_ToRender) {
+                    c->buildChunk();
+                  }
+                  if(c->_state == Chunk_Rendered && c->_quads) {
+                    glBindVertexArray(c->_chunk_vao);
+                    glDrawArrays(GL_TRIANGLES, 0, c->_quads);
+                  }
                 }
               }
             }
