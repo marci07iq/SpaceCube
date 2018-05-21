@@ -12,6 +12,7 @@ void glut_timer_CB(int a);
 extern Player* user;
 
 extern Shader chunkShader;
+extern Shader entityShader;
 
 extern GLuint textures;
 extern GLuint texSampler;

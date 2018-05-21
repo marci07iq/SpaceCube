@@ -260,6 +260,8 @@
     <None Include="..\..\NGin\rapidxml\manual.html" />
     <None Include="Shaders\Chunk.frag" />
     <None Include="Shaders\Chunk.vert" />
+    <None Include="Shaders\Entity.frag" />
+    <None Include="Shaders\Entity.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

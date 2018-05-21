@@ -445,5 +445,11 @@
     <None Include="Shaders\Chunk.vert">
       <Filter>Main\Render\Shaders</Filter>
     </None>
+    <None Include="Shaders\Entity.frag">
+      <Filter>Main\Render\Shaders</Filter>
+    </None>
+    <None Include="Shaders\Entity.vert">
+      <Filter>Main\Render\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

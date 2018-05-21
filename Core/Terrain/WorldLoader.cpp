@@ -84,7 +84,7 @@ Chunk * findChunk(int xc, int yc, int zc, int dim) {
   return cc->getChunk(zc);
 }
 
-BlockPos & getBlock(int xb, int yb, int zb, int dim, bool& success) {
+BlockPos getBlock(int xb, int yb, int zb, int dim, bool& success) {
   Chunk* c = findChunk(
     floorDiv(xb, BLOCK_PER_CHUNK),
     floorDiv(yb, BLOCK_PER_CHUNK),

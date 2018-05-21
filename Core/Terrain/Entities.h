@@ -2,9 +2,17 @@
 
 #include "../Blocks/Block_Types.h"
 
-typedef void(*onEntityMove)(mVec3& to);
+typedef void(*onEntityMove)(mVec3& to, int& dim);
 
 typedef void(*onEntityLook)(sVec3& at);
+
+typedef void(*onEntityLook)(sVec3& at);
+
+
+struct EntityProperties {
+  onEntityMove onMove;
+  onEntityLook onLook;
+};
 
 class Entity {
 protected:
@@ -20,9 +28,11 @@ protected:
   vel_type_mpers _speed;
   float _turnDir;
   int _dim;
-
-  onEntityMove onMove;
-  onEntityLook onLook;
+#ifdef M_CLIENT
+  GLuint entity_pos;
+  GLuint entity_tex;
+  GLuint entity_vao;
+#endif
 public:
   Entity(guid_t guid);
 

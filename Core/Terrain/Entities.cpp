@@ -63,9 +63,9 @@ void Entity::setVel(mpsVec3 vel) {
 
 void Entity::EntityTryLook(sVec3 at) {
   _lookDir = at;
-  if(onLook) {
+  /*if(onLook) {
     onLook(_lookDir);
-  }
+  }*/
 }
 
 Entity::Entity(guid_t guid) {

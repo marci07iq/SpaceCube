@@ -13,6 +13,8 @@ void glut_timer_CB(int a) {
 Player* user;
 
 Shader chunkShader;
+Shader entityShader;
+
 
 GLuint textures;
 GLuint texSampler;
@@ -181,23 +183,47 @@ int MainGameCanvas::mouseMoveManager(int x, int y, int ox, int oy, set<key_locat
 
 int MainGameCanvas::guiEventManager(gui_event evt, int mx, int my, set<key_location>& down, Canvas* me) {
   bool in = me->isIn(mx, my);
-  if(evt._type == evt.evt_down && evt._key._keycode == 0 && evt._key._type == evt._key.type_mouse) {
-    GLdouble pos3D_ax = 0, pos3D_ay = 0, pos3D_az = 0;
+  GLdouble pos3D_ax = 0, pos3D_ay = 0, pos3D_az = 0;
 
-    // get 3D coordinates based on window coordinates
+  // get 3D coordinates based on window coordinates
 
-    gluUnProject((view.viewport[0] + view.viewport[2])/2, (view.viewport[1] + view.viewport[3]) / 2, 0,
-      view.model_view, view.projection, view.viewport,
-      &pos3D_ax, &pos3D_ay, &pos3D_az);
+  gluUnProject((view.viewport[0] + view.viewport[2])/2, (view.viewport[1] + view.viewport[3]) / 2, 0,
+    view.model_view, view.projection, view.viewport,
+    &pos3D_ax, &pos3D_ay, &pos3D_az);
 
-    vec3<double> rayori = { pos3D_ax, pos3D_ay, pos3D_az };
-    vec3<double> raydir = rayori - view.cameraEye;
+  vec3<double> rayori = { pos3D_ax, pos3D_ay, pos3D_az };
+  vec3<double> raydir = rayori - view.cameraEye;
 
-    if(raydir.sqrlen() > 0) {
-      raydir = raydir.norm() * 5;
-      list<iVec3> res = find_voxels(rayori, rayori + raydir);
-      for (auto&& it : res) {
-        setBlock(it, 0, {0,0});
+  if(raydir.sqrlen() > 0) {
+    raydir = raydir.norm() * 5;
+    list<iVec3> res = find_voxels(rayori, rayori + raydir);
+    if (evt._type == evt.evt_down && evt._key._keycode == 0 && evt._key._type == evt._key.type_mouse) {
+      auto it = res.begin();
+      bool go = true;
+      while(it != res.end() && go) {
+        bool success;
+        BlockPos pos;
+        pos = getBlock(it->x, it->y, it->z, 0, success);
+        if (success && pos.b->_ID != 0) {
+          go = false;
+          setBlock(*it, 0, {0,0});
+        }
+        ++it;
+      }
+    }
+    if (evt._type == evt.evt_down && evt._key._keycode == 2 && evt._key._type == evt._key.type_mouse) {
+      auto it = res.begin();
+      bool go = true;
+      iVec3 placeTo = *it;
+      while ((++it) != res.end() && go) {
+        bool success;
+        BlockPos pos;
+        pos = getBlock(it->x, it->y, it->z, 0, success);
+        if (success && pos.b->_ID != 0) {
+          go = false;
+          setBlock(placeTo, 0, Block(1,0));
+        }
+        placeTo = *it;
       }
     }
   }
@@ -212,20 +238,4 @@ void bindGameScreenLabels() {
 
   firstFrameTime = lastFrameTime = chrono::duration_cast< chrono::milliseconds >(
     chrono::system_clock::now().time_since_epoch()).count();
-
-  /*for (int cx = 0; cx < 16; cx++) {
-    for (int cy = 0; cy < 16; cy++) {
-
-      DataElement* res = new DataElement();
-      DataElement* nd;
-      nd = new DataElement();
-      vGFunc(cx, nd);
-      res->addChild(nd);
-      nd = new DataElement();
-      vGFunc(cy, nd);
-      res->addChild(nd);
-      
-      Connection->SendData(res, PacketChunk);
-    }
-  }*/
 }

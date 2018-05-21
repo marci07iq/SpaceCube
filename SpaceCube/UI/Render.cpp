@@ -199,6 +199,7 @@ void InitGraphics() {
   Graphics::addElement(objectMainWindow, objectGameSubWindow);
 
   chunkShader.create("Shaders/Chunk");
+  entityShader.create("Shaders/Entity");
 
   int tw, th;
   textures = png_texture_load("Textures/All.png", tw, th);
