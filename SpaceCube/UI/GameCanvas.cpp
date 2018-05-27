@@ -66,6 +66,10 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   glClear(GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
 
+  // Enable blending
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   chunkShader.bind();
   
   float cameraM[16];
@@ -73,6 +77,7 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   Transpose camview;
   camview.createLook(user->getHead(), user->getLook());
   camview.project(PI/2, (bx-ax)*1.0f/(by-ay), 256, 0.01);
+  camview.transpose();
   camview.read(view.projection);
   camview.read(cameraM);
 
@@ -96,6 +101,7 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   //glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textures);
   glUniform1i(glGetUniformLocation(chunkShader._pID, "myTexture"), 0); // set it manually
+
 
 
   for (auto&& it : _fragments) {

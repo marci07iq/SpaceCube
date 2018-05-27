@@ -1,14 +1,6 @@
 #pragma once
 
 #include "../Definitions.h"
-#define EIGEN_MPL2_ONLY //Only MPL2 or better files included
-#include "../../NGin/Maths/Eigen/Eigen"
-
-template <typename T, int R>
-using ColVector = Eigen::Matrix<T, R, 1>;
-
-template <typename T, int C>
-using RowVector = Eigen::Matrix<T, 1, C>;
 
 /* CRC-32C (iSCSI) polynomial in reversed bit order. */
 #define POLY 0x82f63b78
@@ -18,12 +10,14 @@ using RowVector = Eigen::Matrix<T, 1, C>;
 
 uint32_t crc32c(uint32_t crc, const unsigned char *buf, size_t len);
 
-union quad_int {
-  uint8_t b[16];
-  int i[4];
+union hex_int {
+  uint8_t b[24];
+  int i[6];
 };
 
-double locationRandom(int seed, int x, int y);
+float locationRandom(int seed, int type, int dim, int x, int y, int z);
+
+float locationRandomF(int seed, int type, int dim, float x, float y, float z);
 
 class Perlin2D {
 public:

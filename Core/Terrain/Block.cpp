@@ -12,6 +12,12 @@ Block::Block(block_id_t ID, meta_id_t meta) :
   _meta(meta) {
 }
 
+vector<onBlockUpdate> blockUpdates;
+vector<onBlockTick> blockTicks;
+vector<onBlockLook> blockLooks;
+vector<onBlockInteract> blockInteracts;
+vector<onBlockBreak> blockBreaks;
+
 vector<BlockProperies> blockProperties;
 
 void writeBlock(unsigned char * to, int id, Block & b) {
@@ -31,6 +37,7 @@ void readBlock(unsigned char * from, int id, Block & b) {
 #ifdef M_CLIENT
 map<string, BlockModel> models;
 vector<BlockModel> blockModels;
+
 
 void loadModel(string folder, string name) {
   ifstream in(folder + name + ".modl", ios::in);
@@ -78,17 +85,20 @@ void loadBlocks() {
   blockProperties[2].getNeeds = getSolidNeeds;
   blockProperties[3].getNeeds = getSolidNeeds;
   blockProperties[4].getNeeds = getEmptyNeeds;
+  blockProperties[5].getNeeds = getEmptyNeeds;
   
   blockProperties[0].getModel = getStoredModel;
   blockProperties[1].getModel = getStoredModel;
   blockProperties[2].getModel = getStoredModel;
   blockProperties[3].getModel = getStoredModel;
   blockProperties[4].getModel = getConnectedModel;
+  blockProperties[5].getModel = getStoredModel;
 
   blockProperties[0].getTex = getStoredTex;
   blockProperties[1].getTex = getStoredTex;
   blockProperties[2].getTex = getStoredTex;
   blockProperties[3].getTex = getStoredTex;
   blockProperties[4].getTex = getStoredTex;
+  blockProperties[5].getTex = getStoredTex;
 }
 #endif

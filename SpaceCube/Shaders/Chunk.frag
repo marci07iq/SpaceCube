@@ -3,8 +3,11 @@
 in vec4 colour;
 in vec2 texture_c;
 uniform sampler2D myTexture;
-out vec4 frag_colour;
 
 void main() {
-  frag_colour = (1-colour.a) * texture(myTexture, texture_c) + colour.a * vec4(colour.rgb,1.0);
+  vec4 texCol = texture(myTexture, texture_c);
+  gl_FragColor = texCol.a * vec4(texCol.rgb, 1.0) + (1-texCol.a) * colour;
+  if (gl_FragColor.a < 0.01) {
+	discard; // yes: discard this fragment
+  }
 }

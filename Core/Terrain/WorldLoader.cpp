@@ -302,10 +302,10 @@ void setChunk(int cx, int cy, int cz, int dim, DataElement * data) {
 
 void initMapgen() {
   Mapgen::noise_weights = {
-    { 4, 0.8 },
-    { 16, 3 },
+    { 4, 1 },
+    { 16, 4 },
     { 64, 20},
-    { 256, 70 },
+    { 256, 60 },
     { 1024, 160 }
   };
 }

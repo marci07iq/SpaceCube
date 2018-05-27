@@ -243,12 +243,12 @@ void Chunk::buildChunk() {
       col[24 * i + 4 * j + 3] = it.recolor.a;
     }
 
-    mov[6 * i + 0] = 0;
-    mov[6 * i + 1] = 0;
-    mov[6 * i + 2] = 0;
-    mov[6 * i + 3] = 0;
-    mov[6 * i + 4] = 0;
-    mov[6 * i + 5] = 0;
+    mov[6 * i + 0] = it.rbl;
+    mov[6 * i + 1] = it.rtl;
+    mov[6 * i + 2] = it.rbr;
+    mov[6 * i + 3] = it.rtl;
+    mov[6 * i + 4] = it.rtr;
+    mov[6 * i + 5] = it.rbr;
 
     ++i;
   }

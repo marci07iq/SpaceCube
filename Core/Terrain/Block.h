@@ -35,7 +35,7 @@ typedef void(*onBlockTick)(BlockPos&);
 typedef void(*onBlockInteract)(BlockPos&, Entity*, int, void*);
 typedef void(*onBlockLook)(BlockPos&, Entity*, int, void*);
 typedef void(*onBlockBreak)(BlockPos&, Entity*, int, void*);
-typedef void(*getBlockPhysics)(BlockPos[7], list<PhysCube>& l);
+typedef void(*getBlockPhysics)(BlockPos[7], list<PhysCube>&);
 #ifdef M_CLIENT
 typedef void(*getBlockModel)(BlockPos[7], BlockNeeds, list<QuadFace>&);
 typedef BlockNeeds(*getBlockNeeds)(Block&);

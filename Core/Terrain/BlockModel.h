@@ -26,6 +26,7 @@ struct QuadFace { //Data to render
   vec2<float> tbl, ttl, ttr, tbr; //Texture coordinates
   //float mbl, mtl, mtr, mbr; //Ripple
   floatCol recolor;
+  float rbl, rtl, rtr, rbr;
 #endif
 };
 
@@ -47,3 +48,11 @@ struct BlockModel {
 };
 
 typedef uint8_t BlockNeeds;
+
+inline BlockNeeds rotateCW(BlockNeeds what) {
+  return (what & 48) | ((what & 1) << 3) | ((what & 14) >> 1);
+}
+
+inline BlockNeeds rotateCCW(BlockNeeds what) {
+  return (what & 48) | ((what & 8) >> 3) | ((what & 7) << 1);
+}

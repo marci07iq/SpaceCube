@@ -19,13 +19,51 @@ uint32_t crc32c(uint32_t crc, const unsigned char * buf, size_t len) {
   return ~crc;
 }
 
-double locationRandom(int seed, int scale, int x, int y) {
-  quad_int comb;
+float linInterPol(float zero, float one, float at) {
+  at = modulo(at, 1);
+  return one * at + zero * (1-at);
+}
+
+float locationRandom(int seed, int type, int dim, int x, int y, int z) {
+  hex_int comb;
   comb.i[0] = seed;
-  comb.i[1] = scale;
-  comb.i[2] = bitShuffle(x);
-  comb.i[3] = bitShuffle(y);
-  return bitShuffle(crc32c(0, comb.b, 16)) / 4294967296.0;
+  comb.i[1] = type;
+  comb.i[2] = dim;
+  comb.i[3] = x;
+  comb.i[4] = y;
+  comb.i[5] = z;
+  return bitShuffle(crc32c(0, comb.b, 24)) / 4294967296.0;
+}
+
+float locationRandomF(int seed, int type, int dim, float x, float y, float z) {
+  return linInterPol(
+    linInterPol(
+      linInterPol(
+        locationRandom(seed, type, dim, floor(x), floor(y), floor(z)),
+        locationRandom(seed, type, dim, floor(x) + 1, floor(y), floor(z)),
+        x
+      ),
+      linInterPol(
+        locationRandom(seed, type, dim, floor(x), floor(y) + 1, floor(z)),
+        locationRandom(seed, type, dim, floor(x) + 1, floor(y) + 1, floor(z)),
+        x
+      ),
+      y
+    ),
+    linInterPol(
+      linInterPol(
+        locationRandom(seed, type, dim, floor(x), floor(y), floor(z) + 1),
+        locationRandom(seed, type, dim, floor(x) + 1, floor(y), floor(z) + 1),
+        x
+      ),
+      linInterPol(
+        locationRandom(seed, type, dim, floor(x), floor(y) + 1, floor(z) + 1),
+        locationRandom(seed, type, dim, floor(x) + 1, floor(y) + 1, floor(z) + 1),
+      x
+      ),
+    y
+    ),
+  z);
 }
 
 Perlin2D::Perlin2D(int xl, int yl, int xo, int yo) {
@@ -39,10 +77,8 @@ Perlin2D::Perlin2D(int xl, int yl, int xo, int yo) {
 void Perlin2D::setSeed(int gridscale, int seed) {
   for (int i = 0; i <= _xl; i++) {
     for (int j = 0; j <= _yl; j++) {
-      _vals[i][j] = fVec2(
-        2 * locationRandom(gridscale, seed, modulo(_xo + i, MAP_X / gridscale), modulo(_yo + j, MAP_Y / gridscale)) - 1,
-        2 * locationRandom(gridscale, seed ^ 0xedb88320, modulo(_xo + i, MAP_X / gridscale), modulo(_yo + j, MAP_Y / gridscale)) - 1
-      );
+      float rval = locationRandom(seed, 0, 0, modulo(_xo + i, MAP_X / gridscale), modulo(_yo + j, MAP_Y / gridscale), 0)*TWO_PI;
+      _vals[i][j] = fVec2(sin(rval), cos(rval));
     }
   }
 }

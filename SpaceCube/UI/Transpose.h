@@ -3,37 +3,29 @@
 #include "../../Core/Terrain/WorldLoader.h"
 
 class Transpose {
-  Eigen::Matrix4f matrix;
+  Matrix4f matrix;
 public:
   void setIdentity() {
-    matrix = Eigen::Matrix4f::Identity();
+    matrix.setIdentity();
   }
   void scale(fVec3 scale) {
-    Eigen::Matrix4f with;
-    with <<
-      scale.x, 0, 0, 0,
-    0, scale.y, 0, 0,
-    0, 0, scale.z, 0,
-    0, 0, 0, 1;
+    Matrix4f with;
+    with.at(0, 0) = scale.x;
+    with.at(1, 1) = scale.y;
+    with.at(2, 2) = scale.z;
+    with.at(3, 3) = 1;
     matrix = with*matrix;
   }
   void transform(fVec3 transform) {
-    Eigen::Matrix4f with;
-    with <<
-      1, 0, 0, transform.x,
-      0, 1, 0, transform.y,
-      0, 0, 1, transform.z,
-      0, 0, 0, 1;
+    Matrix4f with;
+    with.setIdentity();
+    with.at(0, 3) = transform.x;
+    with.at(1, 3) = transform.y;
+    with.at(2, 3) = transform.z;
+
     matrix = with*matrix;
   }
-  void rotate(sVec3 around, float with) {
-    Eigen::Matrix4f rotm = Eigen::Matrix4f::Identity();
-    around.norm();
-    Eigen::Vector3f arv;
-    arv << around.x, around.y, around.z;
-    rotm.block<3,3>(0,0) = Eigen::AngleAxisf(with, arv).matrix();
-    matrix = rotm*matrix;
-  }
+
   void createLook(mVec3 from, sVec3 dir) {
     polar_vec3 p;
     p.fromCartesian(dir);
@@ -45,38 +37,39 @@ public:
 
     setIdentity();
     transform(-from);
-    Eigen::Matrix4f with;
-    with <<
+    Matrix4f with;
+    float withf[16] = {
       sinp, -cosp, 0, 0,
       -cosp*cost, -sinp*cost, sint, 0,
       -cosp * sint, -sinp*sint, -cost, 0,
-      0, 0, 0, 1;
+      0, 0, 0, 1};
+    with.set(withf);
     matrix = with*matrix;
-    //scale({0.1,0.1,0.1});
   }
   void project(float fov, float aspectRatio, float zFar, float zNear) {
     float yScale = 1/tan(fov / 2);
     float xScale = yScale / aspectRatio;
-    Eigen::Matrix4f pmat;
-    pmat << xScale, 0, 0, 0,
+    Matrix4f with;
+    float withf[16] = {
+      xScale, 0, 0, 0,
       0, yScale, 0, 0,
       0, 0, -(zFar + zNear) / (zFar - zNear), -2 * zNear*zFar / (zFar - zNear),
-      0, 0, -1, 0;
-    matrix = pmat * matrix;
+      0, 0, -1, 0};
+    with.set(withf);
+    matrix = with * matrix;
   }
   void read(float* to) {
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 4; j++) {
-        to[i*4 + j] = matrix(j,i);
-      }
+    for (int i = 0; i < 16; i++) {
+      to[i] = matrix._vals[i];
     }
   }
   void read(double* to) {
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 4; j++) {
-        to[i * 4 + j] = matrix(j, i);
-      }
+    for (int i = 0; i < 16; i++) {
+      to[i] = matrix._vals[i];
     }
+  }
+  void transpose() {
+    matrix.transpose();
   }
   Transpose() {
     setIdentity();

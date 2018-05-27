@@ -1,5 +1,24 @@
 #include "../Terrain/WorldLoader.h"
 
+void onDefaultBlockUpdate(BlockPos &) {
+
+}
+void onDefaultBlockTick(BlockPos &) {
+
+}
+void onDefaultBlockInteract(BlockPos &, Entity *, int, void *) {
+
+}
+void onDefaultBlockLook(BlockPos &, Entity *, int, void *) {
+
+}
+void onDefaultBlockBreak(BlockPos &, Entity *, int, void *) {
+
+}
+void getStoredBlockPhysics(BlockPos[7], list<PhysCube>& l) {
+
+}
+
 #ifdef M_CLIENT
 BlockNeeds getEmptyNeeds(Block&) {
   return 127;
@@ -29,6 +48,11 @@ void getStoredModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
       res.tbr = (it.base.tbr + texCoord) *TEXTURE_SIZE;
       res.ttl = (it.base.ttl + texCoord) *TEXTURE_SIZE;
       res.ttr = (it.base.ttr + texCoord) *TEXTURE_SIZE;
+
+      res.rbl = 0;
+      res.rbr = 0;
+      res.rtl = 0;
+      res.rtr = 0;
 
       res.recolor = it.base.recolor;
 
