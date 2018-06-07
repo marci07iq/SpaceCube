@@ -22,12 +22,10 @@ struct PhysCube {
 
 struct QuadFace { //Data to render
   fVec3 vbl, vtl, vtr, vbr; //Vertex coordinates
-#ifdef M_CLIENT
   vec2<float> tbl, ttl, ttr, tbr; //Texture coordinates
   //float mbl, mtl, mtr, mbr; //Ripple
   floatCol recolor;
   float rbl, rtl, rtr, rbr;
-#endif
 };
 
 struct StoredQuadFace {

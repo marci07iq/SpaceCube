@@ -19,6 +19,10 @@ Chunk * findChunk(int xc, int yc, int zc, int dim);
 
 BlockPos getBlock(int xb, int yb, int zb, int dim, bool& success);
 
+#ifdef M_CLIENT
+void trysetBlock(iVec3 location, int dim, Block to);
+#endif
+
 void setBlock(iVec3 location, int dim, Block to);
 
 bool blockNeighbour(BlockPos & block, Directions dir, BlockPos & out);

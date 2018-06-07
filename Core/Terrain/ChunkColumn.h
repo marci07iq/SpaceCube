@@ -5,8 +5,8 @@
 class ChunkCol {
 private:
   Chunk* _chunks[CHUNK_PER_COLUMN];
-  list<guid_t> _loaders;
 public:
+  list<guid_t> _loaders;
   int _ccx, _ccy;
   Fragment* _frag;
  

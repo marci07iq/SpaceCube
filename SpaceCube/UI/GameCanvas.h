@@ -2,14 +2,14 @@
 
 #include "../Shaders/Shader.h"
 
-extern NetworkC* Connection;
 extern guid_t userGUID;
+extern NetBinder* user;
+extern NetworkC* Connection;
 
 extern int frameTime; //33ms;
 
 void glut_timer_CB(int a);
 
-extern Player* user;
 
 extern Shader chunkShader;
 extern Shader entityShader;

@@ -2,6 +2,10 @@
 
 #include "ChunkColumn.h"
 
+struct FragmentMeta {
+
+};
+
 class Fragment {
   int _fx, _fy;
   int _dim;

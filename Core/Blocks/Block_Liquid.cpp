@@ -2,7 +2,7 @@
 
 #ifdef M_CLIENT
 void getConnectedModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
-  BlockProperies& prop = blockProperties[b[6].b->_ID];
+  BlockProperies& prop = blockProperties[b[6].b->_ID]._ptr->_val;
 
   BlockNeeds notMe = 1 << Dir_All;
   for (int i = 0; i < 6; i++) {
@@ -11,7 +11,7 @@ void getConnectedModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
     }
   }
 
-  for (auto&& it : blockModels[b[6].b->_ID].faces) {
+  for (auto&& it : blockModels[b[6].b->_ID]._ptr->_val.faces) {
     if (it.type & n & notMe) {
       QuadFace res;
 

@@ -16,6 +16,9 @@
     <Filter Include="Core\Mapgen">
       <UniqueIdentifier>{71ff6353-039c-49df-b6cc-3c0e8d18a8ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Blocks">
+      <UniqueIdentifier>{25e0ff1c-4c02-4eb7-8b93-ce33f7272f97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NGin\Network\Network.cpp">
@@ -102,6 +105,15 @@
     <ClCompile Include="..\Core\Definitions.cpp" />
     <ClCompile Include="..\NGin\Network\Compress.cpp">
       <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Blocks\Block_Liquid.cpp">
+      <Filter>Core\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Blocks\Block_Static.cpp">
+      <Filter>Core\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Blocks\Block_Stone.cpp">
+      <Filter>Core\Blocks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +245,18 @@
     </ClInclude>
     <ClInclude Include="..\NGin\Network\Compress.h">
       <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Liquid.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Static.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Stone.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Types.h">
+      <Filter>Core\Blocks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

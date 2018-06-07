@@ -27,7 +27,7 @@ void Chunk::set(DataElement* from) {
     for (int j = 0; j < BLOCK_PER_CHUNK; j++) {
       for (int k = 0; k < BLOCK_PER_CHUNK; k++) {
         int rawid = k + BLOCK_PER_CHUNK * (j + BLOCK_PER_CHUNK * i);
-        readBlock(from->_core->_data, rawid * 6, _blocks[i][j][k]);
+        readBlock(from->_core->_data, rawid * 8, _blocks[i][j][k]);
       }
     }
   }
@@ -37,12 +37,12 @@ void Chunk::set(DataElement* from) {
 }
 void Chunk::get(DataElement* to) {
   delete to->_core;
-  to->_core = new DataPair(BLOCK_PER_CHUNK *BLOCK_PER_CHUNK *BLOCK_PER_CHUNK *6);
+  to->_core = new DataPair(BLOCK_PER_CHUNK *BLOCK_PER_CHUNK *BLOCK_PER_CHUNK *8);
   for (int i = 0; i < BLOCK_PER_CHUNK; i++) {
     for (int j = 0; j < BLOCK_PER_CHUNK; j++) {
       for (int k = 0; k < BLOCK_PER_CHUNK; k++) {
         int rawid = k + BLOCK_PER_CHUNK * (j + BLOCK_PER_CHUNK * i);
-        writeBlock(to->_core->_data, rawid * 6, _blocks[i][j][k]);
+        writeBlock(to->_core->_data, rawid * 8, _blocks[i][j][k]);
       }
     }
   }
@@ -154,6 +154,59 @@ void Chunk::bye(Directions fromDir, Chunk* fromChunk) {
   _neigh[fromDir] = NULL;
 }
 
+void Chunk::setBlock(int bx, int by, int bz, Block to) {
+#ifdef M_CLIENT
+  _blocks[bx][by][bz] = to;
+
+  if (bx == 0 && _neigh[Dir_MX]) {
+    _neigh[Dir_MX]->_state = Chunk_ToRender;
+  }
+  if (bx == BLOCK_PER_CHUNK - 1 && _neigh[Dir_PX]) {
+    _neigh[Dir_PX]->_state = Chunk_ToRender;
+  }
+  if (by == 0 && _neigh[Dir_MY]) {
+    _neigh[Dir_MY]->_state = Chunk_ToRender;
+  }
+  if (by == BLOCK_PER_CHUNK - 1 && _neigh[Dir_PY]) {
+    _neigh[Dir_PY]->_state = Chunk_ToRender;
+  }
+  if (bz == 0 && _neigh[Dir_MZ]) {
+    _neigh[Dir_MZ]->_state = Chunk_ToRender;
+  }
+  if (bz == BLOCK_PER_CHUNK - 1 && _neigh[Dir_PZ]) {
+    _neigh[Dir_PZ]->_state = Chunk_ToRender;
+  }
+  _state = Chunk_ToRender;
+#endif
+#ifdef M_SERVER
+  bool found;
+  BlockPos p;
+  p.b = &(_blocks[bx][by][bz]);
+  p.c = this;
+  p.lbx = bx;
+  p.lby = by;
+  p.lbz = bz;
+
+  blockProperties[p.b->_ID]._ptr->_val.actionDestory(p);
+  _blocks[bx][by][bz] = to;
+  blockProperties[p.b->_ID]._ptr->_val.onUpdate(p);
+  for(int l = 0; l < 6; l++) {
+    BlockPos np;
+    if(blockNeighbour(p, static_cast<Directions>(l), np)) {
+      blockProperties[np.b->_ID]._ptr->_val.onUpdate(np);
+    }
+  }
+
+  for (auto&& it : _col->_loaders) {
+    if (it % 2) { //Player
+      ((NetBinder*)entities[it])->sendBlock(iVec3(bx, by, bz) + iVec3(_cx, _cy, _cz) * BLOCK_PER_CHUNK, *(p.b));
+    }
+  }
+
+  
+#endif
+}
+
 #ifdef M_CLIENT
 void Chunk::unBuildChunk() {
   if (_chunk_pos_vbo) {
@@ -191,10 +244,10 @@ void Chunk::buildChunk() {
         for (int l = 0; l < 6; l++) {
           bool b = blockNeighbour(neighbours[6], static_cast<Directions>(l), neighbours[l]);
           if(b) {
-            n |= (1 << l) & blockProperties[neighbours[l].b->_ID].getNeeds(*neighbours[l].b);
+            n |= (1 << l) & blockProperties[neighbours[l].b->_ID]._ptr->_val.getNeeds(*neighbours[l].b);
           }
         }
-        blockProperties[_blocks[i][j][k]._ID].getModel(neighbours, n, quads);
+        blockProperties[_blocks[i][j][k]._ID]._ptr->_val.getModel(neighbours, n, quads);
       }
     }
   }

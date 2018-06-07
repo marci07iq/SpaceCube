@@ -134,6 +134,9 @@
     <ClCompile Include="..\..\NGin\Network\Network.cpp" />
     <ClCompile Include="..\..\NGin\Network\NetworkData.cpp" />
     <ClCompile Include="..\..\NGin\Scripts\Scripts.cpp" />
+    <ClCompile Include="..\Core\Blocks\Block_Liquid.cpp" />
+    <ClCompile Include="..\Core\Blocks\Block_Static.cpp" />
+    <ClCompile Include="..\Core\Blocks\Block_Stone.cpp" />
     <ClCompile Include="..\Core\Definition.cpp" />
     <ClCompile Include="..\Core\Definitions.cpp" />
     <ClCompile Include="..\Core\Mapgen\Mapgen.cpp" />
@@ -181,6 +184,10 @@
     <ClInclude Include="..\..\NGin\rapidxml\rapidxml_print.hpp" />
     <ClInclude Include="..\..\NGin\rapidxml\rapidxml_utils.hpp" />
     <ClInclude Include="..\..\NGin\Scripts\Scripts.h" />
+    <ClInclude Include="..\Core\Blocks\Block_Liquid.h" />
+    <ClInclude Include="..\Core\Blocks\Block_Static.h" />
+    <ClInclude Include="..\Core\Blocks\Block_Stone.h" />
+    <ClInclude Include="..\Core\Blocks\Block_Types.h" />
     <ClInclude Include="..\Core\Definitions.h" />
     <ClInclude Include="..\Core\Mapgen\Mapgen.h" />
     <ClInclude Include="..\Core\Mapgen\Perlin.h" />

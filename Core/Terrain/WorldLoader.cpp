@@ -70,7 +70,7 @@ ChunkCol* findLoadChunkCol(int cx, int cy, int dim) {
     nd = new DataElement();
     vGFunc(cy, nd);
     res->addChild(nd);
-    Connection->SendData(res, PacketChunk);
+    user->connection->SendData(res, PacketChunk);
   }
 #endif
   return cc;
@@ -105,6 +105,12 @@ BlockPos getBlock(int xb, int yb, int zb, int dim, bool& success) {
   }
   success = false;
 }
+
+#ifdef M_CLIENT
+void trysetBlock(iVec3 location, int dim, Block to) {
+  user->sendBlock(location, to);
+}
+#endif
 
 void setBlock(iVec3 location, int dim, Block to) {
   int lbx = modulo(location.x, BLOCK_PER_CHUNK);

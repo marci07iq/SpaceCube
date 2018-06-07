@@ -19,3 +19,7 @@ void getStoredModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo);
 vec2<float> getStoredTex(BlockPos& b, uint32_t texID);
 
 #endif
+
+void actionDestoryNothing(BlockPos&);
+void onUpdateNothing(BlockPos&);
+void onUpdateNature(BlockPos&);

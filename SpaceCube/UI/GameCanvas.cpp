@@ -1,7 +1,8 @@
 #include "GameCanvas.h"
 
-NetworkC* Connection;
 guid_t userGUID = 0x0123456789abcdef;
+NetBinder* user;
+NetworkC* Connection;
 
 int frameTime = 33; //33ms;
 
@@ -10,7 +11,6 @@ void glut_timer_CB(int a) {
   glutPostRedisplay();
 }
 
-Player* user;
 
 Shader chunkShader;
 Shader entityShader;
@@ -212,7 +212,7 @@ int MainGameCanvas::guiEventManager(gui_event evt, int mx, int my, set<key_locat
         pos = getBlock(it->x, it->y, it->z, 0, success);
         if (success && pos.b->_ID != 0) {
           go = false;
-          setBlock(*it, 0, {0,0});
+          trysetBlock(*it, 0, Block(0));
         }
         ++it;
       }
@@ -227,7 +227,7 @@ int MainGameCanvas::guiEventManager(gui_event evt, int mx, int my, set<key_locat
         pos = getBlock(it->x, it->y, it->z, 0, success);
         if (success && pos.b->_ID != 0) {
           go = false;
-          setBlock(placeTo, 0, Block(1,0));
+          trysetBlock(placeTo, 0, Block(1));
         }
         placeTo = *it;
       }

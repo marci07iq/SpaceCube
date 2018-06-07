@@ -28,9 +28,9 @@ BlockNeeds getSolidNeeds(Block&) {
 }
 
 void getStoredModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
-  BlockProperies& prop = blockProperties[b[6].b->_ID];
+  BlockProperies& prop = blockProperties[b[6].b->_ID]._ptr->_val;
 
-  for (auto&& it : blockModels[b[6].b->_ID].faces) {
+  for (auto&& it : blockModels[b[6].b->_ID]._ptr->_val.faces) {
     if (it.type & n) {
       QuadFace res;
 
@@ -62,6 +62,23 @@ void getStoredModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
 }
 
 vec2<float> getStoredTex(BlockPos& b, uint32_t texID) {
-  return{ 0.0f, 1.0f*blockProperties[b.b->_ID].textures[texID] };
+  return{ 0.0f, 1.0f*blockProperties[b.b->_ID]._ptr->_val.textures[texID] };
 }
 #endif
+
+void actionDestoryNothing(BlockPos &) {
+
+}
+
+void onUpdateNothing(BlockPos &) {
+
+}
+
+void onUpdateNature(BlockPos &p) {
+  BlockPos np;
+  if (blockNeighbour(p, Dir_MZ, np)) {
+    if(np.b->_ID != 3) { //Destory if not on grass
+      p.c->setBlock(p.lbx, p.lby, p.lbz, Block(0));
+    }
+  }
+}

@@ -155,6 +155,20 @@ NetBinder::NetBinder(guid_t guid) : Player(guid) {
   //_guid = guid;
 }
 
+void NetBinder::sendBlock(iVec3 pos, Block& what) {
+
+  DataElement* res = new DataElement();
+  DataElement* nd;
+  nd = new DataElement();
+  oGFunc(pos, nd);
+  res->addChild(nd);
+  nd = new DataElement();
+  vGFunc(what._ID, nd);
+  res->addChild(nd);
+
+  connection->SendData(res, PacketBlock);
+}
+
 #ifdef M_SERVER
 void NetBinder::sendChunk(Chunk* what) {
 
@@ -175,13 +189,15 @@ void NetBinder::sendChunk(Chunk* what) {
   connection->SendData(res, PacketChunk);
 }
 bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkS * thisptr, NetBinder * connected) {
+  ChunkCol* cc = NULL;
   switch (Id) {
     case PacketChunk:
       int cx, cz;
       vSFunc(cx, Data->_children[0]);
       vSFunc(cz, Data->_children[1]);
 
-      ChunkCol* cc = findLoadChunkCol(cx, cz, 0);
+      cc = findLoadChunkCol(cx, cz, 0);
+      cc->_loaders.push_back(connected->getGUID());
       for (int k = 0; k < CHUNK_PER_COLUMN; k++) {
         if (cc->getChunk(k) != NULL) {
           sendChunk(cc->getChunk(k));
@@ -189,8 +205,16 @@ bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkS * thisptr, Net
       }
       return false;
       break;
+    case PacketBlock:
+      iVec3 pos;
+      Block b;
+      oSFunc(pos, Data->_children[0]);
+      vSFunc(b._ID, Data->_children[1]);
+      setBlock(pos, 0, b);
+      return false;
+      break;
   }
-  return false;
+  return true;
 }
 #endif
 #ifdef M_CLIENT
@@ -205,9 +229,16 @@ bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkC * thisptr) {
       setChunk(cx, cy, cz, 0, Data);
       return false;
       break;
+    case PacketBlock:
+      iVec3 pos;
+      Block b;
+      oSFunc(pos, Data->_children[0]);
+      vSFunc(b._ID, Data->_children[1]);
+      setBlock(pos, 0, b);
+      break;
   }
   return false;
 }
 #endif
 
-set<Entity*> entities;
+map<guid_t, Entity*> entities;

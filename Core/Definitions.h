@@ -5,8 +5,7 @@
 #endif
 #include "../NGin/NGin.h"
 
-typedef uint16_t block_id_t;
-typedef uint32_t meta_id_t;
+typedef uint64_t block_id_t;
 typedef pair<int, pair<int,int>> world_col_t;
 
 typedef uint64_t guid_t;
@@ -28,7 +27,8 @@ const int CHUNK_UNLOAD_RADIUS = 16;
 enum PacketIdsL {
   PacketChunk = 2,
   PacketMove = 3,
-  PacketTurn = 4
+  PacketTurn = 4,
+  PacketBlock = 5
 };
 
 guid_t randomE_GUID();

@@ -155,7 +155,7 @@ void Fragment::save() {
   }
 
   //Encode data
-  DataPair* in = new DataPair(6*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK);
+  DataPair* in = new DataPair(8*COLUMN_PER_FRAGMENT*COLUMN_PER_FRAGMENT*CHUNK_PER_COLUMN*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK*BLOCK_PER_CHUNK);
 
   for (int ci = 0; ci < COLUMN_PER_FRAGMENT; ci++) {
     for (int cj = 0; cj < COLUMN_PER_FRAGMENT; cj++) {
@@ -164,7 +164,7 @@ void Fragment::save() {
           for (int bj = 0; bj < BLOCK_PER_CHUNK; bj++) {
             for (int bk = 0; bk < BLOCK_PER_CHUNK; bk++) {
               int rawid = bk + BLOCK_PER_CHUNK * (bj + BLOCK_PER_CHUNK * (bi + BLOCK_PER_CHUNK * (ck + CHUNK_PER_COLUMN * (cj + COLUMN_PER_FRAGMENT * (ci)))));
-              rawid *= 6;
+              rawid *= 8;
               writeBlock(in->_data, rawid, _cols[ci][cj]->getChunk(ck)->_blocks[bi][bj][bk]);
             }
           }
@@ -242,7 +242,7 @@ void Fragment::load() {
               for (int bj = 0; bj < BLOCK_PER_CHUNK; bj++) {
                 for (int bk = 0; bk < BLOCK_PER_CHUNK; bk++) {
                   int rawid = bk + BLOCK_PER_CHUNK * (bj + BLOCK_PER_CHUNK * (bi + BLOCK_PER_CHUNK * (ck + CHUNK_PER_COLUMN * (cj + COLUMN_PER_FRAGMENT * (ci)))));
-                  rawid *= 6;
+                  rawid *= 8;
                   readBlock((*out)->_data, rawid, nc->_blocks[bi][bj][bk]);
                 }
               }

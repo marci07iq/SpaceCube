@@ -13,7 +13,7 @@ bool recivePacket(DataElement* data, int id, NetworkC* client, NetBinder* lplaye
 
           user = client->ConnectedBinder = lplayer = me;
           client->ConnectedBinder->connection = client;
-          entities.insert(user);
+          entities[userGUID] = user;
 
           Graphics::setElements(objectGameSubWindow, "html/game_screen.xml");
 

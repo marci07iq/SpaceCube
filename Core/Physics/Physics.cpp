@@ -46,7 +46,7 @@ pair<mpssVec3, float> tickEntity(Entity* ent, mVec3 shift) {
             blockNeighbour(b[6], static_cast<Directions>(l), b[l]);
           }
 
-          blockProperties[b[6].b->_ID].getPhysics(b, cubes);
+          blockProperties[b[6].b->_ID]._ptr->_val.getPhysics(b, cubes);
         }
       }
     }
@@ -72,6 +72,6 @@ void tickPhysics(time_type_s tickTime) {
     pair<mpssVec3, float> props = getProps(it, posShift);
     vel *= exp(-tickTime/props.second);
     posShift = vel * tickTime;*/
-    it->movPos(it->getVelocity() * tickTime);
+    it.second->movPos(it.second->getVelocity() * tickTime);
   }
 }

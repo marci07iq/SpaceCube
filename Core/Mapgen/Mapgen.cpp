@@ -42,26 +42,26 @@ void Mapgen::generateFragment(int fx, int fy) {
   for (int i = 0; i < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; i++) {
     for (int j = 0; j < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; j++) {
       for (int k = 0; k <= heightmap[i][j] - 4 && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
-        res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 1;
+        res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 0x0000000000000001;
       }
       if(heightmap[i][j] > 61) {
         for (int k = max(0.0f,heightmap[i][j] - 3); k <= heightmap[i][j] - 1 && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
-          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 2;
+          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 0x1000000000000000;
         }
         for (int k = max(0.0f, heightmap[i][j]); k <= heightmap[i][j] && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
-          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 3;
+          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 0x2000000000000000;
         }
         if(fmodf(heightmap[i][j],0.01065165) > 0.01) {
           int k = heightmap[i][j] + 1;
-          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 5;
+          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 0x4000000000000000;
         }
       } else {
         for (int k = max(0.0f, heightmap[i][j] - 3); k <= heightmap[i][j] && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
-          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 1;
+          res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 0x0000000000000001;
         }
       }
       for (int k = max(0.0f, heightmap[i][j] + 1); k <= 60; k++) {
-        res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 4;
+        res->getChunkCol(i / BLOCK_PER_CHUNK, j / BLOCK_PER_CHUNK)->getChunk(k / BLOCK_PER_CHUNK)->_blocks[i % BLOCK_PER_CHUNK][j % BLOCK_PER_CHUNK][k % BLOCK_PER_CHUNK]._ID = 0x3000000000000000;
       }
     }
   }

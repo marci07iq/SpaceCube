@@ -7,37 +7,18 @@ Block::Block(block_id_t ID) :
   _ID(ID) {
 }
 
-Block::Block(block_id_t ID, meta_id_t meta) :
-  _ID(ID),
-  _meta(meta) {
-}
-
-vector<onBlockUpdate> blockUpdates;
-vector<onBlockTick> blockTicks;
-vector<onBlockLook> blockLooks;
-vector<onBlockInteract> blockInteracts;
-vector<onBlockBreak> blockBreaks;
-
-vector<BlockProperies> blockProperties;
+BinTree<BlockProperies> blockProperties;
 
 void writeBlock(unsigned char * to, int id, Block & b) {
-  to[id] = b._ID >> 0;
-  to[id + 1] = b._ID >> 8;
-  to[id + 2] = b._meta >> 0;
-  to[id + 3] = b._meta >> 8;
-  to[id + 4] = b._meta >> 16;
-  to[id + 5] = b._meta >> 24;
+  *(reinterpret_cast<block_id_t*>(to + id)) = b._ID;
 }
 
 void readBlock(unsigned char * from, int id, Block & b) {
-  b._ID = 1 * from[id] + 256 * from[id + 1];
-  b._meta = 1 * from[id + 2] + 256 * from[id + 3] + 65536 * from[id + 4] + 16777216 * from[id + 5];
+  b._ID = *(reinterpret_cast<block_id_t*>(from + id));
 }
 
-#ifdef M_CLIENT
 map<string, BlockModel> models;
-vector<BlockModel> blockModels;
-
+BinTree<BlockModel> blockModels;
 
 void loadModel(string folder, string name) {
   ifstream in(folder + name + ".modl", ios::in);
@@ -46,7 +27,9 @@ void loadModel(string folder, string name) {
     StoredQuadFace f;
     int type;
     while(in >> f.base.vbl >> f.base.vtl >> f.base.vtr >> f.base.vbr >> f.base.tbl >> f.base.ttl >> f.base.ttr >> f.base.tbr >> f.base.recolor.r >> f.base.recolor.g >> f.base.recolor.b >> f.base.recolor.a >> type >> f.faceID) {
+      #ifdef M_CLIENT
       f.type = type;
+      #endif
       m.faces.push_back(f);
     }
   }
@@ -54,51 +37,76 @@ void loadModel(string folder, string name) {
   in.close();
 }
 
+uint64_t hexTo64(string& name) {
+  uint64_t res = 0;
+  for (auto&& it : name) {
+    if ('0' <= it && it <= '9') {
+      res <<= 4;
+      res += it - '0';
+    }
+    if ('a' <= it && it <= 'f') {
+      res <<= 4;
+      res += it - 'a' + 10;
+    }
+    if ('A' <= it && it <= 'F') {
+      res <<= 4;
+      res += it - 'A' + 10;
+    }
+  }
+  return res;
+}
+
 void loadBlocks() {
   ifstream in("Textures/blocks.dat");
 
-  int id = 0;
-  string modname;
+  string idHexCode;
+  uint64_t idCode;
+  size_t idCodeLen;
+  string idName;
+  string dispName;
+  string modelName;
   int needs;
 
-  while (in >> modname) {
-    blockProperties.push_back(BlockProperies());
-    blockModels.push_back(BlockModel());
-
-    if (!models.count(modname)) {
-      loadModel("Textures/", modname);
+  while (in >> idHexCode >> idCodeLen >> idName >> dispName >> modelName) {
+    idCode = hexTo64(idHexCode);
+    cout << idHexCode << " " << idCode << " " << idCodeLen << " " << idName << " " << dispName << " " << modelName << " " << endl;
+    if (!models.count(modelName)) {
+      loadModel("Textures/", modelName);
     }
-    int size = models[modname].faces.size();
+    int size = models[modelName].faces.size();
+    auto it = blockProperties[make_pair(idCode, idCodeLen)];
     for (int i = 0; i < size; i++) {
       int a;
       in >> a;
-      blockProperties[id].textures.push_back(a);
+      #ifdef M_CLIENT
+      it.operator->().textures.push_back(a);
+      #endif
     }
-    blockModels[id] = models[modname];
-    ++id;
+    blockModels[make_pair(idCode, idCodeLen)].operator->() = models[modelName];
   }
 
   in.close();
 
-  blockProperties[0].getNeeds = getEmptyNeeds;
-  blockProperties[1].getNeeds = getSolidNeeds;
-  blockProperties[2].getNeeds = getSolidNeeds;
-  blockProperties[3].getNeeds = getSolidNeeds;
-  blockProperties[4].getNeeds = getEmptyNeeds;
-  blockProperties[5].getNeeds = getEmptyNeeds;
+  #ifdef M_CLIENT
+  blockProperties[make_pair(0x0000000000000000,64)].operator->().getNeeds = getEmptyNeeds;
+  blockProperties[make_pair(0x0000000000000001,01)].operator->().getNeeds = getSolidNeeds;
+  blockProperties[make_pair(0x1000000000000000,64)].operator->().getNeeds = getSolidNeeds;
+  blockProperties[make_pair(0x2000000000000000,64)].operator->().getNeeds = getSolidNeeds;
+  blockProperties[make_pair(0x3000000000000000,64)].operator->().getNeeds = getEmptyNeeds;
+  blockProperties[make_pair(0x4000000000000000,64)].operator->().getNeeds = getEmptyNeeds;
   
-  blockProperties[0].getModel = getStoredModel;
-  blockProperties[1].getModel = getStoredModel;
-  blockProperties[2].getModel = getStoredModel;
-  blockProperties[3].getModel = getStoredModel;
-  blockProperties[4].getModel = getConnectedModel;
-  blockProperties[5].getModel = getStoredModel;
+  blockProperties[make_pair(0x0000000000000000, 64)].operator->().getModel = getStoredModel;
+  blockProperties[make_pair(0x0000000000000001, 01)].operator->().getModel = getStoredModel;
+  blockProperties[make_pair(0x1000000000000000, 64)].operator->().getModel = getStoredModel;
+  blockProperties[make_pair(0x2000000000000000, 64)].operator->().getModel = getStoredModel;
+  blockProperties[make_pair(0x3000000000000000, 64)].operator->().getModel = getConnectedModel;
+  blockProperties[make_pair(0x4000000000000000, 64)].operator->().getModel = getStoredModel;
 
-  blockProperties[0].getTex = getStoredTex;
-  blockProperties[1].getTex = getStoredTex;
-  blockProperties[2].getTex = getStoredTex;
-  blockProperties[3].getTex = getStoredTex;
-  blockProperties[4].getTex = getStoredTex;
-  blockProperties[5].getTex = getStoredTex;
+  blockProperties[make_pair(0x0000000000000000, 64)].operator->().getTex = getStoredTex;
+  blockProperties[make_pair(0x0000000000000001, 01)].operator->().getTex = getStoredTex;
+  blockProperties[make_pair(0x1000000000000000, 64)].operator->().getTex = getStoredTex;
+  blockProperties[make_pair(0x2000000000000000, 64)].operator->().getTex = getStoredTex;
+  blockProperties[make_pair(0x3000000000000000, 64)].operator->().getTex = getStoredTex;
+  blockProperties[make_pair(0x4000000000000000, 64)].operator->().getTex = getStoredTex;
+  #endif
 }
-#endif

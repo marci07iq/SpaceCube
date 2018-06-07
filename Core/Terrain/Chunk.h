@@ -37,30 +37,7 @@ public:
     return _neigh[dir];
   }
 
-  void setBlock(int bx, int by, int bz, Block to) {
-    _blocks[bx][by][bz] = to;
-#ifdef M_CLIENT
-    if (bx == 0 && _neigh[Dir_MX]) {
-      _neigh[Dir_MX]->_state = Chunk_ToRender;
-    }
-    if (bx == BLOCK_PER_CHUNK - 1 && _neigh[Dir_PX]) {
-      _neigh[Dir_PX]->_state = Chunk_ToRender;
-    }
-    if (by == 0 && _neigh[Dir_MY]) {
-      _neigh[Dir_MY]->_state = Chunk_ToRender;
-    }
-    if (by == BLOCK_PER_CHUNK - 1 && _neigh[Dir_PY]) {
-      _neigh[Dir_PY]->_state = Chunk_ToRender;
-    }
-    if (bz == 0 && _neigh[Dir_MZ]) {
-      _neigh[Dir_MZ]->_state = Chunk_ToRender;
-    }
-    if (bz == BLOCK_PER_CHUNK - 1 && _neigh[Dir_PZ]) {
-      _neigh[Dir_PZ]->_state = Chunk_ToRender;
-    }
-    _state = Chunk_ToRender;
-#endif
-  }
+  void setBlock(int bx, int by, int bz, Block to);
 
 #ifdef M_CLIENT
   GLuint _chunk_vao;
@@ -73,39 +50,39 @@ public:
   inline uint8_t getNeed(uint8_t x, uint8_t y, uint8_t z) {
     uint8_t res = 1 << Dir_All;
     if (0 < x) {
-      res |= (1 << Dir_MX) & blockProperties[_blocks[x - 1][y][z]._ID].getNeeds(_blocks[x - 1][y][z]);
+      res |= (1 << Dir_MX) & blockProperties[_blocks[x - 1][y][z]._ID]._ptr->_val.getNeeds(_blocks[x - 1][y][z]);
     } else if (_neigh[Dir_MX]) {
-      res |= (1 << Dir_MX) & blockProperties[_neigh[Dir_MX]->_blocks[BLOCK_PER_CHUNK - 1][y][z]._ID].getNeeds(_neigh[Dir_MX]->_blocks[BLOCK_PER_CHUNK - 1][y][z]);
+      res |= (1 << Dir_MX) & blockProperties[_neigh[Dir_MX]->_blocks[BLOCK_PER_CHUNK - 1][y][z]._ID]._ptr->_val.getNeeds(_neigh[Dir_MX]->_blocks[BLOCK_PER_CHUNK - 1][y][z]);
     }
 
     if (x < BLOCK_PER_CHUNK - 1) {
-      res |= (1 << Dir_PX) & blockProperties[_blocks[x + 1][y][z]._ID].getNeeds(_blocks[x + 1][y][z]);
+      res |= (1 << Dir_PX) & blockProperties[_blocks[x + 1][y][z]._ID]._ptr->_val.getNeeds(_blocks[x + 1][y][z]);
     } else if (_neigh[Dir_PX]) {
-      res |= (1 << Dir_PX) & blockProperties[_neigh[Dir_PX]->_blocks[0][y][z]._ID].getNeeds(_neigh[Dir_PX]->_blocks[0][y][z]);
+      res |= (1 << Dir_PX) & blockProperties[_neigh[Dir_PX]->_blocks[0][y][z]._ID]._ptr->_val.getNeeds(_neigh[Dir_PX]->_blocks[0][y][z]);
     }
 
     if (0 < y) {
-      res |= (1 << Dir_MY) & blockProperties[_blocks[x][y - 1][z]._ID].getNeeds(_blocks[x][y - 1][z]);
+      res |= (1 << Dir_MY) & blockProperties[_blocks[x][y - 1][z]._ID]._ptr->_val.getNeeds(_blocks[x][y - 1][z]);
     } else if (_neigh[Dir_MY]) {
-      res |= (1 << Dir_MY) & blockProperties[_neigh[Dir_MY]->_blocks[x][BLOCK_PER_CHUNK - 1][z]._ID].getNeeds(_neigh[Dir_MY]->_blocks[x][BLOCK_PER_CHUNK - 1][z]);
+      res |= (1 << Dir_MY) & blockProperties[_neigh[Dir_MY]->_blocks[x][BLOCK_PER_CHUNK - 1][z]._ID]._ptr->_val.getNeeds(_neigh[Dir_MY]->_blocks[x][BLOCK_PER_CHUNK - 1][z]);
     }
 
     if (y < BLOCK_PER_CHUNK - 1) {
-      res |= (1 << Dir_PY) & blockProperties[_blocks[x][y + 1][z]._ID].getNeeds(_blocks[x][y + 1][z]);
+      res |= (1 << Dir_PY) & blockProperties[_blocks[x][y + 1][z]._ID]._ptr->_val.getNeeds(_blocks[x][y + 1][z]);
     } else if (_neigh[Dir_PY]) {
-      res |= (1 << Dir_PY) & blockProperties[_neigh[Dir_PY]->_blocks[x][0][z]._ID].getNeeds(_neigh[Dir_PY]->_blocks[x][0][z]);
+      res |= (1 << Dir_PY) & blockProperties[_neigh[Dir_PY]->_blocks[x][0][z]._ID]._ptr->_val.getNeeds(_neigh[Dir_PY]->_blocks[x][0][z]);
     }
 
     if (0 < z) {
-      res |= (1 << Dir_MZ) & blockProperties[_blocks[x][y][z - 1]._ID].getNeeds(_blocks[x][y][z - 1]);
+      res |= (1 << Dir_MZ) & blockProperties[_blocks[x][y][z - 1]._ID]._ptr->_val.getNeeds(_blocks[x][y][z - 1]);
     } else if (_neigh[Dir_MZ]) {
-      res |= (1 << Dir_MZ) & blockProperties[_neigh[Dir_MZ]->_blocks[x][y][BLOCK_PER_CHUNK - 1]._ID].getNeeds(_neigh[Dir_MZ]->_blocks[x][y][BLOCK_PER_CHUNK - 1]);
+      res |= (1 << Dir_MZ) & blockProperties[_neigh[Dir_MZ]->_blocks[x][y][BLOCK_PER_CHUNK - 1]._ID]._ptr->_val.getNeeds(_neigh[Dir_MZ]->_blocks[x][y][BLOCK_PER_CHUNK - 1]);
     }
 
     if (z < BLOCK_PER_CHUNK - 1) {
-      res |= (1 << Dir_PZ) & blockProperties[_blocks[x][y][z + 1]._ID].getNeeds(_blocks[x][y][z + 1]);
+      res |= (1 << Dir_PZ) & blockProperties[_blocks[x][y][z + 1]._ID]._ptr->_val.getNeeds(_blocks[x][y][z + 1]);
     } else if (_neigh[Dir_PZ]) {
-      res |= (1 << Dir_PZ) & blockProperties[_neigh[Dir_PZ]->_blocks[x][y][0]._ID].getNeeds(_neigh[Dir_PZ]->_blocks[x][y][0]);
+      res |= (1 << Dir_PZ) & blockProperties[_neigh[Dir_PZ]->_blocks[x][y][0]._ID]._ptr->_val.getNeeds(_neigh[Dir_PZ]->_blocks[x][y][0]);
     }
 
     return res;

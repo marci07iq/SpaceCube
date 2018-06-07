@@ -100,7 +100,9 @@ public:
 #ifdef M_CLIENT
   NetworkC* connection;
   bool recivePacket(DataElement* Data, int Id, NetworkC* thisptr);
+
 #endif
+  void sendBlock(iVec3 pos, Block& what);
 #ifdef M_SERVER
   NetworkS* connection;
   void sendChunk(Chunk* what);
@@ -109,4 +111,4 @@ public:
   NetBinder(guid_t guid);
 };
 
-extern set<Entity*> entities;
+extern map<guid_t, Entity*> entities;

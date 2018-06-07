@@ -3,6 +3,8 @@
 list<NetworkS*> deleteClient;
 
 void initalize() {
+  loadBlocks();
+
   initMapgen();
 }
 
@@ -63,8 +65,8 @@ bool recivePacket(DataElement* Data, int Id, NetworkS* thisptr, NetBinder* conne
     if (guid % 2) {
       NetBinder* np = new NetBinder(guid);
       np->loadFile();
-      thisptr->ConnectedBinder = connected = np;
-      np->connection = thisptr;
+      entities[guid] = thisptr->ConnectedBinder = connected = np;
+      np->connection = thisptr; 
 
       DataElement* rese = new DataElement();
 
