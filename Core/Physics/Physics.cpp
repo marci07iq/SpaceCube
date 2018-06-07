@@ -32,7 +32,7 @@ pair<mpssVec3, float> tickEntity(Entity* ent, mVec3 shift) {
 
   mass_type_kg enclosedMass = 0;
   float drag = 1; //no restrict
-  
+
   list<PhysCube> cubes;
 
   for (int i = iBegBot.x; i <= iBegTop.x; i++) {

@@ -38,7 +38,7 @@ void Fragment::link() {
     potentialNeigh->hello(Dir_MY, this);
     _neigh[Dir_PY] = potentialNeigh;
   }
-  
+
 
   for (int i = 0; i < COLUMN_PER_FRAGMENT; i++) {
     for (int j = 0; j < COLUMN_PER_FRAGMENT; j++) {
@@ -148,7 +148,7 @@ void Fragment::save() {
   reg.close();
 
   reg.open(fname, ios::in | ios::out | ios::binary);
-  
+
   //Create empty header if needed
   if (fileSize <= 0) {
     prepareFile(reg, fileSize);
@@ -183,17 +183,17 @@ void Fragment::save() {
   for(int i = 0; i < 8; i++) {
     reg.write("", 1);
   }
-  
+
   //Allocate new position
   vector<pair<int, int>> header = loadHeader(reg);
   int len = (*out)->_len;
   int pos = allocatePos(header, len);
-  
+
   //Set new position
   reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
   reg.write(reinterpret_cast<char *>(&pos), sizeof(pos));
   reg.write(reinterpret_cast<char *>(&len), sizeof(len));
-  
+
   //Write data
   reg.seekg(pos);
   reg.write(reinterpret_cast<char*>((*out)->_data), len);

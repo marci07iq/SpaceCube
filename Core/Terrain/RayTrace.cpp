@@ -1,7 +1,7 @@
 #include "WorldLoader.h"
 
 list<iVec3> find_voxels(dVec3 from, dVec3 to) {
-  
+
   dVec3 dir = to - from;
 
   priority_queue_smallest<pair<double, int>> jumps;
@@ -35,7 +35,7 @@ list<iVec3> find_voxels(dVec3 from, dVec3 to) {
     jumps.push({ (i - from.z) / dir.z,9 });
   }
 
-  list<iVec3> res; 
+  list<iVec3> res;
 
   res.push_back(current);
   while (jumps.size()) {

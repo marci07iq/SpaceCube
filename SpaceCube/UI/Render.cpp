@@ -169,7 +169,7 @@ void InitGraphics() {
 
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
-  
+
   if (err != GLEW_OK) {
     cerr << "GLEW init error: " << glewGetErrorString(err) << endl;
   }

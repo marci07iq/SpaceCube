@@ -1,16 +1,3 @@
-#include "GameCanvas.h"
-
-guid_t userGUID = 0x0123456789abcdef;
-NetBinder* user;
-NetworkC* Connection;
-
-int frameTime = 33; //33ms;
-
-void glut_timer_CB(int a) {
-  glutTimerFunc(frameTime, glut_timer_CB, 0);
-  glutPostRedisplay();
-}
-
 
 Shader chunkShader;
 Shader entityShader;
@@ -31,7 +18,6 @@ void MainGameCanvas::normalizeAngles() {
 
 }
 int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_location>& down) {
-  uint64_t frameTime = chrono::duration_cast< chrono::milliseconds >(
     chrono::system_clock::now().time_since_epoch()).count();
 
   sVec3 userMove = { user->getLook().x, user->getLook().y, 0};
@@ -71,7 +57,7 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   chunkShader.bind();
-  
+
   float cameraM[16];
 
   Transpose camview;
@@ -177,7 +163,7 @@ int MainGameCanvas::mouseMoveManager(int x, int y, int ox, int oy, set<key_locat
     pos.phi -= 0.01*dx;
     pos.theta -= 0.01*dy;
     pos.r = 1;
- 
+
     pos.reNormalize();
 
     sVec3 dir = pos.toCartesian();

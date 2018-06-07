@@ -112,7 +112,7 @@ void loadBlocks() {
   blockProperties[3].getNeeds = getSolidNeeds;
   blockProperties[4].getNeeds = getEmptyNeeds;
   blockProperties[5].getNeeds = getEmptyNeeds;
-  
+
   blockProperties[0].getModel = getStoredModel;
   blockProperties[1].getModel = getStoredModel;
   blockProperties[2].getModel = getStoredModel;

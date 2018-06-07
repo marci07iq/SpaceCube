@@ -120,7 +120,7 @@ void Chunk::unlink() {
     potentialNeigh->bye(Dir_MX, this);
     _neigh[Dir_PX] = NULL;
   }
- 
+
   potentialNeigh = _neigh[Dir_MY];
   if (potentialNeigh != NULL) {
     potentialNeigh->bye(Dir_PY, this);
@@ -131,7 +131,7 @@ void Chunk::unlink() {
     potentialNeigh->bye(Dir_MY, this);
     _neigh[Dir_PY] = NULL;
   }
-  
+
 
 
   potentialNeigh = _neigh[Dir_MZ];
@@ -203,7 +203,7 @@ void Chunk::setBlock(int bx, int by, int bz, Block to) {
     }
   }
 
-  
+
 #endif
 }
 
