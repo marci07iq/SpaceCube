@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="NGin">
+      <UniqueIdentifier>{7023904e-3836-403d-bf24-471dc0063763}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{04cd8405-f5a7-4748-8630-381c586f4e3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{1f42e7d2-f3ab-4cbf-b775-5eded93d7b40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Terrain">
+      <UniqueIdentifier>{7e403143-6a7e-44e3-a460-4ec7bbfa3e8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Mapgen">
+      <UniqueIdentifier>{71ff6353-039c-49df-b6cc-3c0e8d18a8ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Blocks">
+      <UniqueIdentifier>{25e0ff1c-4c02-4eb7-8b93-ce33f7272f97}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\NGin\Network\Network.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Network\NetworkData.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Scripts\Scripts.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\BigFloat.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Cbignum.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Cbignums.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Ctty.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Exarray.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Prime.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\FlowSystem.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\Fraction.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\helperFunctions.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\Keyframe.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\Point.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\Polynomial.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Terrain\Block.cpp">
+      <Filter>Core\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Terrain\Chunk.cpp">
+      <Filter>Core\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Terrain\ChunkColumn.cpp">
+      <Filter>Core\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Terrain\Fragment.cpp">
+      <Filter>Core\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Terrain\Region.cpp">
+      <Filter>Core\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Terrain\Entities.cpp">
+      <Filter>Core\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Terrain\WorldLoader.cpp">
+      <Filter>Core\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Mapgen\Mapgen.cpp">
+      <Filter>Core\Mapgen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Mapgen\Perlin.cpp">
+      <Filter>Core\Mapgen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Definition.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Definitions.cpp" />
+    <ClCompile Include="..\NGin\Network\Compress.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Blocks\Block_Liquid.cpp">
+      <Filter>Core\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Blocks\Block_Static.cpp">
+      <Filter>Core\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Blocks\Block_Stone.cpp">
+      <Filter>Core\Blocks</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\NGin\Network\Network.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Network\NetworkData.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\NGin\NGin.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\rapidxml\rapidxml.hpp">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\rapidxml\rapidxml_iterators.hpp">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\rapidxml\rapidxml_print.hpp">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\rapidxml\rapidxml_utils.hpp">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Scripts\Scripts.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\GL\freeglut.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\GL\freeglut_ext.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\GL\freeglut_std.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\GL\glut.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigFloat.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbignum.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbignums.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbnl.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cios.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cthr.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Ctty.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exarray.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exdebug.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exstring.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exthread.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\constants.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\FlowSystem.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\Fraction.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\helperFunctions.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\Keyframe.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\Point.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\Polynomial.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\Types.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Terrain\Block.h">
+      <Filter>Core\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Terrain\Chunk.h">
+      <Filter>Core\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Terrain\ChunkColumn.h">
+      <Filter>Core\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Terrain\Fragment.h">
+      <Filter>Core\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Terrain\Region.h">
+      <Filter>Core\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Definitions.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Terrain\Entities.h">
+      <Filter>Core\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Terrain\WorldLoader.h">
+      <Filter>Core\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Mapgen\Mapgen.h">
+      <Filter>Core\Mapgen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Mapgen\Perlin.h">
+      <Filter>Core\Mapgen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NGin\Network\Compress.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Liquid.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Static.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Stone.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Blocks\Block_Types.h">
+      <Filter>Core\Blocks</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\NGin\rapidxml\manual.html">
+      <Filter>NGin</Filter>
+    </None>
+    <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.inl">
+      <Filter>NGin</Filter>
+    </None>
+    <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbnl.inl">
+      <Filter>NGin</Filter>
+    </None>
+    <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbnl64.inl">
+      <Filter>NGin</Filter>
+    </None>
+  </ItemGroup>
+</Project>

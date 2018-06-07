@@ -1,0 +1,16 @@
+Debug/
+SpaceCube/Debug/
+Server/Debug/
+
+Release/
+SpaceCube/Release/
+Server/Release/
+x64/
+SpaceCube/x64/
+Server/x64/
+NGin
+
+*.map
+*.ent
+
+.vs/

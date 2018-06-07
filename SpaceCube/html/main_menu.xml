@@ -1,0 +1,136 @@
+<body>
+	<image
+		id = "objectMainMenuLogoImage"
+		align = "1"
+	>
+		<location>
+			<bot
+				rel="0.7"
+				abs="0.0"
+			></bot>
+			<top
+				rel="0.9"
+				abs="0.0"
+			></top>
+			<left
+				rel="0.1"
+				abs="0.0"
+			></left>
+			<right
+				rel="0.9"
+				abs="0.0"
+			></right>
+		</location>html/logo.png</image>
+	<button
+		id = "objectMainMenuSingleplayerPlayButton"
+		callback = "mainMenuSingleplayerPlayButton"
+	>
+		<location>
+			<bot
+				rel="0.6"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.7"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.3"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.7"
+				abs="-5.0"
+			></right>
+		</location>Singleplayer</button>
+	<button
+		id = "objectMainMenuMultiplayerPlayButton"
+		callback = "mainMenuMultiplayerPlayButton"
+	>
+		<location>
+			<bot
+				rel="0.5"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.6"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.3"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.7"
+				abs="-5.0"
+			></right>
+		</location>Multiplayer</button>
+	<button
+		id = "objectMainMenuSettingsButton"
+		callback = "mainMenuSettingsButton"
+		trigger = "0 115"
+	>
+		<location>
+			<bot
+				rel="0.4"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.5"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.3"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.7"
+				abs="-5.0"
+			></right>
+		</location>Settings</button>
+	<button
+		id = "objectMainMenuExitButton"
+		callback = "mainMenuExitButton"
+		trigger = "0 27"
+	>
+		<location>
+			<bot
+				rel="0.3"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.4"
+				abs="-5.0"
+			></top>
+			<left
+				rel="0.3"
+				abs="5.0"
+			></left>
+			<right
+				rel="0.7"
+				abs="-5.0"
+			></right>
+		</location>Exit</button>
+	<labelbind
+		id = "objectMainMenuVersion"
+		align = "1"
+	>
+		<location>
+			<bot
+				rel="0.0"
+				abs="5.0"
+			></bot>
+			<top
+				rel="0.0"
+				abs="35.0"
+			></top>
+			<left
+				rel="1.0"
+				abs="-95.0"
+			></left>
+			<right
+				rel="1.0"
+				abs="-5.0"
+			></right>
+		</location>ERROR</labelbind>
+</body>

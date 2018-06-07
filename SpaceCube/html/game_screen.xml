@@ -1,0 +1,24 @@
+<body>
+	<div
+		id = "objectMainGameCanvasContainer"
+	>
+		<location>
+			<bot
+				rel="0.0"
+				abs="0.0"
+			></bot>
+			<top
+				rel="1.0"
+				abs="0.0"
+			></top>
+			<left
+				rel="0.0"
+				abs="0.0"
+			></left>
+			<right
+				rel="1.0"
+				abs="0.0"
+			></right>
+		</location>
+	</div>
+</body>
