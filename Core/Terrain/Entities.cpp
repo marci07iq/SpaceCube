@@ -156,14 +156,14 @@ NetBinder::NetBinder(guid_t guid) : Player(guid) {
 }
 
 void NetBinder::sendBlock(iVec3 pos, Block& what) {
-
+  cout << pos << " " << what._raw << endl;
   DataElement* res = new DataElement();
   DataElement* nd;
   nd = new DataElement();
   oGFunc(pos, nd);
   res->addChild(nd);
   nd = new DataElement();
-  vGFunc(what._ID, nd);
+  vGFunc(what._raw, nd);
   res->addChild(nd);
 
   connection->SendData(res, PacketBlock);
@@ -209,7 +209,7 @@ bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkS * thisptr, Net
       iVec3 pos;
       Block b;
       oSFunc(pos, Data->_children[0]);
-      vSFunc(b._ID, Data->_children[1]);
+      vSFunc(b._raw, Data->_children[1]);
       setBlock(pos, 0, b);
       return false;
       break;
@@ -233,7 +233,7 @@ bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkC * thisptr) {
       iVec3 pos;
       Block b;
       oSFunc(pos, Data->_children[0]);
-      vSFunc(b._ID, Data->_children[1]);
+      vSFunc(b._raw, Data->_children[1]);
       setBlock(pos, 0, b);
       break;
   }

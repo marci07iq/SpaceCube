@@ -1,20 +1,28 @@
 #include "WorldLoader.h"
 
 Block::Block() {
+  _raw = 0;
 }
 
-Block::Block(block_id_t ID) :
-  _ID(ID) {
+Block::Block(uint16_t ID) {
+  _raw = 0;
+  _ID = ID;
+}
+
+Block::Block(uint16_t ID, uint64_t meta) {
+  _raw = 0;
+  _ID = ID;
+  _meta = meta;
 }
 
 vector<BlockProperies> blockProperties;
 
 void writeBlock(unsigned char * to, int id, Block & b) {
-  *(reinterpret_cast<block_id_t*>(to + id)) = b._ID;
+  *(reinterpret_cast<uint64_t*>(to + id)) = b._raw;
 }
 
 void readBlock(unsigned char * from, int id, Block & b) {
-  b._ID = *(reinterpret_cast<block_id_t*>(from + id));
+  b._raw = *(reinterpret_cast<uint64_t*>(from + id));
 }
 
 map<string, BlockModel> models;
@@ -58,19 +66,16 @@ uint64_t hexTo64(string& name) {
 
 void loadBlocks() {
   ifstream in("Textures/blocks.dat");
-
-  string idHexCode;
   uint64_t idCode = 0;
-  size_t idCodeLen;
   string idName;
   string dispName;
   string modelName;
   int needs;
 
-  while (in >> idHexCode >> idCodeLen >> idName >> dispName >> modelName) {
+  while (in >> idName >> dispName >> modelName) {
     blockProperties.resize(idCode+1);
     blockModels.resize(idCode+1);
-    cout << idHexCode << " " << idCode << " " << idCodeLen << " " << idName << " " << dispName << " " << modelName << " " << endl;
+    cout << idCode << " " << idName << " " << dispName << " " << modelName << " " << endl;
     if (!models.count(modelName)) {
       loadModel("Textures/", modelName);
     }
@@ -96,6 +101,7 @@ void loadBlocks() {
   blockProperties[3].actionDestory = actionDestoryNothing;
   blockProperties[4].actionDestory = actionDestoryNothing;
   blockProperties[5].actionDestory = actionDestoryNothing;
+  blockProperties[6].actionDestory = actionDestoryNothing;
 
   blockProperties[0].onUpdate = onUpdateNothing;
   blockProperties[1].onUpdate = onUpdateNothing;
@@ -103,6 +109,8 @@ void loadBlocks() {
   blockProperties[3].onUpdate = onUpdateNothing;
   blockProperties[4].onUpdate = onUpdateNothing;
   blockProperties[5].onUpdate = onUpdateNature;
+  blockProperties[6].onUpdate = onUpdateNothing;
+
   #endif
 
   #ifdef M_CLIENT
@@ -112,6 +120,8 @@ void loadBlocks() {
   blockProperties[3].getNeeds = getSolidNeeds;
   blockProperties[4].getNeeds = getEmptyNeeds;
   blockProperties[5].getNeeds = getEmptyNeeds;
+  blockProperties[6].getNeeds = getSolidNeeds;
+
 
   blockProperties[0].getModel = getStoredModel;
   blockProperties[1].getModel = getStoredModel;
@@ -119,6 +129,8 @@ void loadBlocks() {
   blockProperties[3].getModel = getStoredModel;
   blockProperties[4].getModel = getConnectedModel;
   blockProperties[5].getModel = getStoredModel;
+  blockProperties[6].getModel = getWoodModel;
+
 
   blockProperties[0].getTex = getStoredTex;
   blockProperties[1].getTex = getStoredTex;
@@ -126,5 +138,7 @@ void loadBlocks() {
   blockProperties[3].getTex = getStoredTex;
   blockProperties[4].getTex = getStoredTex;
   blockProperties[5].getTex = getStoredTex;
+  blockProperties[6].getTex = getStoredTex;
+
   #endif
 }

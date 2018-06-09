@@ -1,3 +1,4 @@
+#include "GameCanvas.h"
 
 Shader chunkShader;
 Shader entityShader;
@@ -14,10 +15,22 @@ uint64_t firstFrameTime;
 
 uint64_t lastFrameTime;
 
+guid_t userGUID = 0x0123456789abcdef;
+NetBinder* user;
+NetworkC* Connection;
+
+int frameTime = 30; //33ms;
+
+void glut_timer_CB(int a) {
+  glutPostRedisplay();
+  glutTimerFunc(frameTime, glut_timer_CB, 0);
+}
+
 void MainGameCanvas::normalizeAngles() {
 
 }
 int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_location>& down) {
+  uint64_t thisFrameTime = chrono::duration_cast< chrono::milliseconds >(
     chrono::system_clock::now().time_since_epoch()).count();
 
   sVec3 userMove = { user->getLook().x, user->getLook().y, 0};
@@ -46,7 +59,7 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
 
   user->setVel(resVel);
 
-  tickPhysics((frameTime - lastFrameTime) / 1000.0);
+  tickPhysics((thisFrameTime - lastFrameTime) / 1000.0);
 
   glDepthRange(0.01, 256);
   glClear(GL_DEPTH_BUFFER_BIT);
@@ -140,7 +153,7 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   glVertex2d((ax + bx) / 2.0 + 1, (ay + by) / 2.0 + 10);
   glEnd();
 
-  lastFrameTime = frameTime;
+  lastFrameTime = thisFrameTime;
 
   return 0;
 }

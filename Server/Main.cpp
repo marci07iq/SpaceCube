@@ -89,6 +89,8 @@ bool recivePacket(DataElement* Data, int Id, NetworkS* thisptr, NetBinder* conne
 }
 
 int main() {
+  assert (sizeof(Block) == 8);
+
   initalize();
 
   while (true) {

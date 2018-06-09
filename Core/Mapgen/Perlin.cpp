@@ -32,7 +32,7 @@ float locationRandom(int seed, int type, int dim, int x, int y, int z) {
   comb.i[3] = x;
   comb.i[4] = y;
   comb.i[5] = z;
-  return bitShuffle(crc32c(0, comb.b, 24)) / 4294967296.0;
+  return crc32c(0, comb.b, 24) / 4294967296.0;
 }
 
 float locationRandomF(int seed, int type, int dim, float x, float y, float z) {
@@ -77,7 +77,7 @@ Perlin2D::Perlin2D(int xl, int yl, int xo, int yo) {
 void Perlin2D::setSeed(int gridscale, int seed) {
   for (int i = 0; i <= _xl; i++) {
     for (int j = 0; j <= _yl; j++) {
-      float rval = locationRandom(seed, 0, 0, modulo(_xo + i, MAP_X / gridscale), modulo(_yo + j, MAP_Y / gridscale), 0)*TWO_PI;
+      float rval = locationRandom(seed, 0, 0, modulo(_xo + i, MAP_X / gridscale), modulo(_yo + j, MAP_Y / gridscale), gridscale)*TWO_PI;
       _vals[i][j] = fVec2(sin(rval), cos(rval));
     }
   }

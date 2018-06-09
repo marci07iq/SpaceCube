@@ -5,7 +5,6 @@
 #endif
 #include "../NGin/NGin.h"
 
-typedef uint64_t block_id_t;
 typedef pair<int, pair<int,int>> world_col_t;
 
 typedef uint64_t guid_t;
@@ -17,6 +16,12 @@ const int COLUMN_PER_FRAGMENT = 4;
 const int FRAGMENT_PER_REGION = 4;
 
 const int BLOCK_BYTES = 8;
+const int BLOCK_ID_BYTES = 2;
+const int BLOCK_META_BYTES = BLOCK_BYTES - BLOCK_ID_BYTES;
+
+const int BLOCK_BITS = 8 * BLOCK_BYTES;
+const int BLOCK_ID_BITS = 8 * BLOCK_ID_BYTES;
+const int BLOCK_META_BITS = 8 * BLOCK_META_BYTES;
 
 extern string mapname;
 
@@ -48,3 +53,5 @@ enum Directions {
   Dir_PZ = 5,
   Dir_All = 6
 };
+
+iVec3 jump(iVec3 in, int towards);

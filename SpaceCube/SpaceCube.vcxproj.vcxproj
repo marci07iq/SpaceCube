@@ -156,7 +156,7 @@
     <ClCompile Include="..\Core\Blocks\Block_Liquid.cpp" />
     <ClCompile Include="..\Core\Blocks\Block_Static.cpp" />
     <ClCompile Include="..\Core\Blocks\Block_Stone.cpp" />
-    <ClCompile Include="..\Core\Definition.cpp" />
+    <ClCompile Include="..\Core\Definitions.cpp" />
     <ClCompile Include="..\Core\Mapgen\Mapgen.cpp" />
     <ClCompile Include="..\Core\Mapgen\Perlin.cpp" />
     <ClCompile Include="..\Core\Physics\Physics.cpp" />

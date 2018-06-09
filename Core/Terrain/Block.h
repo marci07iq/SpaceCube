@@ -10,11 +10,19 @@ class Entity;
 
 
 struct Block {
-  block_id_t _ID;
+  union {
+    uint64_t _raw;
+    struct {
+      uint32_t _data;
+      uint16_t _meta;
+      uint16_t _ID;
+    };
+  };
 
   Block();
+  Block(uint16_t ID);
+  Block(uint16_t ID, uint64_t meta);
 
-  Block(block_id_t ID);
 };
 
 struct BlockPos {

@@ -135,9 +135,6 @@
     <ClCompile Include="..\..\NGin\Scripts\Scripts.cpp">
       <Filter>NGin</Filter>
     </ClCompile>
-    <ClCompile Include="..\Core\Definition.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\Core\Terrain\Block.cpp">
       <Filter>Core\Terrain</Filter>
     </ClCompile>
@@ -200,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="..\NGin\Network\Compress.cpp">
       <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Definitions.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

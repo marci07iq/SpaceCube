@@ -99,9 +99,6 @@
     <ClCompile Include="..\Core\Mapgen\Perlin.cpp">
       <Filter>Core\Mapgen</Filter>
     </ClCompile>
-    <ClCompile Include="..\Core\Definition.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\Core\Definitions.cpp" />
     <ClCompile Include="..\NGin\Network\Compress.cpp">
       <Filter>NGin</Filter>

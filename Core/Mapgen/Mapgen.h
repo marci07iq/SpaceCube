@@ -9,5 +9,11 @@ public:
   int dim;
   static list<pair<int, double>> noise_weights;
 
+  Block& Mapgen::getBlock(iVec3 lplace);
+
+  bool isIn(iVec3& what);
+
+  void buildTree(iVec3 lbase);
+
   void generateFragment(int fx, int fy);
 };
