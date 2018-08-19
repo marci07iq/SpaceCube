@@ -19,7 +19,7 @@ guid_t userGUID = 0x0123456789abcdef;
 NetBinder* user;
 NetworkC* Connection;
 
-int frameTime = 30; //33ms;
+int frameTime = 10; //33ms;
 
 void glut_timer_CB(int a) {
   glutPostRedisplay();
@@ -38,26 +38,29 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   if(userMove.sqrlen() > 0) {
     userMove.norm();
     if (isDown(down, key_location(key('w', 0)))) {
-      resVel += (userMove * user->getSpeed());
+      resVel += (userMove * user->getSpeed() * 5);
     }
     if (isDown(down, key_location(key('d', 0)))) {
-      resVel += (crs(userMove, {0,0,1}) * user->getSpeed());
+      resVel += (crs(userMove, {0,0,1}) * user->getSpeed() * 5);
     }
     if (isDown(down, key_location(key('s', 0)))) {
-      resVel += (-userMove * user->getSpeed());
+      resVel += (-userMove * user->getSpeed() * 5);
     }
     if (isDown(down, key_location(key('a', 0)))) {
-      resVel += (-crs(userMove, { 0,0,1 }) * user->getSpeed());
+      resVel += (-crs(userMove, { 0,0,1 }) * user->getSpeed() * 5);
     }
     if (isDown(down, key_location(key(' ', 0)))) {
       resVel += (fVec3(0,0,1) * user->getSpeed());
+      if(user->_inWorld) {
+        user->setVel(user->getVelocity() + mpsVec3(0, 0, 5) * user->_friction);
+      }
     }
     if (isDown(down, key_location(key(112, 1)))) {
       resVel += (-fVec3(0,0,1) * user->getSpeed());
     }
   }
 
-  user->setVel(resVel);
+  user->_selfAccel = resVel;
 
   tickPhysics((thisFrameTime - lastFrameTime) / 1000.0);
 
@@ -68,6 +71,8 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   // Enable blending
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  glAlphaFunc(GL_GREATER, 0.1);
 
   chunkShader.bind();
 
@@ -101,8 +106,6 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   glBindTexture(GL_TEXTURE_2D, textures);
   glUniform1i(glGetUniformLocation(chunkShader._pID, "myTexture"), 0); // set it manually
 
-
-
   for (auto&& it : _fragments) {
     if(it.second) {
       for (int i = 0; i < COLUMN_PER_FRAGMENT; i++) {
@@ -134,11 +137,11 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
 
   chunkShader.unbind();
 
-  glFlush();
+  //glFlush();
 
   Graphics::resetViewport();
 
-  mVec3 head = user->getHead();
+  mVec3 head = user->getFeetCenter();
   renderBitmapString(10,10,"Pos: " + to_string(head.x) + " " + to_string(head.y) + " " + to_string(head.z), 0xffff00ff, false);
 
   setColor(0xffffffff);
@@ -153,6 +156,8 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   glVertex2d((ax + bx) / 2.0 + 1, (ay + by) / 2.0 + 10);
   glEnd();
 
+  glFlush();
+  
   lastFrameTime = thisFrameTime;
 
   return 0;

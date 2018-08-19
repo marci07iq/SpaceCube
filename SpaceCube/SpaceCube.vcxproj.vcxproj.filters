@@ -201,6 +201,9 @@
     <ClCompile Include="..\Core\Definitions.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\Core\Terrain\ItemContainer.cpp">
+      <Filter>Core\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NGin\GUI\Button.h">
@@ -424,6 +427,9 @@
     </ClInclude>
     <ClInclude Include="..\NGin\Network\Compress.h">
       <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Terrain\ItemContainer.h">
+      <Filter>Core\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

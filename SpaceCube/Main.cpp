@@ -14,6 +14,7 @@ bool recivePacket(DataElement* data, int id, NetworkC* client, NetBinder* lplaye
           user = client->ConnectedBinder = lplayer = me;
           client->ConnectedBinder->connection = client;
           entities[userGUID] = user;
+          user->loadChunks();
 
           Graphics::setElements(objectGameSubWindow, "html/game_screen.xml");
 
@@ -38,7 +39,8 @@ bool recivePacket(DataElement* data, int id, NetworkC* client, NetBinder* lplaye
 
           glutPostRedisplay();
         } else {
-          createMainMenu();
+          //createMainMenu();
+          createMessageScreen(data->_children[1]->_core->toType<string>(), "BACK", createMainMenu, true);
           glutPostRedisplay();
         }
         break;
@@ -51,6 +53,17 @@ bool recivePacket(DataElement* data, int id, NetworkC* client, NetBinder* lplaye
 }
 
 int main() {
+  Graphics::defaultKeyManager = Graphics::defaultKeyManagerNL;
+  Graphics::defaultKeyUpManager = Graphics::defaultKeyUpManagerNL;
+  Graphics::defaultMouseClickManager = Graphics::defaultMouseClickManagerNL;
+  Graphics::defaultMouseEntryManager = Graphics::defaultMouseEntryManagerNL;
+  Graphics::defaultMouseMoveManager = Graphics::defaultMouseMoveManagerNL;
+  Graphics::defaultMouseWheelManager = Graphics::defaultMouseWheelManagerNL;
+  Graphics::defaultRenderManager = Graphics::defaultRenderManagerNL;
+  Graphics::defaultResizeManager = Graphics::defaultResizeManagerNL;
+  Graphics::defaultSpecialKeyManager = Graphics::defaultSpecialKeyManagerNL;
+
+
   setlocale(LC_ALL, "");
   srand(time(NULL));
   ran1(time(NULL));

@@ -253,8 +253,7 @@ void Chunk::buildChunk() {
   }
   float* vert = new float[quads.size() * 3 * 6];
   float* tex = new float[quads.size() * 2 * 6];
-  float* col = new float[quads.size() * 4 * 6];
-  float* mov = new float[quads.size() * 6];
+
   int i = 0;
   for (auto&& it : quads) {
     vert[18 * i +  0] = it.vbl.x;
@@ -289,20 +288,6 @@ void Chunk::buildChunk() {
     tex[12 * i + 10] = it.tbr.x;
     tex[12 * i + 11] = it.tbr.y;
 
-    for (int j = 0; j < 6; j++) {
-      col[24 * i + 4 * j + 0] = it.recolor.r;
-      col[24 * i + 4 * j + 1] = it.recolor.g;
-      col[24 * i + 4 * j + 2] = it.recolor.b;
-      col[24 * i + 4 * j + 3] = it.recolor.a;
-    }
-
-    mov[6 * i + 0] = it.rbl;
-    mov[6 * i + 1] = it.rtl;
-    mov[6 * i + 2] = it.rbr;
-    mov[6 * i + 3] = it.rtl;
-    mov[6 * i + 4] = it.rtr;
-    mov[6 * i + 5] = it.rbr;
-
     ++i;
   }
 
@@ -316,14 +301,6 @@ void Chunk::buildChunk() {
   glBindBuffer(GL_ARRAY_BUFFER, _chunk_tex_vbo);
   glBufferData(GL_ARRAY_BUFFER, quads.size() * 2 * 6 * sizeof(float), tex, GL_STATIC_DRAW);
 
-  glGenBuffers(1, &_chunk_col_vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, _chunk_col_vbo);
-  glBufferData(GL_ARRAY_BUFFER, quads.size() * 4 * 6 * sizeof(float), col, GL_STATIC_DRAW);
-
-  glGenBuffers(1, &_chunk_mov_vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, _chunk_mov_vbo);
-  glBufferData(GL_ARRAY_BUFFER, quads.size() * 6 * sizeof(float), mov, GL_STATIC_DRAW);
-
   glGenVertexArrays(1, &_chunk_vao);
   glBindVertexArray(_chunk_vao);
   glEnableVertexAttribArray(0);
@@ -332,17 +309,9 @@ void Chunk::buildChunk() {
   glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, _chunk_tex_vbo);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-  glEnableVertexAttribArray(2);
-  glBindBuffer(GL_ARRAY_BUFFER, _chunk_col_vbo);
-  glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, NULL);
-  glEnableVertexAttribArray(3);
-  glBindBuffer(GL_ARRAY_BUFFER, _chunk_mov_vbo);
-  glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, NULL);
 
   delete[quads.size() * 3 * 6] vert;
   delete[quads.size() * 2 * 6] tex;
-  delete[quads.size() * 4 * 6] col;
-  delete[quads.size() * 6] mov;
 
   _quads = quads.size()*6;
 }

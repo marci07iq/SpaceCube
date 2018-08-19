@@ -18,14 +18,16 @@ struct PhysCube {
   float drag; //0: none, 1: infinite
   float invMass; //1/kg
   mass_density_type_kgpermmm density;
+
+  void offset(mVec3 with) {
+    nc += with;
+    pc += with;
+  }
 };
 
 struct QuadFace { //Data to render
   fVec3 vbl, vtl, vtr, vbr; //Vertex coordinates
   vec2<float> tbl, ttl, ttr, tbr; //Texture coordinates
-  //float mbl, mtl, mtr, mbr; //Ripple
-  floatCol recolor;
-  float rbl, rtl, rtr, rbr;
 };
 
 struct StoredQuadFace {

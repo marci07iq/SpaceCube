@@ -140,6 +140,7 @@
     <ClCompile Include="..\Core\Definitions.cpp" />
     <ClCompile Include="..\Core\Mapgen\Mapgen.cpp" />
     <ClCompile Include="..\Core\Mapgen\Perlin.cpp" />
+    <ClCompile Include="..\Core\Physics\Physics.cpp" />
     <ClCompile Include="..\Core\Terrain\Block.cpp" />
     <ClCompile Include="..\Core\Terrain\Chunk.cpp" />
     <ClCompile Include="..\Core\Terrain\ChunkColumn.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="..\Core\Definitions.h" />
     <ClInclude Include="..\Core\Mapgen\Mapgen.h" />
     <ClInclude Include="..\Core\Mapgen\Perlin.h" />
+    <ClInclude Include="..\Core\Physics\Physics.h" />
     <ClInclude Include="..\Core\Terrain\Block.h" />
     <ClInclude Include="..\Core\Terrain\Chunk.h" />
     <ClInclude Include="..\Core\Terrain\ChunkColumn.h" />

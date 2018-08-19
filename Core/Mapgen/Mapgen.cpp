@@ -30,41 +30,51 @@ void Mapgen::buildTree(iVec3 lbase) {
       Block& b = getBlock(it.first);
       if (b._ID == 0) {
         b._ID = 6;
-        b._meta = min(it.second.first, 3) << (2*it.second.second ^ 1);
+        b._meta = min(it.second.first, 3) << (2*it.second.second);
         if (it.second.second == Dir_MZ) { //if up branch
           int nw = round(it.second.first - ran1());
+          nw = max(nw, 0);
           steps.push_back({jump(it.first, Dir_PZ), {nw, Dir_MZ}});
           b._meta |= min(nw, 3) << (2 * Dir_PZ);
-          if (ran1() < 1.0 / (it.second.first * it.second.first)) {
+          if (ran1() < 1.0 / (1 - 0.25 * it.second.first)) {
             int nw = round(it.second.first * ran1());
+            nw = max(nw, 0);
             steps.push_back({ jump(it.first, Dir_PX),{ nw, Dir_MX } });
             b._meta |= min(nw, 3) << (2 * Dir_PX);
           }
-          if (ran1() < 1.0 / (it.second.first * it.second.first)) {
+          if (ran1() < 1.0 / (1 - 0.25 * it.second.first)) {
             int nw = round(it.second.first * ran1());
+            nw = max(nw, 0);
             steps.push_back({ jump(it.first, Dir_MX),{ nw, Dir_PX } });
             b._meta |= min(nw, 3) << (2 * Dir_MX);
           }
-          if (ran1() < 1.0 / (it.second.first * it.second.first)) {
+          if (ran1() < 1.0 / (1 - 0.25 * it.second.first)) {
             int nw = round(it.second.first * ran1());
+            nw = max(nw, 0);
             steps.push_back({ jump(it.first, Dir_PY),{ nw, Dir_MY } });
             b._meta |= min(nw, 3) << (2 * Dir_PY);
           }
-          if (ran1() < 1.0 / (it.second.first * it.second.first)) {
+          if (ran1() < 1.0 / (1 - 0.25 * it.second.first)) {
             int nw = round(it.second.first * ran1());
+            nw = max(nw, 0);
             steps.push_back({ jump(it.first, Dir_MY),{ nw, Dir_PY } });
             b._meta |= min(nw, 3) << (2 * Dir_MY);
           }
         }
         if (it.second.second < 4) { //if side branch
-          steps.push_back({ jump(it.first, it.second.second ^ 1),{ floor(it.second.first - 1.5*ran1()), it.second.second } });
-          if (ran1() < 1.0 / it.second.first) {
+          int nw = max(0.0, floor(it.second.first - 1.5*ran1()));
+          nw = max(nw, 0);
+          steps.push_back({ jump(it.first, it.second.second ^ 1),{ nw, it.second.second } });
+          b._meta |= min(nw, 3) << (2 * (it.second.second ^ 1));
+          if (ran1() < 1.0 / (1 - 0.25 * it.second.first)) {
             int nw = round(it.second.first * ran1());
+            nw = max(nw, 0);
             steps.push_back({ jump(it.first, it.second.second ^ 2),{ nw, it.second.second ^ 3 } });
             b._meta |= min(nw, 3) << (2 * (it.second.second ^ 2));
           }
-          if (ran1() < 1.0 / it.second.first) {
+          if (ran1() < 1.0 / (1 - 0.25 * it.second.first)) {
             int nw = round(it.second.first * ran1());
+            nw = max(nw, 0);
             steps.push_back({ jump(it.first, it.second.second ^ 3),{ nw, it.second.second ^ 2 } });
             b._meta |= min(nw, 3) << (2 * (it.second.second ^ 3));
           }
@@ -86,37 +96,25 @@ void Mapgen::generateFragment(int fx, int fy) {
     }
   }
 
-  float heightmap[BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT][BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT];
+  CompositePerlin heightMap;
+  heightMap._parts = noise_weights;
 
-  for (int i = 0; i < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; i++) {
-    for (int j = 0; j < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; j++) {
-      heightmap[i][j] = 70;
-    }
-  }
+  heightMap.generate(
+  {fx * COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK, fy * COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK},
+  {1,1},
+  { COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK, COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK },
+  0,
+  dim,
+  0);
 
-  for (auto&& it : noise_weights) {
-    Perlin2D perlin(
-      ceilDiv(COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK, it.first),
-      ceilDiv(COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK, it.first),
-      floorDiv(fx * COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK, it.first),
-      floorDiv(fy * COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK, it.first));
-    perlin.setSeed(it.first, 0);
-    for (int i = 0; i < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; i++) {
-      for (int j = 0; j < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; j++) {
-        heightmap[i][j] += perlin.getAt(
-          (i + fx * COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK - perlin._xo * it.first)*1.0 / it.first,
-          (j + fy * COLUMN_PER_FRAGMENT * BLOCK_PER_CHUNK - perlin._yo * it.first)*1.0 / it.first)
-          * it.second;
-      }
-    }
-  }
+  vector<vector<float>>& heightmap = (heightMap._vals);
 
   for (int i = 0; i < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; i++) {
     for (int j = 0; j < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; j++) {
       for (int k = 0; k <= heightmap[i][j] - 4 && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
         getBlock({i, j, k}) =  Block(1);
       }
-      if(heightmap[i][j] > 61) {
+      if(heightMap._vals[i][j] > 61) {
         for (int k = max(0.0f,heightmap[i][j] - 3); k <= heightmap[i][j] - 1 && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
           getBlock({ i, j, k }) = Block(2);
         }
@@ -139,15 +137,17 @@ void Mapgen::generateFragment(int fx, int fy) {
       int k = heightmap[i][j] + 1;
 
       //Flower
-      float val = locationRandom(0, 1, 0, i + fx * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, j + fy * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, 0);
-      if (val > 0.98) {
-        getBlock({ i, j, k }) = Block(5);
-      }
+      if(getBlock({i, j, k-1})._ID == 3) {
+        float val = locationRandom(0, 1, 0, i + fx * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, j + fy * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, 0);
+        if (val > 0.98) {
+          getBlock({ i, j, k }) = Block(5);
+        }
 
-      //Tree
-      val = locationRandom(0, 1, 0, i + fx * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, j + fy * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, 1);
-      if (val > 0.99) {
-        buildTree({i, j, k});
+        //Tree
+        val = locationRandom(0, 1, 0, i + fx * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, j + fy * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, 1);
+        if (val > 0.99) {
+          //buildTree({i, j, k});
+        }
       }
     }
   }

@@ -13,6 +13,14 @@ class Fragment {
 public:
   Fragment* _neigh[4];
 
+  Fragment() {
+    for (int i = 0; i < COLUMN_PER_FRAGMENT; i++) {
+      for (int j = 0; j < COLUMN_PER_FRAGMENT; j++) {
+        _cols[i][j] = NULL;
+      }
+    }
+  }
+
   void link();
   void hello(Directions fromDir, Fragment* fromChunk);
   void unlink();

@@ -1,13 +1,12 @@
 #pragma once
 
-#include "../Blocks/Block_Types.h"
+#include "ItemContainer.h"
 
 typedef void(*onEntityMove)(mVec3& to, int& dim);
 
 typedef void(*onEntityLook)(sVec3& at);
 
 typedef void(*onEntityLook)(sVec3& at);
-
 
 struct EntityProperties {
   onEntityMove onMove;
@@ -23,7 +22,6 @@ protected:
   uint32_t _type;
   mass_type_kg _mass;
   mpsVec3 _velocity;
-  mpssVec3 _selfAccel;
   sVec3 _lookDir;
   vel_type_mpers _speed;
   float _turnDir;
@@ -34,13 +32,16 @@ protected:
   GLuint entity_vao;
 #endif
 public:
+  sVec3 _friction;
+  bool _inWorld;
+  mpssVec3 _selfAccel;
   Entity(guid_t guid);
 
   inline mVec3& getCenter() {
-    return _pos;
+    return _pos + mVec3(0, 0, _size.z);
   }
   inline mVec3& getFeetCenter() {
-    return _pos - mVec3(0, 0, _size.z);
+    return _pos;
   }
   inline mVec3& getHead() {
     return _pos + rotateVecZ(_headOffset, _turnDir);
@@ -82,6 +83,8 @@ public:
 
   void set(DataElement* from);
   void get(DataElement* to);
+
+  void loadChunks();
 
   PhysCube getPhysCube();
 };

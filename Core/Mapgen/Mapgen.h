@@ -3,6 +3,10 @@
 #include "../Terrain/Fragment.h"
 #include "Perlin.h"
 
+class MapStructure {
+
+};
+
 class Mapgen {
 public:
   Fragment* res;

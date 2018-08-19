@@ -69,11 +69,11 @@ struct BlockProperies {
 };
 
 extern vector<BlockProperies> blockProperties;
+extern map<string, BlockModel> models;
+extern vector<BlockModel> blockModels;
 
 void loadBlocks();
 
 #ifdef M_CLIENT
-extern map<string, BlockModel> models;
-extern vector<BlockModel> blockModels;
 
 #endif

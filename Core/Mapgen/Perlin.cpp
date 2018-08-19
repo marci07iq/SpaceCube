@@ -74,10 +74,10 @@ Perlin2D::Perlin2D(int xl, int yl, int xo, int yo) {
   _yo = yo;
 }
 
-void Perlin2D::setSeed(int gridscale, int seed) {
+void Perlin2D::setSeed(int seed, int type, int dim, int loopX, int loopY, int scaleType) {
   for (int i = 0; i <= _xl; i++) {
     for (int j = 0; j <= _yl; j++) {
-      float rval = locationRandom(seed, 0, 0, modulo(_xo + i, MAP_X / gridscale), modulo(_yo + j, MAP_Y / gridscale), gridscale)*TWO_PI;
+      float rval = locationRandom(seed, type, dim, modulo(_xo + i, loopX), modulo(_yo + j, loopY), scaleType)*TWO_PI;
       _vals[i][j] = fVec2(sin(rval), cos(rval));
     }
   }
@@ -93,4 +93,53 @@ double Perlin2D::getAt(float x, float y) {
     ((_vals[posix + 0][posiy + 1].x * (posx - posix - 0) + _vals[posix + 0][posiy + 1].y * (posy - posiy - 1)))*(1 - posx + posix)*(0 + posy - posiy) +
     ((_vals[posix + 1][posiy + 0].x * (posx - posix - 1) + _vals[posix + 1][posiy + 0].y * (posy - posiy - 0)))*(0 + posx - posix)*(1 - posy + posiy) +
     ((_vals[posix + 1][posiy + 1].x * (posx - posix - 1) + _vals[posix + 1][posiy + 1].y * (posy - posiy - 1)))*(0 + posx - posix)*(0 + posy - posiy);
+}
+
+void CompositePerlin::generate(iVec2 start, iVec2 jump, iVec2 length, int seed, int dim, int type) {
+  _vals = vector<vector<float>>(length.x / jump.x, vector<float>(length.y / jump.y));
+  _start = start;
+  _jump = jump;
+  int typeId = 0;
+  for (auto&& it : _parts) {
+    if(it.first > 0) {
+      Perlin2D perlin(
+        ceilDiv(length.x, it.first),
+        ceilDiv(length.y, it.first),
+        floorDiv(start.x, it.first),
+        floorDiv(start.y, it.first));
+      perlin.setSeed(seed, type, dim, MAP_X / it.first, MAP_Y / it.first, typeId);
+      ++typeId;
+  
+      int ix = 0;
+      for (int sx = start.x; sx < start.x + length.x; sx += jump.x) {
+        int iy = 0;
+        for (int sy = start.y; sy < start.y + length.y; sy += jump.y) {
+          _vals[ix][iy] += perlin.getAt(
+            (sx * 1.0 / it.first - perlin._xo),
+            (sy * 1.0 / it.first - perlin._yo) )
+            * it.second;
+          ++iy;
+        }
+        ++ix;
+      }
+    
+    } else {
+      int ix = 0;
+      for (int sx = start.x; sx < start.x + length.x; sx += jump.x) {
+        int iy = 0;
+        for (int sy = start.y; sy < start.y + length.y; sy += jump.y) {
+          _vals[ix][iy] += it.second;
+          ++iy;
+        }
+        ++ix;
+      }
+    }
+  }
+  _start = start;
+  _jump = jump;
+}
+
+float CompositePerlin::getAt(iVec2 at) {
+  fVec2 index = (at - _start) / _jump;
+  return _vals[round(index.x)][round(index.y)];
 }

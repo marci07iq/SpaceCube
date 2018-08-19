@@ -22,7 +22,26 @@ void createMainMenu() {
     );
 
   Graphics::deleteElements(objectGameSubWindow);
+}
+void createMainMenu(string s) {
+  createMainMenu();
+}
+void createMessageScreen(string message, string button, ClickCallback buttonFunc,  bool showButton, string imgname, bool showImage) {
+  Graphics::deleteElements(objectMenuSubWindow);
+  Graphics::deleteElements(objectGameSubWindow);
 
+  Graphics::LabelHwnd lab = Graphics::createLabel("objectMessageText", LocationData(LinearScale(0.5),LinearScale(0.6),LinearScale(0),LinearScale(1)),getColor("label","bg"), getColor("label", "active"), getColor("label", "text"), message, 1);
+  Graphics::addElement(objectMenuSubWindow, lab);
+
+  if(showButton) {
+    Graphics::ButtonHwnd but = Graphics::createButton("objectMessageButton", LocationData(LinearScale(0.4), LinearScale(0.5), LinearScale(0), LinearScale(1)), getColor("label", "bg"), getColor("label", "active"), getColor("label", "text"), button, key(0, 0), buttonFunc);
+    Graphics::addElement(objectMenuSubWindow, but);
+  }
+
+  if (showImage) {
+    Graphics::ImageHwnd img = Graphics::createImage("objectMessageImage", LocationData(LinearScale(0.6), LinearScale(0.9), LinearScale(0), LinearScale(1)), getColor("label", "bg"), getColor("label", "active"), getColor("label", "text"), imgname, 1);
+    Graphics::addElement(objectMenuSubWindow, img);
+  }
 }
 void createSettings(Graphics::TableHwnd& table) {
   for (auto&& it : table->data) {
@@ -75,18 +94,18 @@ void connectServer(string ip, string port) {
 }
 
 //Main
-void mainMenuSingleplayerPlayButton() {
+void mainMenuSingleplayerPlayButton(string s) {
 
 }
-void mainMenuMultiplayerPlayButton() {
+void mainMenuMultiplayerPlayButton(string s) {
   Graphics::setElements(objectMenuSubWindow, "html/multi_menu.xml");
 }
-void mainMenuSettingsButton() {
+void mainMenuSettingsButton(string s) {
   Graphics::setElements(objectMenuSubWindow, "html/game_settings.xml");
   Graphics::TableHwnd table = (Graphics::TableHwnd)Graphics::getElementById("objectSettingsMenuTable");
   createSettings(table);
 }
-void mainMenuExitButton() {
+void mainMenuExitButton(string s) {
   glutExit();
 }
 
@@ -94,14 +113,14 @@ void mainMenuExitButton() {
 void multiMenuInput(string inp) {
 
 }
-void multiMenuInputButton() {
+void multiMenuInputButton(string s) {
 
   string ip = reinterpret_cast<Graphics::TextInputHwnd>(Graphics::getElementById("objectMultiMenuIpInput"))->text;
   string port = reinterpret_cast<Graphics::TextInputHwnd>(Graphics::getElementById("objectMultiMenuPortInput"))->text;
 
   connectServer(ip, port);
 }
-void multiMenuBackButton() {
+void multiMenuBackButton(string s) {
   createMainMenu();
 }
 
@@ -109,23 +128,24 @@ void multiMenuBackButton() {
 void settingsMenuInput(key nkey, int id) {
   keybindReply(nkey, id);
 }
-void settingsMenuBackButton() {
+void settingsMenuBackButton(string s) {
   createMainMenu();
   saveKeybinds();
 }
 
 
-void GLAPIENTRY
-MessageCallback(GLenum source,
+void MessageCallback(GLenum source,
   GLenum type,
   GLuint id,
   GLenum severity,
   GLsizei length,
   const GLchar* message,
   const void* userParam) {
+  if(severity != GL_DEBUG_SEVERITY_NOTIFICATION) {
   fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-    (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+    "** GL ERROR **",
     type, severity, message);
+    }
 }
 
 
@@ -160,12 +180,8 @@ void InitGraphics() {
   char **argv = new char*[0];
   glutInit(&argc, argv);
 
-  glutSetOption(
-    GLUT_ACTION_ON_WINDOW_CLOSE,
-    GLUT_ACTION_GLUTMAINLOOP_RETURNS
-    );
   //Subwindows
-  objectMainWindow = Graphics::CreateMainWindow("Game", Graphics::defaultWindowManagers, 640, 480, true);
+  objectMainWindow = Graphics::CreateMainWindow("SpaceCube", Graphics::defaultWindowManagers, 640, 480, true);
 
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();

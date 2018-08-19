@@ -85,25 +85,28 @@ Chunk * findChunk(int xc, int yc, int zc, int dim) {
 }
 
 BlockPos getBlock(int xb, int yb, int zb, int dim, bool& success) {
-  Chunk* c = findChunk(
+  Chunk* c = NULL;
+  c = findChunk(
     floorDiv(xb, BLOCK_PER_CHUNK),
     floorDiv(yb, BLOCK_PER_CHUNK),
     floorDiv(zb, BLOCK_PER_CHUNK),
     dim);
-  if(c != NULL) {
-    success = true;
-    return BlockPos{
-      c,
-      modulo(xb, BLOCK_PER_CHUNK),
-      modulo(yb, BLOCK_PER_CHUNK),
-      modulo(zb, BLOCK_PER_CHUNK),
-      &(c->_blocks
-      [modulo(xb, BLOCK_PER_CHUNK)]
-      [modulo(yb, BLOCK_PER_CHUNK)]
-      [modulo(zb, BLOCK_PER_CHUNK)])
-    };
-  }
   success = false;
+  if(c == NULL) {
+    return BlockPos();
+  }
+  success = true;
+  return BlockPos{
+    c,
+    modulo(xb, BLOCK_PER_CHUNK),
+    modulo(yb, BLOCK_PER_CHUNK),
+    modulo(zb, BLOCK_PER_CHUNK),
+    &(c->_blocks
+    [modulo(xb, BLOCK_PER_CHUNK)]
+    [modulo(yb, BLOCK_PER_CHUNK)]
+    [modulo(zb, BLOCK_PER_CHUNK)])
+  };
+  
 }
 
 #ifdef M_CLIENT
@@ -308,6 +311,7 @@ void setChunk(int cx, int cy, int cz, int dim, DataElement * data) {
 
 void initMapgen() {
   Mapgen::noise_weights = {
+    { 0, 70 },
     { 4, 1 },
     { 16, 4 },
     { 64, 20},

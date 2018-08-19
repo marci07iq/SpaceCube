@@ -164,6 +164,7 @@
     <ClCompile Include="..\Core\Terrain\BlockModel.cpp" />
     <ClCompile Include="..\Core\Terrain\Chunk.cpp" />
     <ClCompile Include="..\Core\Terrain\ChunkColumn.cpp" />
+    <ClCompile Include="..\Core\Terrain\ItemContainer.cpp" />
     <ClCompile Include="..\Core\Terrain\Entities.cpp" />
     <ClCompile Include="..\Core\Terrain\Fragment.cpp" />
     <ClCompile Include="..\Core\Terrain\RayTrace.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="..\Core\Terrain\BlockModel.h" />
     <ClInclude Include="..\Core\Terrain\Chunk.h" />
     <ClInclude Include="..\Core\Terrain\ChunkColumn.h" />
+    <ClInclude Include="..\Core\Terrain\ItemContainer.h" />
     <ClInclude Include="..\Core\Terrain\Entities.h" />
     <ClInclude Include="..\Core\Terrain\Fragment.h" />
     <ClInclude Include="..\Core\Terrain\RayTrace.h" />

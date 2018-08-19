@@ -19,6 +19,9 @@
     <Filter Include="Core\Blocks">
       <UniqueIdentifier>{25e0ff1c-4c02-4eb7-8b93-ce33f7272f97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Physics">
+      <UniqueIdentifier>{172ebd39-918e-47e0-987a-817e23ee26e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NGin\Network\Network.cpp">
@@ -111,6 +114,9 @@
     </ClCompile>
     <ClCompile Include="..\Core\Blocks\Block_Stone.cpp">
       <Filter>Core\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Physics\Physics.cpp">
+      <Filter>Core\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,6 +260,9 @@
     </ClInclude>
     <ClInclude Include="..\Core\Blocks\Block_Types.h">
       <Filter>Core\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Physics\Physics.h">
+      <Filter>Core\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

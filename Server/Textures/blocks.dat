@@ -1,7 +1,7 @@
 space_cube:void Void empty
-space_cube:rock Rock	solid 3 3 3 3 3 3
+space_cube:rock Rock solid 3 3 3 3 3 3
 space_cube:soil Soil solid 2 2 2 2 2 2
 space_cube:grass Grass solid 1 1 1 1 2 0
 space_cube:water Water liquid 4 4 4 4 4 4
 space_cube:flower Flower cross 5 5
-space_cube:wood Wood solid 7 7 7 7 6 6
+space_cube:wood Wood solid 7 7 7 6 8 9

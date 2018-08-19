@@ -7,7 +7,7 @@ void onDefaultBlockTick(BlockPos&);
 void onDefaultBlockInteract(BlockPos&, Entity*, int, void*);
 void onDefaultBlockLook(BlockPos&, Entity*, int, void*);
 void onDefaultBlockBreak(BlockPos&, Entity*, int, void*);
-void getStoredBlockPhysics(BlockPos[7], list<PhysCube>& l);
+void getStoredPhysics(BlockPos[7], list<PhysCube>& l);
 
 #ifdef M_CLIENT
 

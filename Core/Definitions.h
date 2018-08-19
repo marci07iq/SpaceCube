@@ -2,6 +2,8 @@
 
 #ifdef M_CLIENT
 #define SCRIPT_GUI
+//#define GUI_NO_NETLOCK
+#include <GL/glew.h>
 #endif
 #include "../NGin/NGin.h"
 

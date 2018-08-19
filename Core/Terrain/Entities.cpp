@@ -21,35 +21,12 @@ void Entity::setPos(mVec3 pos) {
   int ncy = floor(pos.y / BLOCK_PER_CHUNK);
   int ocx = floor(_pos.x / BLOCK_PER_CHUNK);
   int ocy = floor(_pos.y / BLOCK_PER_CHUNK);
-  /*if (ncx < ocx) {
-    for (int wcy = ncy - CHUNK_LOAD_RADIUS; wcy < ncy + CHUNK_LOAD_RADIUS; wcy++) {
-      findLoadChunkCol(ncx - CHUNK_LOAD_RADIUS, wcy, _dim);
-    }
-  }
-  if (ncy > ocy) {
-    for (int wcx = ncx - CHUNK_LOAD_RADIUS; wcx < ncx + CHUNK_LOAD_RADIUS; wcx++) {
-      findLoadChunkCol(wcx, ncy + CHUNK_LOAD_RADIUS, _dim);
-    }
-  }
-
-  if (ncx > ocx) {
-    for (int wcy = ncy + CHUNK_LOAD_RADIUS; wcy > ncy + CHUNK_LOAD_RADIUS; wcy--) {
-      findLoadChunkCol(ncx + CHUNK_LOAD_RADIUS, wcy, _dim);
-    }
-  }
-  if (ncy < ocy) {
-    for (int wcx = ncx + CHUNK_LOAD_RADIUS; wcx > ncx + CHUNK_LOAD_RADIUS; wcx--) {
-      findLoadChunkCol(wcx, ncy - CHUNK_LOAD_RADIUS, _dim);
-    }
-  }*/
-  if(ncx != ocx || ncy != ocy) {
-    for (int wcx = ncx - CHUNK_LOAD_RADIUS; wcx <= ncx + CHUNK_LOAD_RADIUS; wcx++) {
-      for (int wcy = ncy - CHUNK_LOAD_RADIUS; wcy <= ncy + CHUNK_LOAD_RADIUS; wcy++) {
-        findLoadChunkCol(wcx, wcy, _dim);
-      }
-    }
-  }
+#endif
   _pos = pos;
+#ifdef M_CLIENT
+  if(ncx != ocx || ncy != ocy) {
+    loadChunks();
+  }
 #endif
 }
 
@@ -70,6 +47,9 @@ void Entity::EntityTryLook(sVec3 at) {
 
 Entity::Entity(guid_t guid) {
   _guid = guid;
+  _size = mVec3(0.4, 0.4, 0.8);
+  _headOffset = mVec3(0,0,1.5);
+  cout << _size << endl;
 }
 
 void Entity::set(DataElement * from) {
@@ -91,10 +71,10 @@ void Entity::get(DataElement * to) {
   oGFunc(_pos, ne);
   to->addChild(ne);
   ne = new DataElement();
-  oGFunc(_size, ne);
+  oGFunc(_headOffset, ne);
   to->addChild(ne);
   ne = new DataElement();
-  oGFunc(_headOffset, ne);
+  oGFunc(_size, ne);
   to->addChild(ne);
   ne = new DataElement();
   vGFunc(_guid, ne);
@@ -116,13 +96,23 @@ void Entity::get(DataElement * to) {
   to->addChild(ne);
 }
 
+void Entity::loadChunks() {
+  int ncx = floor(_pos.x / BLOCK_PER_CHUNK);
+  int ncy = floor(_pos.y / BLOCK_PER_CHUNK);
+  for (int wcx = ncx - CHUNK_LOAD_RADIUS; wcx <= ncx + CHUNK_LOAD_RADIUS; wcx++) {
+    for (int wcy = ncy - CHUNK_LOAD_RADIUS; wcy <= ncy + CHUNK_LOAD_RADIUS; wcy++) {
+      findLoadChunkCol(wcx, wcy, _dim);
+    }
+  }
+}
+
 PhysCube Entity::getPhysCube() {
   PhysCube ans;
   ans.bounce = 0;
   ans.drag = 1;
   ans.invMass = 1 / _mass;
-  ans.nc = _pos - _size;
-  ans.pc = _pos + _size;
+  ans.nc = _pos - _size * mVec3(1,1,0);
+  ans.pc = _pos + _size * mVec3(1,1,2);
   return ans;
 }
 

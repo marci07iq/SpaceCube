@@ -32,13 +32,21 @@ void loadModel(string folder, string name) {
   ifstream in(folder + name + ".modl", ios::in);
   BlockModel m;
   if(in.is_open()) {
+    int faces, cubes;
+    in >> faces >> cubes;
     StoredQuadFace f;
     int type;
-    while(in >> f.base.vbl >> f.base.vtl >> f.base.vtr >> f.base.vbr >> f.base.tbl >> f.base.ttl >> f.base.ttr >> f.base.tbr >> f.base.recolor.r >> f.base.recolor.g >> f.base.recolor.b >> f.base.recolor.a >> type >> f.faceID) {
+    while(faces--) {
+      in >> f.base.vbl >> f.base.vtl >> f.base.vtr >> f.base.vbr >> f.base.tbl >> f.base.ttl >> f.base.ttr >> f.base.tbr >> type >> f.faceID;
       #ifdef M_CLIENT
       f.type = type;
       #endif
       m.faces.push_back(f);
+    }
+    PhysCube newCube;
+    while (cubes--) {
+      in >> newCube.nc.x >> newCube.nc.y >> newCube.nc.z >> newCube.pc.x >> newCube.pc.y >> newCube.pc.z;
+      m.cubes.push_back(newCube);
     }
   }
   models[name] = m;
@@ -141,4 +149,12 @@ void loadBlocks() {
   blockProperties[6].getTex = getStoredTex;
 
   #endif
+
+  blockProperties[0].getPhysics = getStoredPhysics;
+  blockProperties[1].getPhysics = getStoredPhysics;
+  blockProperties[2].getPhysics = getStoredPhysics;
+  blockProperties[3].getPhysics = getStoredPhysics;
+  blockProperties[4].getPhysics = getStoredPhysics;
+  blockProperties[5].getPhysics = getStoredPhysics;
+  blockProperties[6].getPhysics = getStoredPhysics;
 }

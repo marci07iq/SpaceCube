@@ -30,42 +30,6 @@ void getConnectedModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
       res.ttl = (it.base.ttl + texCoord) * TEXTURE_SIZE;
       res.ttr = (it.base.ttr + texCoord) * TEXTURE_SIZE;
 
-      res.recolor = it.base.recolor;
-
-      /*res.rbl = 0;
-      res.rtl = 0;
-      res.rtr = 0;
-      res.rbr = 0;*/
-
-      //if(it.faceID < 4) {
-        //if (!(notMe & 31 & ((it.type) | rotateCW(it.type)))) {
-          res.rbl = 0.153 + locationRandomF(0, 1, 0, res.vbl.x / 10, res.vbl.y / 10, res.vbl.z / 10)*0.002;
-        //}
-        //if (!(notMe & 31 & ((it.type) | rotateCW(it.type)))) {
-          res.rtl = 0.153 + locationRandomF(0, 1, 0, res.vtl.x / 10, res.vtl.y / 10, res.vtl.z / 10)*0.002;
-        //}
-        //if (!(notMe & 31 & ((it.type) | rotateCCW(it.type)))) {
-          res.rtr = 0.153 + locationRandomF(0, 1, 0, res.vtr.x / 10, res.vtr.y / 10, res.vtr.z / 10)*0.002;
-        //}
-        //if (!(notMe & 31 & ((it.type) | rotateCCW(it.type)))) {
-          res.rbr = 0.153 + locationRandomF(0, 1, 0, res.vbr.x / 10, res.vbr.y / 10, res.vbr.z / 10)*0.002;
-        //}
-      /*} else {
-        if (!(notMe & 5)) {
-          res.rbl = 0.202 + locationRandom(0, 1, 0, res.vbl.x, res.vbl.y, res.vbl.z)*0.002;
-        }
-        if (!(notMe & 9)) {
-          res.rtl = 0.202 + locationRandom(0, 1, 0, res.vtl.x, res.vtl.y, res.vtl.z)*0.002;
-        }
-        if (!(notMe & 10)) {
-          res.rtr = 0.202 + locationRandom(0, 1, 0, res.vtr.x, res.vtr.y, res.vtr.z)*0.002;
-        }
-        if (!(notMe & 6)) {
-          res.rbr = 0.202 + locationRandom(0, 1, 0, res.vbr.x, res.vbr.y, res.vbr.z)*0.002;
-        }
-      }*/
-
-
       addTo.push_back(res);
     }
   }
