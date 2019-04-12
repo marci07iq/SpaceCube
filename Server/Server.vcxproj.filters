@@ -24,54 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\NGin\Network\Network.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Network\NetworkData.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Scripts\Scripts.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\BigFloat.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Cbignum.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Cbignums.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Ctty.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Exarray.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\BigNumberLibrary\Prime.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\FlowSystem.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\Fraction.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\helperFunctions.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\Keyframe.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\Point.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NGin\Maths\Polynomial.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -103,9 +55,6 @@
       <Filter>Core\Mapgen</Filter>
     </ClCompile>
     <ClCompile Include="..\Core\Definitions.cpp" />
-    <ClCompile Include="..\NGin\Network\Compress.cpp">
-      <Filter>NGin</Filter>
-    </ClCompile>
     <ClCompile Include="..\Core\Blocks\Block_Liquid.cpp">
       <Filter>Core\Blocks</Filter>
     </ClCompile>
@@ -118,104 +67,61 @@
     <ClCompile Include="..\Core\Physics\Physics.cpp">
       <Filter>Core\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NGin\Maths\BinTree.cpp" />
+    <ClCompile Include="..\..\NGin\Network\Compress.cpp" />
+    <ClCompile Include="..\..\Libraries\Include\NGin\Network\Compress.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Network\Network.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Network\NetworkData.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigFloat.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignum.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignumf.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignums.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Ctty.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exarray.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Prime.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BinTree.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\FlowSystem.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\Fraction.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\helperFunctions.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\Keyframe.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\Point.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\Polynomial.cpp">
+      <Filter>NGin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\NGin\Network\Network.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Network\NetworkData.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\NGin\NGin.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\rapidxml\rapidxml.hpp">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\rapidxml\rapidxml_iterators.hpp">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\rapidxml\rapidxml_print.hpp">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\rapidxml\rapidxml_utils.hpp">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Scripts\Scripts.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\GL\freeglut.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\GL\freeglut_ext.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\GL\freeglut_std.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\GL\glut.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigFloat.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbignum.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbignums.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cbnl.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cios.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Cthr.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Ctty.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exarray.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exdebug.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exstring.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\BigNumberLibrary\Exthread.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\constants.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\FlowSystem.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\Fraction.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\helperFunctions.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\Keyframe.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\Point.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\Polynomial.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NGin\Maths\Types.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
     <ClInclude Include="..\Core\Terrain\Block.h">
       <Filter>Core\Terrain</Filter>
     </ClInclude>
@@ -246,9 +152,6 @@
     <ClInclude Include="..\Core\Mapgen\Perlin.h">
       <Filter>Core\Mapgen</Filter>
     </ClInclude>
-    <ClInclude Include="..\NGin\Network\Compress.h">
-      <Filter>NGin</Filter>
-    </ClInclude>
     <ClInclude Include="..\Core\Blocks\Block_Liquid.h">
       <Filter>Core\Blocks</Filter>
     </ClInclude>
@@ -264,18 +167,101 @@
     <ClInclude Include="..\Core\Physics\Physics.h">
       <Filter>Core\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NGin\Maths\BinTree.h" />
+    <ClInclude Include="..\..\NGin\Network\Compress.h" />
+    <ClInclude Include="..\..\Libraries\Include\NGin\Network\Compress.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Network\Network.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Network\NetworkData.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\rapidxml\rapidxml.hpp">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\rapidxml\rapidxml_iterators.hpp">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\rapidxml\rapidxml_print.hpp">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\rapidxml\rapidxml_utils.hpp">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigFloat.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignum.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignumf.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignums.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbnl.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cios.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cthr.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Ctty.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exarray.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exdebug.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exstring.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exthread.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BinTree.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\FlowSystem.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Fraction.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\helperFunctions.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Keyframe.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Point.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Polynomial.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Types.h">
+      <Filter>NGin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\NGin\rapidxml\manual.html">
+    <None Include="..\..\Libraries\Include\NGin\rapidxml\manual.html">
       <Filter>NGin</Filter>
     </None>
-    <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbignumf.inl">
+    <None Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignumf.inl">
       <Filter>NGin</Filter>
     </None>
-    <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbnl.inl">
+    <None Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbnl.inl">
       <Filter>NGin</Filter>
     </None>
-    <None Include="..\..\NGin\Maths\BigNumberLibrary\Cbnl64.inl">
+    <None Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbnl64.inl">
       <Filter>NGin</Filter>
     </None>
   </ItemGroup>

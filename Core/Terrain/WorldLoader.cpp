@@ -111,7 +111,11 @@ BlockPos getBlock(int xb, int yb, int zb, int dim, bool& success) {
 
 #ifdef M_CLIENT
 void trysetBlock(iVec3 location, int dim, Block to) {
-  user->sendBlock(location, to);
+  bool success = false;
+  BlockPos now = getBlock(location.x, location.y, location.z, dim, success);
+  if(success && ((now.b->_ID == 0 && !user->getPhysCube().intersect(PhysCube{location, location + mVec3(1)})) || to._ID == 0)) {
+    user->sendBlock(location, to);
+  }
 }
 #endif
 

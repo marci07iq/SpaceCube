@@ -32,7 +32,7 @@ protected:
   GLuint entity_vao;
 #endif
 public:
-  sVec3 _friction;
+  sVec3 _friction; //Determines effect of self acceleration, and decay. 0: free space, 1: move exactly s much as you want
   bool _inWorld;
   mpssVec3 _selfAccel;
   Entity(guid_t guid);

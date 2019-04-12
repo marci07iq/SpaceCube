@@ -20,7 +20,7 @@ uint32_t crc32c(uint32_t crc, const unsigned char * buf, size_t len) {
 }
 
 float linInterPol(float zero, float one, float at) {
-  at = modulo(at, 1);
+  at = modulo<float>(at, 1);
   return one * at + zero * (1-at);
 }
 
@@ -77,7 +77,7 @@ Perlin2D::Perlin2D(int xl, int yl, int xo, int yo) {
 void Perlin2D::setSeed(int seed, int type, int dim, int loopX, int loopY, int scaleType) {
   for (int i = 0; i <= _xl; i++) {
     for (int j = 0; j <= _yl; j++) {
-      float rval = locationRandom(seed, type, dim, modulo(_xo + i, loopX), modulo(_yo + j, loopY), scaleType)*TWO_PI;
+      float rval = locationRandom(seed, type, dim, modulo(_xo + i, loopX), modulo(_yo + j, loopY), scaleType)*CONS_TWO_PI;
       _vals[i][j] = fVec2(sin(rval), cos(rval));
     }
   }

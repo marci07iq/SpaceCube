@@ -23,6 +23,10 @@ struct PhysCube {
     nc += with;
     pc += with;
   }
+
+  bool intersect(PhysCube& other) {
+    return band(vecSwitch(nc < other.nc, other.nc, nc) < vecSwitch(pc > other.pc, other.pc, pc));
+  }
 };
 
 struct QuadFace { //Data to render

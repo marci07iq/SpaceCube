@@ -1,11 +1,11 @@
 #pragma once
 
+#include "NGin/Network/Network.h"
+#include "NGin/Maths/Point.h"
 #ifdef M_CLIENT
-#define SCRIPT_GUI
-//#define GUI_NO_NETLOCK
 #include <GL/glew.h>
+#include "NGin/GUI/Graphics.h"
 #endif
-#include "../NGin/NGin.h"
 
 typedef pair<int, pair<int,int>> world_col_t;
 

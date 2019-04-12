@@ -26,7 +26,7 @@ public:
   int locateField(iVec2 at);
 #ifdef M_CLIENT
   ContainerGUI(string lname, LocationData llocation, colorargb lbg, colorargb lactive, colorargb ltextColor) :
-    GUIElement(lname, llocation, lbg, lactive, ltextColor) {
+    GUIElement(lname, llocation, lbg, lactive, ltextColor, NULL) {
   }
   /*int mouseEnter(int state);
   int mouseMoved(int mx, int my, int ox, int oy, set<key_location>& down);

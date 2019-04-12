@@ -23,35 +23,33 @@ void createMainMenu() {
 
   Graphics::deleteElements(objectGameSubWindow);
 }
-void createMainMenu(string s) {
+void createMainMenu(Graphics::ElemHwnd e, void* data) {
   createMainMenu();
 }
 void createMessageScreen(string message, string button, ClickCallback buttonFunc,  bool showButton, string imgname, bool showImage) {
   Graphics::deleteElements(objectMenuSubWindow);
   Graphics::deleteElements(objectGameSubWindow);
 
-  Graphics::LabelHwnd lab = Graphics::createLabel("objectMessageText", LocationData(LinearScale(0.5),LinearScale(0.6),LinearScale(0),LinearScale(1)),getColor("label","bg"), getColor("label", "active"), getColor("label", "text"), message, 1);
+  Graphics::LabelHwnd lab = Graphics::createLabel("objectMessageText", LocationData(LinearScale(0.5),LinearScale(0.6),LinearScale(0),LinearScale(1)),getColor("label","bg"), getColor("label", "active"), getColor("label", "text"), NULL, message, 1);
   Graphics::addElement(objectMenuSubWindow, lab);
 
   if(showButton) {
-    Graphics::ButtonHwnd but = Graphics::createButton("objectMessageButton", LocationData(LinearScale(0.4), LinearScale(0.5), LinearScale(0), LinearScale(1)), getColor("label", "bg"), getColor("label", "active"), getColor("label", "text"), button, key(0, 0), buttonFunc);
+    Graphics::ButtonHwnd but = Graphics::createButton("objectMessageButton", LocationData(LinearScale(0.4), LinearScale(0.5), LinearScale(0), LinearScale(1)), getColor("label", "bg"), getColor("label", "active"), getColor("label", "text"), NULL, button, -1, buttonFunc);
     Graphics::addElement(objectMenuSubWindow, but);
   }
 
   if (showImage) {
-    Graphics::ImageHwnd img = Graphics::createImage("objectMessageImage", LocationData(LinearScale(0.6), LinearScale(0.9), LinearScale(0), LinearScale(1)), getColor("label", "bg"), getColor("label", "active"), getColor("label", "text"), imgname, 1);
+    Graphics::ImageHwnd img = Graphics::createImage("objectMessageImage", LocationData(LinearScale(0.6), LinearScale(0.9), LinearScale(0), LinearScale(1)), getColor("label", "bg"), getColor("label", "active"), getColor("label", "text"), NULL, imgname, 1);
     Graphics::addElement(objectMenuSubWindow, img);
   }
 }
 void createSettings(Graphics::TableHwnd& table) {
-  for (auto&& it : table->data) {
-    it->toDelete = true;
-  }
+  Graphics::deleteElements(table, true);
   int i = 0;
   for (auto&& it : keybinds) {
-    Graphics::TablerowHwnd row = Graphics::createTableRow("objectKeybindRow" + to_string(i), LocationData(LinearScale(0, 0), LinearScale(0, 30), LinearScale(0, 0), LinearScale(1, 0)), getColor("tablerow", "bgcolor"));
-    Graphics::LabelHwnd    name = Graphics::createLabel("objectKeybindLabel" + to_string(i), LocationData(LinearScale(0, 5), LinearScale(0, 25), LinearScale(0, 0), LinearScale(0.9, -50)), getColor("label", "bgcolor"), getColor("label", "activecolor"), getColor("label", "textcolor"), it.second, 1);
-    Graphics::ControlHwnd  ctrl = Graphics::createControl("objectKeybindInput" + to_string(i), LocationData(LinearScale(0, 5), LinearScale(0, 25), LinearScale(0.9, -45), LinearScale(1, -5)), getColor("control", "bgcolor"), getColor("control", "activecolor"), getColor("control", "textcolor"), it.first, i, keybindReply);
+    Graphics::TablerowHwnd row = Graphics::createTableRow("objectKeybindRow" + to_string(i), LocationData(LinearScale(0, 0), LinearScale(0, 30), LinearScale(0, 0), LinearScale(1, 0)), getColor("tablerow", "bgcolor"), getColor("tablerow", "activecolor"), NULL);
+    Graphics::LabelHwnd    name = Graphics::createLabel("objectKeybindLabel" + to_string(i), LocationData(LinearScale(0, 5), LinearScale(0, 25), LinearScale(0, 0), LinearScale(0.9, -50)), getColor("label", "bgcolor"), getColor("label", "activecolor"), getColor("label", "textcolor"), NULL, it.second.display, 1);
+    Graphics::ControlHwnd  ctrl = Graphics::createControl("objectKeybindInput" + to_string(i), LocationData(LinearScale(0, 5), LinearScale(0, 25), LinearScale(0.9, -45), LinearScale(1, -5)), getColor("control", "bgcolor"), getColor("control", "activecolor"), getColor("control", "textcolor"), NULL, it.second, it.first, keybindReply);
     Graphics::addElement(row, name);
     Graphics::addElement(row, ctrl);
     Graphics::addElement(table, row);
@@ -94,47 +92,47 @@ void connectServer(string ip, string port) {
 }
 
 //Main
-void mainMenuSingleplayerPlayButton(string s) {
+void mainMenuSingleplayerPlayButton(Graphics::ElemHwnd e, void* data) {
 
 }
-void mainMenuMultiplayerPlayButton(string s) {
+void mainMenuMultiplayerPlayButton(Graphics::ElemHwnd e, void* data) {
   Graphics::setElements(objectMenuSubWindow, "html/multi_menu.xml");
 }
-void mainMenuSettingsButton(string s) {
+void mainMenuSettingsButton(Graphics::ElemHwnd e, void* data) {
   Graphics::setElements(objectMenuSubWindow, "html/game_settings.xml");
   Graphics::TableHwnd table = (Graphics::TableHwnd)Graphics::getElementById("objectSettingsMenuTable");
   createSettings(table);
 }
-void mainMenuExitButton(string s) {
-  glutExit();
+void mainMenuExitButton(Graphics::ElemHwnd e, void* data) {
+  Graphics::shutdownGraphics();
 }
 
 //Main / Multi
-void multiMenuInput(string inp) {
+void multiMenuInput(Graphics::ElemHwnd e, void* data, string& s) {
 
 }
-void multiMenuInputButton(string s) {
+void multiMenuInputButton(Graphics::ElemHwnd e, void* data) {
 
   string ip = reinterpret_cast<Graphics::TextInputHwnd>(Graphics::getElementById("objectMultiMenuIpInput"))->text;
   string port = reinterpret_cast<Graphics::TextInputHwnd>(Graphics::getElementById("objectMultiMenuPortInput"))->text;
 
   connectServer(ip, port);
 }
-void multiMenuBackButton(string s) {
+void multiMenuBackButton(Graphics::ElemHwnd e, void* data) {
   createMainMenu();
 }
 
 //Main / Settings
-void settingsMenuInput(key nkey, int id) {
+/*void settingsMenuInput(key nkey, int id) {
   keybindReply(nkey, id);
-}
-void settingsMenuBackButton(string s) {
+}*/
+void settingsMenuBackButton(Graphics::ElemHwnd e, void* data) {
   createMainMenu();
   saveKeybinds();
 }
 
 
-void MessageCallback(GLenum source,
+void GLAPIENTRY MessageCallback(GLenum source,
   GLenum type,
   GLuint id,
   GLenum severity,
@@ -148,70 +146,39 @@ void MessageCallback(GLenum source,
     }
 }
 
+void glfwErrorCb(int i, const char* c) {
+  cout << i << c << endl;
+}
 
-void InitGraphics() {
-  //Main
-  Graphics::setName("mainMenuSingleplayerPlayButton", mainMenuSingleplayerPlayButton);
-  Graphics::setName("mainMenuMultiplayerPlayButton", mainMenuMultiplayerPlayButton);
-  Graphics::setName("mainMenuSettingsButton", mainMenuSettingsButton);
-  Graphics::setName("mainMenuExitButton", mainMenuExitButton);
-
-  //Main / Multiplayer
-  Graphics::setName("multiMenuInputButton", multiMenuInputButton);
-  Graphics::setName("multiMenuInput", multiMenuInput);
-  Graphics::setName("multiMenuBackButton", multiMenuBackButton);
-
-  //Main / Settings
-  Graphics::setName("settingsMenuBackButton", settingsMenuBackButton);
-
-
-  //Validators
-  Graphics::setName("textValidator", textValidator);
-  Graphics::setName("numericalValidator", numericalValidator);
-  Graphics::setName("floatValidator", floatValidator);
-
-
-
-  glutInitContextVersion(4, 2);
-  //glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
-  glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
-
-  int argc = 0;
-  char **argv = new char*[0];
-  glutInit(&argc, argv);
-
-  //Subwindows
-  objectMainWindow = Graphics::CreateMainWindow("SpaceCube", Graphics::defaultWindowManagers, 640, 480, true);
-
+void mainWindowSetup(Graphics::WinHwnd win) {
+  objectMainWindow = win;
   glewExperimental = GL_TRUE;
-  GLenum err = glewInit();
 
-  if (err != GLEW_OK) {
-    cerr << "GLEW init error: " << glewGetErrorString(err) << endl;
-  }
-  cout << "Using GLEW " << glewGetString(GLEW_VERSION) << endl;
+  glewInit();
 
-  if (GLEW_VERSION_4_2) {
-    cout << "OpenGL 4.2 supported." << endl;
-  }
+  // get version info
+  const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
+  const GLubyte* version = glGetString(GL_VERSION); // version as a string
+  printf("Renderer: %s\n", renderer);
+  printf("OpenGL version supported %s\n", version);
 
   // During init, enable debug output
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(MessageCallback, 0);
 
   glDisable(GL_DITHER);
-  glDisable(GL_POINT_SMOOTH);
+  glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
+  //glDisable(GL_POINT_SMOOTH);
   glDisable(GL_LINE_SMOOTH);
   glDisable(GL_POLYGON_SMOOTH);
-  //glHint(GL_POINT_SMOOTH, GL_DONT_CARE);
-  //glHint(GL_LINE_SMOOTH, GL_DONT_CARE);
-  glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
-#define GL_MULTISAMPLE_ARB 0x809D
-  glDisable(GL_MULTISAMPLE_ARB);
 
-  objectMenuSubWindow = Graphics::createPanel("objectMenuSubWindow", fullContainer, getColor("div", "bgcolor"));
+  Gll::gllInit("NGin/GUI/GLL_Res/");
+
+  win->autoRedraw = true;
+
+  objectMenuSubWindow = Graphics::createPanel("objectMenuSubWindow", fullContainer, getColor("div", "bgcolor"), NULL);
   Graphics::addElement(objectMainWindow, objectMenuSubWindow);
-  objectGameSubWindow = Graphics::createPanel("objectGameSubWindow", fullContainer, getColor("div", "bgcolor"));
+  objectGameSubWindow = Graphics::createPanel("objectGameSubWindow", fullContainer, getColor("div", "bgcolor"), NULL);
   Graphics::addElement(objectMainWindow, objectGameSubWindow);
 
   chunkShader.create("Shaders/Chunk");
@@ -220,4 +187,39 @@ void InitGraphics() {
   int tw, th;
   textures = png_texture_load("Textures/All.png", tw, th);
   cout << "Loaded texture " << textures << endl;
+
+  //createMainMenu();
+}
+void InitGraphics() {
+  //Main
+  Graphics::setName<ClickCallback>("mainMenuSingleplayerPlayButton", mainMenuSingleplayerPlayButton);
+  Graphics::setName<ClickCallback>("mainMenuMultiplayerPlayButton", mainMenuMultiplayerPlayButton);
+  Graphics::setName<ClickCallback>("mainMenuSettingsButton", mainMenuSettingsButton);
+  Graphics::setName<ClickCallback>("mainMenuExitButton", mainMenuExitButton);
+
+  //Main / Multiplayer
+  Graphics::setName<ClickCallback>("multiMenuInputButton", multiMenuInputButton);
+  Graphics::setName<TextInputFunc>("multiMenuInput", multiMenuInput);
+  Graphics::setName<ClickCallback>("multiMenuBackButton", multiMenuBackButton);
+
+  //Main / Settings
+  Graphics::setName<ClickCallback>("settingsMenuBackButton", settingsMenuBackButton);
+
+
+  //Validators
+  Graphics::setName<TextValidatorFunc>("textValidator", textValidator);
+  Graphics::setName<TextValidatorFunc>("numericalValidator", numericalValidator);
+  Graphics::setName<TextValidatorFunc>("floatValidator", floatValidator);
+
+
+  Graphics::initGraphics();
+  glfwSetErrorCallback(glfwErrorCb);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // We want OpenGL 4.3
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
+
+  Graphics::CreateMainWindow("SpaceCube", Graphics::defaultWindowManagers, 1080, 768, true, 0, 0, false, 0, NULL, mainWindowSetup);
+
+  Graphics::cleanQueues();
 }

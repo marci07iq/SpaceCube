@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Shaders/Shader.h"
+#include "../UI/Transpose.h";
 
 extern guid_t userGUID;
 extern NetBinder* user;
@@ -26,11 +26,11 @@ namespace MainGameCanvas {
   extern bool lockMouse;
 
   void normalizeAngles();
-  int renderManager(int ax, int ay, int bx, int by, set<key_location>& down);
-  int resizeManager(int x, int y);
-  int mouseEntryManager(int state);
-  int mouseMoveManager(int x, int y, int ox, int oy, set<key_location>& down);
-  int guiEventManager(gui_event evt, int mx, int my, set<key_location>& down, Canvas* me);
+  void renderManager(Canvas* c, int ax, int ay, int bx, int by, set<key_location>& down);
+  int resizeManager(Canvas* c, int x, int y);
+  int mouseEntryManager(Canvas* c, int state);
+  int mouseMoveManager(Canvas* c, int x, int y, int ox, int oy, set<key_location>& down);
+  int guiEventManager(Canvas* c, gui_event& evt, int mx, int my, set<key_location>& down);
 }
 
 void bindGameScreenLabels();

@@ -1,5 +1,7 @@
 #pragma once
 
+#error THIS IS A LEGACY FILE
+
 #include "../UI/Transpose.h";
 
 class Shader {

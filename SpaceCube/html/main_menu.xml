@@ -1,5 +1,5 @@
 <body>
-	<image
+	<!--<image
 		id = "objectMainMenuLogoImage"
 		align = "1"
 	>
@@ -20,7 +20,7 @@
 				rel="0.9"
 				abs="0.0"
 			></right>
-		</location>html/logo.png</image>
+		</location>html/logo.png</image>-->
 	<button
 		id = "objectMainMenuSingleplayerPlayButton"
 		callback = "mainMenuSingleplayerPlayButton"

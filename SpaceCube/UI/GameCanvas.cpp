@@ -21,15 +21,11 @@ NetworkC* Connection;
 
 int frameTime = 10; //33ms;
 
-void glut_timer_CB(int a) {
-  glutPostRedisplay();
-  glutTimerFunc(frameTime, glut_timer_CB, 0);
-}
 
 void MainGameCanvas::normalizeAngles() {
 
 }
-int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_location>& down) {
+void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, set<key_location>& down) {
   uint64_t thisFrameTime = chrono::duration_cast< chrono::milliseconds >(
     chrono::system_clock::now().time_since_epoch()).count();
 
@@ -37,27 +33,31 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   mpsVec3 resVel = mpsVec3(0);
   if(userMove.sqrlen() > 0) {
     userMove.norm();
-    if (isDown(down, key_location(key('w', 0)))) {
-      resVel += (userMove * user->getSpeed() * 5);
+    if (isDown(down, key_location(key('W', key::type_key)))) {
+      resVel += (userMove * user->getSpeed() );
     }
-    if (isDown(down, key_location(key('d', 0)))) {
-      resVel += (crs(userMove, {0,0,1}) * user->getSpeed() * 5);
+    if (isDown(down, key_location(key('D', key::type_key)))) {
+      resVel += (crs(userMove, {0,0,1}) * user->getSpeed());
     }
-    if (isDown(down, key_location(key('s', 0)))) {
-      resVel += (-userMove * user->getSpeed() * 5);
+    if (isDown(down, key_location(key('S', key::type_key)))) {
+      resVel += (-userMove * user->getSpeed());
     }
-    if (isDown(down, key_location(key('a', 0)))) {
-      resVel += (-crs(userMove, { 0,0,1 }) * user->getSpeed() * 5);
+    if (isDown(down, key_location(key('A', key::type_key)))) {
+      resVel += (-crs(userMove, { 0,0,1 }) * user->getSpeed());
     }
-    if (isDown(down, key_location(key(' ', 0)))) {
-      resVel += (fVec3(0,0,1) * user->getSpeed());
-      if(user->_inWorld) {
-        user->setVel(user->getVelocity() + mpsVec3(0, 0, 5) * user->_friction);
+    if (isDown(down, key_location(key(' ', key::type_key)))) {
+      if (user->_inWorld) { //Jump from ground
+        resVel += mpsVec3(0, 0, 40 * sqrt(-G.z));
+      } else {
+        resVel += -G * 30;
       }
+      /*if(user->_inWorld) { //Jump from ground
+        user->setVel(user->getVelocity() + sqrtVec<acc_type_mperss>(-G*2) * user->_friction);
+      }*/
     }
-    if (isDown(down, key_location(key(112, 1)))) {
-      resVel += (-fVec3(0,0,1) * user->getSpeed());
-    }
+    /*if (isDown(down, key_location(key(GLFW_KEY_LEFT_SHIFT, key::type_key)))) {
+      resVel += (G/10 * user->getSpeed());
+    }*/
   }
 
   user->_selfAccel = resVel;
@@ -72,7 +72,7 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  glAlphaFunc(GL_GREATER, 0.1);
+  //glAlphaFunc(GL_GREATER, 0.1);
 
   chunkShader.bind();
 
@@ -80,7 +80,7 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
 
   Transpose camview;
   camview.createLook(user->getHead(), user->getLook());
-  camview.project(PI/2, (bx-ax)*1.0f/(by-ay), 256, 0.01);
+  camview.project(CONS_PI/2, (bx-ax)*1.0f/(by-ay), 256, 0.01);
   camview.transpose();
   camview.read(view.projection);
   camview.read(cameraM);
@@ -145,35 +145,36 @@ int MainGameCanvas::renderManager(int ax, int ay, int bx, int by, set<key_locati
   renderBitmapString(10,10,"Pos: " + to_string(head.x) + " " + to_string(head.y) + " " + to_string(head.z), 0xffff00ff, false);
 
   setColor(0xffffffff);
-  glBegin(GL_QUADS);
-  glVertex2d((ax + bx) / 2.0 - 10, (ay + by) / 2.0 + 1);
-  glVertex2d((ax + bx) / 2.0 - 10, (ay + by) / 2.0 - 1);
-  glVertex2d((ax + bx) / 2.0 + 10, (ay + by) / 2.0 - 1);
-  glVertex2d((ax + bx) / 2.0 + 10, (ay + by) / 2.0 + 1);
-  glVertex2d((ax + bx) / 2.0 + 1, (ay + by) / 2.0 - 10);
-  glVertex2d((ax + bx) / 2.0 - 1, (ay + by) / 2.0 - 10);
-  glVertex2d((ax + bx) / 2.0 - 1, (ay + by) / 2.0 + 10);
-  glVertex2d((ax + bx) / 2.0 + 1, (ay + by) / 2.0 + 10);
-  glEnd();
+  Gll::gllBegin(Gll::GLL_QUADS);
+  Gll::gllVertex((ax + bx) / 2.0 - 10, (ay + by) / 2.0 - 1);
+  Gll::gllVertex((ax + bx) / 2.0 - 10, (ay + by) / 2.0 + 1);
+  Gll::gllVertex((ax + bx) / 2.0 + 10, (ay + by) / 2.0 - 1);
+  Gll::gllVertex((ax + bx) / 2.0 + 10, (ay + by) / 2.0 + 1);
+  Gll::gllVertex((ax + bx) / 2.0 + 1, (ay + by) / 2.0 - 10);
+  Gll::gllVertex((ax + bx) / 2.0 - 1, (ay + by) / 2.0 - 10);
+  Gll::gllVertex((ax + bx) / 2.0 - 1, (ay + by) / 2.0 + 10);
+  Gll::gllVertex((ax + bx) / 2.0 + 1, (ay + by) / 2.0 + 10);
+  Gll::gllEnd();
 
   glFlush();
   
   lastFrameTime = thisFrameTime;
-
+}
+int MainGameCanvas::resizeManager(Canvas* c, int x, int y) {
   return 0;
 }
-int MainGameCanvas::resizeManager(int x, int y) {
-  return 0;
-}
-int MainGameCanvas::mouseEntryManager(int state) {
+int MainGameCanvas::mouseEntryManager(Canvas* c, int state) {
   //mousebuttons = 0;
   return 0;
 }
-int MainGameCanvas::mouseMoveManager(int x, int y, int ox, int oy, set<key_location>& down) {
-  if (x != 100 || y != 100) {
-    int dx = x - 100;
-    int dy = y - 100;
-    glutWarpPointer(100, glutGet(GLUT_WINDOW_HEIGHT) - 100);
+int MainGameCanvas::mouseMoveManager(Canvas* c, int x, int y, int ox, int oy, set<key_location>& down) {
+  int mrsx = Graphics::current->width / 2, mrsy = Graphics::current->height / 2;
+
+  if (x != mrsx || y != mrsy) {
+    int dx = x - mrsx;
+    int dy = y - mrsy;
+    //glutWarpPointer(100, glutGet(GLUT_WINDOW_HEIGHT) - 100);
+    glfwSetCursorPos(Graphics::current->rawHwnd, Graphics::current->width / 2, Graphics::current->height / 2);
 
     polar_vec3 pos;
     pos.fromCartesian(user->getLook());
@@ -191,8 +192,8 @@ int MainGameCanvas::mouseMoveManager(int x, int y, int ox, int oy, set<key_locat
   return 0;
 }
 
-int MainGameCanvas::guiEventManager(gui_event evt, int mx, int my, set<key_location>& down, Canvas* me) {
-  bool in = me->isIn(mx, my);
+int MainGameCanvas::guiEventManager(Canvas* c, gui_event& evt, int mx, int my, set<key_location>& down) {
+  bool in = c->isIn(mx, my);
   GLdouble pos3D_ax = 0, pos3D_ay = 0, pos3D_az = 0;
 
   // get 3D coordinates based on window coordinates
@@ -207,7 +208,7 @@ int MainGameCanvas::guiEventManager(gui_event evt, int mx, int my, set<key_locat
   if(raydir.sqrlen() > 0) {
     raydir = raydir.norm() * 5;
     list<iVec3> res = find_voxels(rayori, rayori + raydir);
-    if (evt._type == evt.evt_down && evt._key._keycode == 0 && evt._key._type == evt._key.type_mouse) {
+    if (evt._type == evt.evt_down && evt._key._keycode == GLFW_MOUSE_BUTTON_LEFT && evt._key._type == evt._key.type_mouse) {
       auto it = res.begin();
       bool go = true;
       while(it != res.end() && go) {
@@ -221,7 +222,7 @@ int MainGameCanvas::guiEventManager(gui_event evt, int mx, int my, set<key_locat
         ++it;
       }
     }
-    if (evt._type == evt.evt_down && evt._key._keycode == 2 && evt._key._type == evt._key.type_mouse) {
+    if (evt._type == evt.evt_down && evt._key._keycode == GLFW_MOUSE_BUTTON_RIGHT && evt._key._type == evt._key.type_mouse) {
       auto it = res.begin();
       bool go = true;
       iVec3 placeTo = *it;
