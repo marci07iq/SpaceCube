@@ -13,10 +13,11 @@ void getStoredPhysics(BlockPos[7], list<PhysCube>& l);
 
 BlockNeeds getEmptyNeeds(Block&);
 BlockNeeds getSolidNeeds(Block&);
+BlockNeeds getSlabNeeds(Block&);
 
 void getStoredModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo);
-
 void getWoodModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo);
+
 
 vec2<float> getStoredTex(BlockPos& b, uint32_t texID);
 

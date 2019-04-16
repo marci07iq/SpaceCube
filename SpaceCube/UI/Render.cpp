@@ -5,7 +5,7 @@ Graphics::PanelHwnd objectGameSubWindow;
 Graphics::CanvasHwnd objectMainGameCanvas;
 Graphics::PanelHwnd objectMenuSubWindow;
 
-bool recivePacket(DataElement* data, int id, NetworkC* client, NetBinder* player);
+bool recivePacket(DataElement* data, int id, Network* client, NetworkBinder* player);
 
 void createMainMenu() {
   Graphics::setElements(objectMenuSubWindow, "html/main_menu.xml");
@@ -171,6 +171,10 @@ void mainWindowSetup(Graphics::WinHwnd win) {
   //glDisable(GL_POINT_SMOOTH);
   glDisable(GL_LINE_SMOOTH);
   glDisable(GL_POLYGON_SMOOTH);
+
+  //glEnable(GL_CULL_FACE);
+  //glCullFace(GL_FRONT);
+  //glFrontFace(GL_CCW);
 
   Gll::gllInit("NGin/GUI/GLL_Res/");
 

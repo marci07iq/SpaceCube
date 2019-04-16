@@ -43,8 +43,7 @@ public:
   GLuint _chunk_vao;
   GLuint _chunk_pos_vbo;
   GLuint _chunk_tex_vbo;
-  GLuint _chunk_col_vbo;
-  GLuint _chunk_mov_vbo;
+  GLuint _chunk_lig_vbo;
   int _quads;
 
   inline uint8_t getNeed(uint8_t x, uint8_t y, uint8_t z) {

@@ -2,15 +2,20 @@
 
 #include "../Blocks/Block_Types.h"
 
-struct Item {
+struct MetaBlock {
   Block block;
+  void* meta;
+};
+
+struct ItemStack {
+  MetaBlock block;
   //Meta
   size_t count;
 };
 
 struct ContainerSlot {
   iVec2 location;
-  Item contents;
+  ItemStack contents;
 };
 
 #ifdef M_CLIENT
@@ -20,7 +25,6 @@ class ContainerGUI {
 #endif
 public:
   vector<ContainerSlot> elements;
-  iVec2 containerSize;
   string containerName;
 
   int locateField(iVec2 at);

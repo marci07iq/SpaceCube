@@ -13,10 +13,8 @@ OpenGLData MainGameCanvas::view;
 
 uint64_t firstFrameTime;
 
-uint64_t lastFrameTime;
-
 guid_t userGUID = 0x0123456789abcdef;
-NetBinder* user;
+NetPlayer* user;
 NetworkC* Connection;
 
 int frameTime = 10; //33ms;
@@ -34,7 +32,7 @@ void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, se
   if(userMove.sqrlen() > 0) {
     userMove.norm();
     if (isDown(down, key_location(key('W', key::type_key)))) {
-      resVel += (userMove * user->getSpeed() );
+      resVel += (userMove * user->getSpeed());
     }
     if (isDown(down, key_location(key('D', key::type_key)))) {
       resVel += (crs(userMove, {0,0,1}) * user->getSpeed());
@@ -45,11 +43,14 @@ void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, se
     if (isDown(down, key_location(key('A', key::type_key)))) {
       resVel += (-crs(userMove, { 0,0,1 }) * user->getSpeed());
     }
+    if (isDown(down, key_location(key(GLFW_KEY_LEFT_CONTROL, key::type_key)))) {
+      resVel *= 3;
+    } else {
+      resVel *= 1.5;
+    }
     if (isDown(down, key_location(key(' ', key::type_key)))) {
       if (user->_inWorld) { //Jump from ground
-        resVel += mpsVec3(0, 0, 40 * sqrt(-G.z));
-      } else {
-        resVel += -G * 30;
+        resVel += mpsVec3(0, 0, sqrt(-2*1.5*G.z) / SC_SUBTICK_TIME);
       }
       /*if(user->_inWorld) { //Jump from ground
         user->setVel(user->getVelocity() + sqrtVec<acc_type_mperss>(-G*2) * user->_friction);
@@ -60,9 +61,13 @@ void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, se
     }*/
   }
 
+  if (!user->_inWorld) {
+    resVel = 0;
+  }
+
   user->_selfAccel = resVel;
 
-  tickPhysics((thisFrameTime - lastFrameTime) / 1000.0);
+  doTicks(size_t((thisFrameTime - firstFrameTime) / 1000.0 / SC_SUBTICK_TIME));
 
   glDepthRange(0.01, 256);
   glClear(GL_DEPTH_BUFFER_BIT);
@@ -99,7 +104,7 @@ void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, se
   loc = -1;
   loc = glGetUniformLocation(chunkShader._pID, "frame_time");
   if (loc != -1) {
-    glUniform1f(loc, (lastFrameTime - firstFrameTime) / 1000.0f );
+    glUniform1f(loc, (thisFrameTime - firstFrameTime) / 1000.0f );
   }
 
   //glActiveTexture(GL_TEXTURE0);
@@ -157,9 +162,8 @@ void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, se
   Gll::gllEnd();
 
   glFlush();
-  
-  lastFrameTime = thisFrameTime;
 }
+
 int MainGameCanvas::resizeManager(Canvas* c, int x, int y) {
   return 0;
 }
@@ -232,7 +236,7 @@ int MainGameCanvas::guiEventManager(Canvas* c, gui_event& evt, int mx, int my, s
         pos = getBlock(it->x, it->y, it->z, 0, success);
         if (success && pos.b->_ID != 0) {
           go = false;
-          trysetBlock(placeTo, 0, Block(1));
+          trysetBlock(placeTo, 0, Block(9));
         }
         placeTo = *it;
       }
@@ -247,6 +251,6 @@ void bindGameScreenLabels() {
   iden.setIdentity();
   iden.read(MainGameCanvas::view.model_view);
 
-  firstFrameTime = lastFrameTime = chrono::duration_cast< chrono::milliseconds >(
+  firstFrameTime = chrono::duration_cast< chrono::milliseconds >(
     chrono::system_clock::now().time_since_epoch()).count();
 }

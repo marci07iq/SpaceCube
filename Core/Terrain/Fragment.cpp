@@ -94,7 +94,7 @@ void Fragment::prepareFile(fstream & reg, int & fileSize) {
     res[i] = 0;
   }
   reg.write(res, fileSize);
-  delete[fileSize] res;
+  delete[] res;
 }
 vector<pair<int, int>> loadHeader(fstream & reg) {
   reg.seekg(0);
@@ -142,7 +142,7 @@ void Fragment::save() {
   fstream reg;
 
   //Read file size
-  reg.open(fname, ios::in | ios::out | ios::app);
+  reg.open(fname, ios::in | ios::out | ios::binary | ios::app);
   reg.seekg(0, ios::end);
   int fileSize = reg.tellg();
   reg.close();
@@ -174,29 +174,30 @@ void Fragment::save() {
   }
 
   //Compress data
-  DataPair** out = new DataPair*;
-  compress(in, out);
+  DataPair* out;
+  compress(in, &out);
   delete in;
 
   //0 out this fragment data
-  reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
+  reg.seekp(8 * (lfx*FRAGMENT_PER_REGION + lfy));
   for(int i = 0; i < 8; i++) {
     reg.write("", 1);
   }
 
   //Allocate new position
   vector<pair<int, int>> header = loadHeader(reg);
-  int len = (*out)->_len;
+  int len = out->_len;
   int pos = allocatePos(header, len);
+  cout << "Len: " << len << ", Pos: " << pos << endl;
 
   //Set new position
-  reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
+  reg.seekp(8 * (lfx*FRAGMENT_PER_REGION + lfy));
   reg.write(reinterpret_cast<char *>(&pos), sizeof(pos));
   reg.write(reinterpret_cast<char *>(&len), sizeof(len));
 
   //Write data
-  reg.seekg(pos);
-  reg.write(reinterpret_cast<char*>((*out)->_data), len);
+  reg.seekp(pos);
+  reg.write(reinterpret_cast<char*>(out->_data), len);
 
   //Cleanup
   delete out;
@@ -214,7 +215,7 @@ void Fragment::load() {
   //If file exists
   if (reg.good()) {
     //Load header data
-    int pos, len;
+    uint32_t pos, len;
     reg.seekg(8 * (lfx*FRAGMENT_PER_REGION + lfy));
     reg.read(reinterpret_cast<char *>(&pos), sizeof(pos));
     reg.read(reinterpret_cast<char *>(&len), sizeof(len));
@@ -228,8 +229,8 @@ void Fragment::load() {
       reg.read(reinterpret_cast<char*>(in->_data), in->_len);
 
       //Decode
-      DataPair** out = new DataPair*;
-      decompress(in, out);
+      DataPair* out;
+      decompress(in, &out);
       delete in;
 
       //Write blocks
@@ -243,7 +244,7 @@ void Fragment::load() {
                 for (int bk = 0; bk < BLOCK_PER_CHUNK; bk++) {
                   int rawid = bk + BLOCK_PER_CHUNK * (bj + BLOCK_PER_CHUNK * (bi + BLOCK_PER_CHUNK * (ck + CHUNK_PER_COLUMN * (cj + COLUMN_PER_FRAGMENT * (ci)))));
                   rawid *= BLOCK_BYTES;
-                  readBlock((*out)->_data, rawid, nc->_blocks[bi][bj][bk]);
+                  readBlock(out->_data, rawid, nc->_blocks[bi][bj][bk]);
                 }
               }
             }
@@ -256,6 +257,8 @@ void Fragment::load() {
       //Clean up
       delete out;
       link();
+
+      reg.close();
       return;
     }
   }

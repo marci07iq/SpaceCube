@@ -11,14 +11,14 @@ void getConnectedModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
     }
   }
 
+  fVec3 location = {
+    b[6].c->_cx * BLOCK_PER_CHUNK + b[6].lbx * 1.0f,
+    b[6].c->_cy * BLOCK_PER_CHUNK + b[6].lby * 1.0f,
+    b[6].c->_cz * BLOCK_PER_CHUNK + b[6].lbz * 1.0f };
+
   for (auto&& it : blockModels[b[6].b->_ID].faces) {
     if (it.type & n & notMe) {
       QuadFace res;
-
-      fVec3 location = {
-        b[6].c->_cx * BLOCK_PER_CHUNK + b[6].lbx * 1.0f,
-        b[6].c->_cy * BLOCK_PER_CHUNK + b[6].lby * 1.0f,
-        b[6].c->_cz * BLOCK_PER_CHUNK + b[6].lbz * 1.0f };
       res.vbl = it.base.vbl + location;
       res.vbr = it.base.vbr + location;
       res.vtl = it.base.vtl + location;

@@ -5,3 +5,6 @@ space_cube:grass Grass solid 1 1 1 1 2 0
 space_cube:water Water liquid 4 4 4 4 4 4
 space_cube:flower Flower cross 5 5
 space_cube:wood Wood solid 7 7 7 6 8 9
+space_cube:brick Brick solid 10 10 10 10 10 10
+space_cube:sand Sand solid 11 11 11 11 11 11
+space_cube:slab Slab slab 13 13 13 13 10 10

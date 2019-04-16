@@ -1,6 +1,6 @@
-#include "../Core/Terrain/WorldLoader.h"
+#include "../Core/Physics/Tick.h"
 
-list<NetworkS*> deleteClient;
+list<Network*> deleteClient;
 
 void initalize() {
   loadBlocks();
@@ -21,7 +21,7 @@ int verifyVersion(DataElement* data) {
   return LoginErrorOk;
 }
 
-void sendLoginReject(NetworkS* from, string message, int state) {
+void sendLoginReject(Network* from, string message, int state) {
   DataElement* res = new DataElement();
 
   DataElement* statee = new DataElement();
@@ -48,7 +48,7 @@ void sendLoginReject(NetworkS* from, string message, int state) {
   deleteClient.push_back(from);
 }
 
-bool recivePacket(DataElement* Data, int Id, NetworkS* thisptr, NetBinder* connected) {
+bool recivePacket(DataElement* Data, int Id, Network* thisptr, NetworkBinder* connected) {
   if (connected == NULL) {
     if (Id != PacketLogin) {
       sendLoginReject(thisptr, "Protocol error!", LoginErrorProtocolError);
@@ -63,9 +63,10 @@ bool recivePacket(DataElement* Data, int Id, NetworkS* thisptr, NetBinder* conne
     guid_t guid;
     vSFunc(guid, Data->_children[3]);
     if (guid % 2) {
-      NetBinder* np = new NetBinder(guid);
+      NetPlayer* np = new NetPlayer(guid);
       np->loadFile();
-      entities[guid] = thisptr->ConnectedBinder = connected = np;
+      thisptr->_binder = connected = np;
+      entities[guid] = np;
       np->connection = thisptr; 
 
       DataElement* rese = new DataElement();
@@ -85,7 +86,7 @@ bool recivePacket(DataElement* Data, int Id, NetworkS* thisptr, NetBinder* conne
     sendLoginReject(thisptr, "Invalid GUID!", LoginErrorInvalidAuth);
     return true;
   }
-  return connected->recivePacket(Data, Id, thisptr, connected);
+  return connected->recivePacket(Data, Id, thisptr);
 }
 
 int main() {

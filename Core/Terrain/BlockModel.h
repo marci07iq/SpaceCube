@@ -32,16 +32,22 @@ struct PhysCube {
 struct QuadFace { //Data to render
   fVec3 vbl, vtl, vtr, vbr; //Vertex coordinates
   vec2<float> tbl, ttl, ttr, tbr; //Texture coordinates
+  float brightness;
+  void calculateLight() {
+    brightness = 0.8 + abs(dot<float>(light, crs(vbr - vbl, vtl - vbl).norm()) * 0.2);
+  }
 };
+
+typedef uint8_t BlockNeeds;
 
 struct StoredQuadFace {
   QuadFace base;
+#ifdef M_CLIENT
+  //Example: hollow tube from x- to y+ faces will be 9.
   //1: x-, 2: x+, 4: y-, 8: y+, 16: z-, 32: z+, 64: always
   //Binary storage when to enable.
   //Enabled if one is requested.
-  //Example: hollow tube from x- to y+ faces will be 9.
-#ifdef M_CLIENT
-  uint8_t type;
+  BlockNeeds type;
 #endif
   uint32_t faceID;
 };
@@ -51,7 +57,6 @@ struct BlockModel {
   list<PhysCube> cubes; //For physics
 };
 
-typedef uint8_t BlockNeeds;
 
 inline BlockNeeds rotateCW(BlockNeeds what) {
   return (what & 48) | ((what & 1) << 3) | ((what & 14) >> 1);

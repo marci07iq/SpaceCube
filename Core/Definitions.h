@@ -1,10 +1,10 @@
 #pragma once
 
-#include "NGin/Network/Network.h"
-#include "NGin/Maths/Point.h"
+#include <NGin/Network/Network.h>
+#include <NGin/Maths/Point.h>
 #ifdef M_CLIENT
 #include <GL/glew.h>
-#include "NGin/GUI/Graphics.h"
+#include <NGin/GUI/Graphics.h>
 #endif
 
 typedef pair<int, pair<int,int>> world_col_t;
@@ -32,6 +32,12 @@ const int MAP_Y = 1 << 24; //2^25
 
 const int CHUNK_LOAD_RADIUS = 12;
 const int CHUNK_UNLOAD_RADIUS = 16;
+
+const sVec3 light = sVec3(0, 1, 2).norm();
+
+const int SC_SUBTICK_PER_TICK = 1;
+const int SC_TICK_PRES_SEC = 16;
+const time_type_s SC_SUBTICK_TIME = 1.0 / SC_TICK_PRES_SEC / SC_SUBTICK_PER_TICK;
 
 enum PacketIdsL {
   PacketChunk = 2,

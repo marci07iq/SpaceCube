@@ -12,11 +12,13 @@ class Entity;
 struct Block {
   union {
     uint64_t _raw;
-    struct {
+    PACK(
+      struct {
       uint32_t _data;
       uint16_t _meta;
       uint16_t _ID;
     };
+    )
   };
 
   Block();

@@ -199,7 +199,7 @@ void Chunk::setBlock(int bx, int by, int bz, Block to) {
 
   for (auto&& it : _col->_loaders) {
     if (it % 2) { //Player
-      ((NetBinder*)entities[it])->sendBlock(iVec3(bx, by, bz) + iVec3(_cx, _cy, _cz) * BLOCK_PER_CHUNK, *(p.b));
+      ((NetPlayer*)entities[it])->sendBlock(iVec3(bx, by, bz) + iVec3(_cx, _cy, _cz) * BLOCK_PER_CHUNK, *(p.b));
     }
   }
 
@@ -217,13 +217,9 @@ void Chunk::unBuildChunk() {
     glDeleteBuffers(1, &_chunk_tex_vbo);
     _chunk_tex_vbo = 0;
   }
-  if (_chunk_col_vbo) {
-    glDeleteBuffers(1, &_chunk_col_vbo);
-    _chunk_col_vbo = 0;
-  }
-  if (_chunk_mov_vbo) {
-    glDeleteBuffers(1, &_chunk_mov_vbo);
-    _chunk_mov_vbo = 0;
+  if (_chunk_lig_vbo) {
+    glDeleteBuffers(1, &_chunk_lig_vbo);
+    _chunk_lig_vbo = 0;
   }
   if (_chunk_vao) {
     glDeleteVertexArrays(1, &_chunk_vao);
@@ -253,6 +249,7 @@ void Chunk::buildChunk() {
   }
   float* vert = new float[quads.size() * 3 * 6];
   float* tex = new float[quads.size() * 2 * 6];
+  float* light = new float[quads.size() * 1 * 6];
 
   int i = 0;
   for (auto&& it : quads) {
@@ -288,6 +285,15 @@ void Chunk::buildChunk() {
     tex[12 * i + 10] = it.tbr.x;
     tex[12 * i + 11] = it.tbr.y;
 
+    it.calculateLight();
+
+    light[6 * i + 0] = it.brightness;
+    light[6 * i + 1] = it.brightness;
+    light[6 * i + 2] = it.brightness;
+    light[6 * i + 3] = it.brightness;
+    light[6 * i + 4] = it.brightness;
+    light[6 * i + 5] = it.brightness;
+
     ++i;
   }
 
@@ -301,6 +307,10 @@ void Chunk::buildChunk() {
   glBindBuffer(GL_ARRAY_BUFFER, _chunk_tex_vbo);
   glBufferData(GL_ARRAY_BUFFER, quads.size() * 2 * 6 * sizeof(float), tex, GL_STATIC_DRAW);
 
+  glGenBuffers(1, &_chunk_lig_vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, _chunk_lig_vbo);
+  glBufferData(GL_ARRAY_BUFFER, quads.size() * 1 * 6 * sizeof(float), light, GL_STATIC_DRAW);
+  
   glGenVertexArrays(1, &_chunk_vao);
   glBindVertexArray(_chunk_vao);
   glEnableVertexAttribArray(0);
@@ -309,9 +319,13 @@ void Chunk::buildChunk() {
   glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, _chunk_tex_vbo);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, _chunk_lig_vbo);
+  glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, NULL);
 
-  delete[quads.size() * 3 * 6] vert;
-  delete[quads.size() * 2 * 6] tex;
+  delete[] vert;
+  delete[] tex;
+  delete[] light;
 
   _quads = quads.size()*6;
 }

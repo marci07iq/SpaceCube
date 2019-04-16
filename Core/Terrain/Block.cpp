@@ -110,6 +110,9 @@ void loadBlocks() {
   blockProperties[4].actionDestory = actionDestoryNothing;
   blockProperties[5].actionDestory = actionDestoryNothing;
   blockProperties[6].actionDestory = actionDestoryNothing;
+  blockProperties[7].actionDestory = actionDestoryNothing;
+  blockProperties[8].actionDestory = actionDestoryNothing;
+  blockProperties[9].actionDestory = actionDestoryNothing;
 
   blockProperties[0].onUpdate = onUpdateNothing;
   blockProperties[1].onUpdate = onUpdateNothing;
@@ -118,6 +121,9 @@ void loadBlocks() {
   blockProperties[4].onUpdate = onUpdateNothing;
   blockProperties[5].onUpdate = onUpdateNature;
   blockProperties[6].onUpdate = onUpdateNothing;
+  blockProperties[7].onUpdate = onUpdateNothing;
+  blockProperties[8].onUpdate = onUpdateNothing;
+  blockProperties[9].onUpdate = onUpdateNothing;
 
   #endif
 
@@ -129,6 +135,9 @@ void loadBlocks() {
   blockProperties[4].getNeeds = getEmptyNeeds;
   blockProperties[5].getNeeds = getEmptyNeeds;
   blockProperties[6].getNeeds = getSolidNeeds;
+  blockProperties[7].getNeeds = getSolidNeeds;
+  blockProperties[8].getNeeds = getSolidNeeds;
+  blockProperties[9].getNeeds = getSlabNeeds;
 
 
   blockProperties[0].getModel = getStoredModel;
@@ -138,6 +147,9 @@ void loadBlocks() {
   blockProperties[4].getModel = getConnectedModel;
   blockProperties[5].getModel = getStoredModel;
   blockProperties[6].getModel = getWoodModel;
+  blockProperties[7].getModel = getStoredModel;
+  blockProperties[8].getModel = getStoredModel;
+  blockProperties[9].getModel = getStoredModel;
 
 
   blockProperties[0].getTex = getStoredTex;
@@ -147,6 +159,9 @@ void loadBlocks() {
   blockProperties[4].getTex = getStoredTex;
   blockProperties[5].getTex = getStoredTex;
   blockProperties[6].getTex = getStoredTex;
+  blockProperties[7].getTex = getStoredTex;
+  blockProperties[8].getTex = getStoredTex;
+  blockProperties[9].getTex = getStoredTex;
 
   #endif
 
@@ -157,4 +172,7 @@ void loadBlocks() {
   blockProperties[4].getPhysics = getStoredPhysics;
   blockProperties[5].getPhysics = getStoredPhysics;
   blockProperties[6].getPhysics = getStoredPhysics;
+  blockProperties[7].getPhysics = getStoredPhysics;
+  blockProperties[8].getPhysics = getStoredPhysics;
+  blockProperties[9].getPhysics = getStoredPhysics;
 }

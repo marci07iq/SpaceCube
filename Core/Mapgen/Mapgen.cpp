@@ -123,7 +123,7 @@ void Mapgen::generateFragment(int fx, int fy) {
         }
       } else {
         for (int k = max(0.0f, heightmap[i][j] - 3); k <= heightmap[i][j] && k < BLOCK_PER_CHUNK * CHUNK_PER_COLUMN; k++) {
-          getBlock({ i, j, k }) = Block(1);
+          getBlock({ i, j, k }) = Block(8);
         }
       }
       for (int k = max(0.0f, heightmap[i][j] + 1); k <= 60; k++) {
@@ -136,17 +136,19 @@ void Mapgen::generateFragment(int fx, int fy) {
     for (int j = 0; j < BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT; j++) {
       int k = heightmap[i][j] + 1;
 
-      //Flower
-      if(getBlock({i, j, k-1})._ID == 3) {
-        float val = locationRandom(0, 1, 0, i + fx * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, j + fy * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, 0);
-        if (val > 0.98) {
-          getBlock({ i, j, k }) = Block(5);
-        }
+      if (0 < k) {
+        //Flower
+        if (getBlock({ i, j, k - 1 })._ID == 3) {
+          float val = locationRandom(0, 1, 0, i + fx * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, j + fy * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, 0);
+          if (val > 0.98) {
+            getBlock({ i, j, k }) = Block(5);
+          }
 
-        //Tree
-        val = locationRandom(0, 1, 0, i + fx * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, j + fy * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, 1);
-        if (val > 0.99) {
-          //buildTree({i, j, k});
+          //Tree
+          val = locationRandom(0, 1, 0, i + fx * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, j + fy * BLOCK_PER_CHUNK * COLUMN_PER_FRAGMENT, 1);
+          if (val > 0.99) {
+            //buildTree({i, j, k});
+          }
         }
       }
     }

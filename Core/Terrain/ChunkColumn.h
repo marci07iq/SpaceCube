@@ -7,6 +7,7 @@ private:
   Chunk* _chunks[CHUNK_PER_COLUMN];
 public:
   list<guid_t> _loaders;
+  list<Entity*> _entities;
   int _ccx, _ccy;
   Fragment* _frag;
  

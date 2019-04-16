@@ -7,7 +7,7 @@ void requestFrame() {
   }
 }
 
-bool recivePacket(DataElement* data, int id, NetworkC* client, NetBinder* lplayer) {
+bool recivePacket(DataElement* data, int id, Network* client, NetworkBinder* lplayer) {
   if (lplayer == NULL) {
     switch (id) {
       case PacketLogin:
@@ -15,11 +15,13 @@ bool recivePacket(DataElement* data, int id, NetworkC* client, NetBinder* lplaye
 
           //vSFunc(userGUID, data->_children[1]);
 
-          NetBinder* me = new NetBinder(userGUID);
+          NetPlayer* me = new NetPlayer(userGUID);
           me->set(data->_children[1]);
 
-          user = client->ConnectedBinder = lplayer = me;
-          client->ConnectedBinder->connection = client;
+          client->_binder = lplayer = me;
+          user = me;
+
+          client->_binder->connection = client;
           entities[userGUID] = user;
           user->loadChunks();
 

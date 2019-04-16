@@ -78,9 +78,11 @@
       <PreprocessorDefinitions>M_CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>M_SERVER</UndefinePreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:/Programming/Libraries/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>D:\Programming\NGin\bin\glfw3.lib;D:\Programming\NGin\bin\glfw3dll.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\Programming\Libraries\NGin\NGin_x64_Release.lib;D:\Programming\Libraries\NGin\glfw3.lib;D:\Programming\Libraries\NGin\glfw3dll.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -91,9 +93,11 @@
       <PreprocessorDefinitions>M_CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>M_SERVER</UndefinePreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:/Programming/Libraries/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>D:\Programming\NGin\bin\glfw3.lib;D:\Programming\NGin\bin\glfw3dll.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\Programming\Libraries\NGin\NGin_x64_Release.lib;D:\Programming\Libraries\NGin\glfw3.lib;D:\Programming\Libraries\NGin\glfw3dll.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -106,11 +110,13 @@
       <PreprocessorDefinitions>M_CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>M_SERVER</UndefinePreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:/Programming/Libraries/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>D:\Programming\NGin\bin\glfw3.lib;D:\Programming\NGin\bin\glfw3dll.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\Programming\Libraries\NGin\NGin_x64_Release.lib;D:\Programming\Libraries\NGin\glfw3.lib;D:\Programming\Libraries\NGin\glfw3dll.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,51 +129,17 @@
       <PreprocessorDefinitions>M_CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>M_SERVER</UndefinePreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:/Programming/Libraries/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>D:\Programming\NGin\bin\glfw3.lib;D:\Programming\NGin\bin\glfw3dll.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\Programming\Libraries\NGin\NGin_x64_Release.lib;D:\Programming\Libraries\NGin\glfw3.lib;D:\Programming\Libraries\NGin\glfw3dll.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Button.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Canvas.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Checkbox.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\ClientCore.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Container.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\ControlSetting.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Graphics.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\GraphicsUtils.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\GUIElement.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Image.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Label.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\LabelBind.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Panel.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Plot.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Popup.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Shader.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Slider.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Table.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\TextInput.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\GUI\Texture.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigFloat.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignum.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignumf.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignums.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Ctty.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exarray.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Prime.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\BinTree.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\FlowSystem.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\Fraction.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\helperFunctions.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\Keyframe.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\Point.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Maths\Polynomial.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Network\Compress.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Network\Network.cpp" />
-    <ClCompile Include="..\..\Libraries\Include\NGin\Network\NetworkData.cpp" />
+    <ClCompile Include="..\Core\Blocks\Block_Directional.cpp" />
     <ClCompile Include="..\Core\Blocks\Block_Liquid.cpp" />
     <ClCompile Include="..\Core\Blocks\Block_Static.cpp" />
     <ClCompile Include="..\Core\Blocks\Block_Stone.cpp" />
@@ -175,6 +147,7 @@
     <ClCompile Include="..\Core\Mapgen\Mapgen.cpp" />
     <ClCompile Include="..\Core\Mapgen\Perlin.cpp" />
     <ClCompile Include="..\Core\Physics\Physics.cpp" />
+    <ClCompile Include="..\Core\Physics\Tick.cpp" />
     <ClCompile Include="..\Core\Terrain\Block.cpp" />
     <ClCompile Include="..\Core\Terrain\BlockModel.cpp" />
     <ClCompile Include="..\Core\Terrain\Chunk.cpp" />
@@ -191,54 +164,7 @@
     <ClCompile Include="UI\Transpose.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Button.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Canvas.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Checkbox.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\ClientCore.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Container.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\ControlSetting.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Graphics.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\GraphicsUtils.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\GUIElement.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Image.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Label.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\LabelBind.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Panel.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Plot.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Popup.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Shader.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Slider.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\stb_image.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Table.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\TextInput.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\GUI\Texture.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigFloat.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignum.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignumf.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignums.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbnl.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cios.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cthr.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Ctty.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exarray.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exdebug.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exstring.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Exthread.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\BinTree.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\FlowSystem.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Fraction.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\helperFunctions.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Keyframe.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Point.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Polynomial.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Maths\Types.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Network\Compress.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Network\Network.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\Network\NetworkData.h" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\rapidxml\rapidxml.hpp" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\rapidxml\rapidxml_iterators.hpp" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\rapidxml\rapidxml_print.hpp" />
-    <ClInclude Include="..\..\Libraries\Include\NGin\rapidxml\rapidxml_utils.hpp" />
+    <ClInclude Include="..\Core\Blocks\Block_Directional.h" />
     <ClInclude Include="..\Core\Blocks\Block_Liquid.h" />
     <ClInclude Include="..\Core\Blocks\Block_Static.h" />
     <ClInclude Include="..\Core\Blocks\Block_Stone.h" />
@@ -247,6 +173,8 @@
     <ClInclude Include="..\Core\Mapgen\Mapgen.h" />
     <ClInclude Include="..\Core\Mapgen\Perlin.h" />
     <ClInclude Include="..\Core\Physics\Physics.h" />
+    <ClInclude Include="..\Core\Physics\Tick.h" />
+    <ClInclude Include="..\Core\Sync\Sync.h" />
     <ClInclude Include="..\Core\Terrain\Block.h" />
     <ClInclude Include="..\Core\Terrain\BlockModel.h" />
     <ClInclude Include="..\Core\Terrain\Chunk.h" />
@@ -262,10 +190,6 @@
     <ClInclude Include="UI\Transpose.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbignumf.inl" />
-    <None Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbnl.inl" />
-    <None Include="..\..\Libraries\Include\NGin\Maths\BigNumberLibrary\Cbnl64.inl" />
-    <None Include="..\..\Libraries\Include\NGin\rapidxml\manual.html" />
     <None Include="Shaders\Chunk.frag" />
     <None Include="Shaders\Chunk.vert" />
     <None Include="Shaders\Entity.frag" />

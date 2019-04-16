@@ -17,10 +17,13 @@ void onDefaultBlockBreak(BlockPos &, Entity *, int, void *) {
 }
 
 void getStoredPhysics(BlockPos b[7], list<PhysCube>& l) {
+
+  fVec3 location = mVec3(b[6].lbx + b[6].c->_cx * BLOCK_PER_CHUNK, b[6].lby + b[6].c->_cy * BLOCK_PER_CHUNK, b[6].lbz + b[6].c->_cz * BLOCK_PER_CHUNK);
+
   for (auto&& it : blockModels[b[6].b->_ID].cubes) {
     PhysCube newC = it;
-    newC.nc += mVec3(b[6].lbx + b[6].c->_cx * BLOCK_PER_CHUNK, b[6].lby + b[6].c->_cy * BLOCK_PER_CHUNK, b[6].lbz + b[6].c->_cz * BLOCK_PER_CHUNK);
-    newC.pc += mVec3(b[6].lbx + b[6].c->_cx * BLOCK_PER_CHUNK, b[6].lby + b[6].c->_cy * BLOCK_PER_CHUNK, b[6].lbz + b[6].c->_cz * BLOCK_PER_CHUNK);
+    newC.nc += location;
+    newC.pc += location;
     l.push_back(newC);
   }
 }
@@ -32,18 +35,21 @@ BlockNeeds getEmptyNeeds(Block&) {
 BlockNeeds getSolidNeeds(Block&) {
   return 0;
 }
+BlockNeeds getSlabNeeds(Block&) {
+  return 95; //Not top faces
+}
 
 void getStoredModel(BlockPos b[7], BlockNeeds n, list<QuadFace>& addTo) {
   BlockProperies& prop = blockProperties[b[6].b->_ID];
+  fVec3 location = {
+    b[6].c->_cx * BLOCK_PER_CHUNK + b[6].lbx * 1.0f,
+    b[6].c->_cy * BLOCK_PER_CHUNK + b[6].lby * 1.0f,
+    b[6].c->_cz * BLOCK_PER_CHUNK + b[6].lbz * 1.0f };
 
   for (auto&& it : blockModels[b[6].b->_ID].faces) {
     if (it.type & n) {
       QuadFace res;
 
-      fVec3 location = {
-        b[6].c->_cx * BLOCK_PER_CHUNK + b[6].lbx * 1.0f,
-        b[6].c->_cy * BLOCK_PER_CHUNK + b[6].lby * 1.0f,
-        b[6].c->_cz * BLOCK_PER_CHUNK + b[6].lbz * 1.0f };
       res.vbl = it.base.vbl + location;
       res.vbr = it.base.vbr + location;
       res.vtl = it.base.vtl + location;

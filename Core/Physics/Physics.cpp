@@ -80,6 +80,30 @@ bool operator>(const IntersectionData& lhs, const IntersectionData& rhs) {
   return lhs.t > rhs.t;
 }
 
+inline void calculateCollisions(PhysCube& entc, priority_queue_smallest<IntersectionData>& pcubes, mpsVec3& vel, list<PhysCube>& cubes, time_type_s& processTreshold, time_type_s& deltaT) {
+  pcubes = priority_queue_smallest<IntersectionData>();
+  for (auto&& it : cubes) {
+    vec2<time_type_s> entryTimes;
+    vec2<time_type_s> exitTimes;
+    for (int i = 0; i < 2; i++) {
+      if (vel[i] != 0) {
+        entryTimes[i] = (vel[i] > 0) ? ((it.nc[i] + EPSILON - entc.pc[i]) / vel[i]) : ((it.pc[i] - EPSILON - entc.nc[i]) / vel[i]);
+        exitTimes[i] = (vel[i] > 0) ? ((it.pc[i] - EPSILON - entc.nc[i]) / vel[i]) : ((it.nc[i] + EPSILON - entc.pc[i]) / vel[i]);
+      } else {
+        entryTimes[i] = (max(it.nc[i] + EPSILON, entc.nc[i]) < min(it.pc[i] - EPSILON, entc.pc[i])) ? (-INFINITY) : (INFINITY);
+        exitTimes[i] = (max(it.nc[i] + EPSILON, entc.nc[i]) < min(it.pc[i] - EPSILON, entc.pc[i])) ? (INFINITY) : (-INFINITY);
+      }
+    }
+    if (entryTimes.maxV() < exitTimes.minV()) {
+      int axis = entryTimes.maxI();
+      time_type_s entry = entryTimes[axis];
+      if (processTreshold <= entry && entry <= deltaT) {
+        pcubes.push({ entry, (entry < 0) ? -1 : axis, it });
+      }
+    }
+  }
+}
+
 void tickEntity(Entity* ent, time_type_s deltaT) {
   //Assumption: deltaT is so small, that an entity entering a PhysCube will not leave it in the same timestep
   //Guarantee: Even in this case, objects hitting the wall will get stopped.
@@ -90,8 +114,6 @@ void tickEntity(Entity* ent, time_type_s deltaT) {
   //Assumption: Entity height < maxStepSize
   //Guarantee: Nope.
 
-  //ent->_friction = sVec3(1);
-
   time_type_s stepLength = deltaT;
 
   mVec3 newPos = ent->getFeetCenter();
@@ -101,8 +123,17 @@ void tickEntity(Entity* ent, time_type_s deltaT) {
 
   mpsVec3 vel = ent->getVelocity();
   getBlock(newPos.x, newPos.y, newPos.z, ent->getDim(), ent->_inWorld);
-  vel -= vel * ent->_friction;
+
+  //cout << ent->_friction << endl;
+  vel -= vel * ent->_drag;
+  //cout << vel << endl;
   vel += (ent->_selfAccel * ent->_friction + G) * deltaT;
+  //cout << vel << endl;
+  //cout << endl;
+
+  if (!ent->_inWorld) {
+    vel = 0;
+  }
 
   mVec3 offset = vel * deltaT;
 
@@ -141,31 +172,14 @@ void tickEntity(Entity* ent, time_type_s deltaT) {
 
   //Order cubes in order of collision time
 
+  time_type_s processTreshold = -INFINITY;
+
   priority_queue_smallest<IntersectionData> pcubes;
 
-  for (auto&& it : cubes) {
-    vec2<time_type_s> entryTimes;
-    vec2<time_type_s> exitTimes;
-    for (int i = 0; i < 2; i++) {
-      if (vel[i] != 0) {
-        entryTimes[i] = (vel[i] > 0) ? ((it.nc[i] + EPSILON - entc.pc[i]) / vel[i]) : ((it.pc[i] - EPSILON - entc.nc[i]) / vel[i]);
-         exitTimes[i] = (vel[i] > 0) ? ((it.pc[i] - EPSILON - entc.nc[i]) / vel[i]) : ((it.nc[i] + EPSILON - entc.pc[i]) / vel[i]);
-      } else {
-        entryTimes[i] = (max(it.nc[i] + EPSILON, entc.nc[i]) < min(it.pc[i] - EPSILON, entc.pc[i])) ? (-INFINITY) : (INFINITY);
-         exitTimes[i] = (max(it.nc[i] + EPSILON, entc.nc[i]) < min(it.pc[i] - EPSILON, entc.pc[i])) ? (INFINITY) : (-INFINITY);
-      }
-    }
-    if (entryTimes.maxV() < exitTimes.minV()) {
-      int axis = entryTimes.maxI();
-      time_type_s entry = entryTimes[axis];
-      if (entry <= deltaT) {
-        pcubes.push({ entry, (entry < 0) ? -1 : axis, it });
-      }
-    }
-  }
+  calculateCollisions(entc, pcubes, vel, cubes, processTreshold, deltaT);
 
-  float lowerHL = min(entc.nc[2], endc.nc[2]);
-  float upperHL = max(entc.nc[2], endc.nc[2]) + maxStepSize;
+  distance_type_m lowerHL = min(entc.nc[2], endc.nc[2]);
+  distance_type_m upperHL = max(entc.nc[2], endc.nc[2]) + maxStepSize + EPSILON;
 
   //entity height
   float entcH = entc.pc[2] - entc.nc[2];
@@ -177,13 +191,15 @@ void tickEntity(Entity* ent, time_type_s deltaT) {
     auto cube = pcubes.top();
     pcubes.pop();
 
+    processTreshold = cube.t;
+
     if (cube.ax == -1 || !lockedAxes[cube.ax]) {
       //Merge intervals
-      float tempUpper = upperHL;
-      float tempLower = lowerHL;
+      distance_type_m tempUpper = upperHL;
+      distance_type_m tempLower = lowerHL;
 
-      float newUpper = cube.cube.pc[2];
-      float newLower = cube.cube.nc[2] - entcH;
+      distance_type_m newUpper = cube.cube.pc[2];
+      distance_type_m newLower = cube.cube.nc[2] - entcH;
 
       if (lowerHL < newLower && newLower < upperHL) {
         tempUpper = newLower;
@@ -196,13 +212,24 @@ void tickEntity(Entity* ent, time_type_s deltaT) {
         tempLower = newUpper;
       }
 
-      if (cube.ax != -1 && tempUpper <= tempLower) {
-        lockedAxes[cube.ax] = true;
-        teleportPos[cube.ax] = 
-          (vel[cube.ax] > 0) ?
-          (cube.cube.nc[cube.ax] - (entc.pc[cube.ax] - entc.nc[cube.ax]) / 2.0) :
-          (cube.cube.pc[cube.ax] + (entc.pc[cube.ax] - entc.nc[cube.ax]) / 2.0);
+      if (tempUpper <= tempLower) {
+        if (cube.ax != -1) {
+          lockedAxes[cube.ax] = true;
+          //cout << cube.ax;
+          teleportPos[cube.ax] =
+            (vel[cube.ax] > 0) ?
+            (cube.cube.nc[cube.ax] - (entc.pc[cube.ax] - entc.nc[cube.ax]) / 2.0) :
+            (cube.cube.pc[cube.ax] + (entc.pc[cube.ax] - entc.nc[cube.ax]) / 2.0);
+          vel[cube.ax] = 0;
+
+          calculateCollisions(entc, pcubes, vel, cubes, processTreshold, deltaT);
+
+
+        }
       } else {
+        //assert(lowerHL <= tempLower);
+        //assert(tempLower <= tempUpper);
+        //assert(tempUpper <= upperHL);
         lowerHL = tempLower;
         upperHL = tempUpper;
       }
@@ -213,13 +240,17 @@ void tickEntity(Entity* ent, time_type_s deltaT) {
   if (lockedAxes[1]) newPos[1] = teleportPos[1];
   newPos[2] = max(lowerHL, min(endc.nc[2], upperHL));
   
-  if (newPos[2] == lowerHL && endc.nc[2] != lowerHL) {
-    ent->_friction = sVec3(1);
+  if (abs(newPos[2]-endc.nc[2]) > EPSILON || !ent->_inWorld) {
+    ent->_friction = sVec3(SC_SUBTICK_TIME * 30, SC_SUBTICK_TIME * 30, 1);
+    ent->_drag = sVec3(1 - pow(2, -SC_SUBTICK_TIME / 0.05), 1 - pow(2, -SC_SUBTICK_TIME / 0.05), 1);
+    vel[2] = 0;
   } else {
-    ent->_friction = sVec3(0.1, 0.1, 0);
+    ent->_friction = sVec3(SC_SUBTICK_TIME / 0.5, SC_SUBTICK_TIME / 0.5, 0);
+    ent->_drag = sVec3(1 - pow(2, -SC_SUBTICK_TIME / 1.0), 1 - pow(2, -SC_SUBTICK_TIME / 1.0), 1 - pow(2, -SC_SUBTICK_TIME / 1.0));
   }
 
   ent->setPos(newPos);
+  ent->setVel(vel);
 
   /*volume_type_mmm fullVol = getVol(entc);
 
@@ -367,7 +398,7 @@ void tickEntity(Entity* ent, time_type_s deltaT) {
   ent->setVel(newVel);*/
 }
 
-void tickPhysics(time_type_s tickTime) {
+void subtickPhysics() {
   for (auto&& it : entities) {
     /*mVec3 posShift = {0,0,0};
     mpsVec3 vel = it->getVelocity();
@@ -376,6 +407,6 @@ void tickPhysics(time_type_s tickTime) {
     posShift = vel * tickTime;*/
     //it.second->movPos(it.second->() * tickTime);
     //it.second->movPos(it.second->_selfAccel * tickTime * 0.02);
-    tickEntity(it.second, 0.05);
+    tickEntity(it.second, SC_SUBTICK_TIME);
   }
 }

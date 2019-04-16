@@ -32,7 +32,8 @@ protected:
   GLuint entity_vao;
 #endif
 public:
-  sVec3 _friction; //Determines effect of self acceleration, and decay. 0: free space, 1: move exactly s much as you want
+  sVec3 _drag; //0-1
+  sVec3 _friction; //Determines effect of self acceleration, 0-1
   bool _inWorld;
   mpssVec3 _selfAccel;
   Entity(guid_t guid);
@@ -98,20 +99,20 @@ public:
   void saveFile();
 };
 
-class NetBinder : public Player {
+class NetPlayer : public Player, public NetworkBinder {
 public:
+  bool recivePacket(DataElement* Data, int Id, Network* thisptr);
+
+  void sendBlock(iVec3 pos, Block& what);
+
 #ifdef M_CLIENT
-  NetworkC* connection;
-  bool recivePacket(DataElement* Data, int Id, NetworkC* thisptr);
 
 #endif
-  void sendBlock(iVec3 pos, Block& what);
+
 #ifdef M_SERVER
-  NetworkS* connection;
   void sendChunk(Chunk* what);
-  bool recivePacket(DataElement* Data, int Id, NetworkS* thisptr, NetBinder* connected);
 #endif
-  NetBinder(guid_t guid);
+  NetPlayer(guid_t guid);
 };
 
 extern map<guid_t, Entity*> entities;

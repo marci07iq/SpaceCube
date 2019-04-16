@@ -126,8 +126,8 @@ void Player::loadFile() {
     set(me);
   } else {
     _lookDir = fVec3(0.3,0.3,-0.9).norm();
-    _pos ={0, 0, 50};
-    _speed = 50;
+    _pos ={0, 0, 80};
+    _speed = 10;
     saveFile();
   }
   delete me;
@@ -141,11 +141,11 @@ void Player::saveFile() {
   saveToFile(me, to_string(_guid) + ".ent");
 }
 
-NetBinder::NetBinder(guid_t guid) : Player(guid) {
+NetPlayer::NetPlayer(guid_t guid) : Player(guid) {
   //_guid = guid;
 }
 
-void NetBinder::sendBlock(iVec3 pos, Block& what) {
+void NetPlayer::sendBlock(iVec3 pos, Block& what) {
   cout << pos << " " << what._raw << endl;
   DataElement* res = new DataElement();
   DataElement* nd;
@@ -160,7 +160,7 @@ void NetBinder::sendBlock(iVec3 pos, Block& what) {
 }
 
 #ifdef M_SERVER
-void NetBinder::sendChunk(Chunk* what) {
+void NetPlayer::sendChunk(Chunk* what) {
 
   DataElement* res = new DataElement();
   DataElement* nd;
@@ -178,7 +178,7 @@ void NetBinder::sendChunk(Chunk* what) {
 
   connection->SendData(res, PacketChunk);
 }
-bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkS * thisptr, NetBinder * connected) {
+bool NetPlayer::recivePacket(DataElement * Data, int Id, Network * thisptr) {
   ChunkCol* cc = NULL;
   switch (Id) {
     case PacketChunk:
@@ -187,7 +187,7 @@ bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkS * thisptr, Net
       vSFunc(cz, Data->_children[1]);
 
       cc = findLoadChunkCol(cx, cz, 0);
-      cc->_loaders.push_back(connected->getGUID());
+      cc->_loaders.push_back(getGUID());
       for (int k = 0; k < CHUNK_PER_COLUMN; k++) {
         if (cc->getChunk(k) != NULL) {
           sendChunk(cc->getChunk(k));
@@ -209,7 +209,7 @@ bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkS * thisptr, Net
 #endif
 #ifdef M_CLIENT
 
-bool NetBinder::recivePacket(DataElement * Data, int Id, NetworkC * thisptr) {
+bool NetPlayer::recivePacket(DataElement * Data, int Id, Network * thisptr) {
   switch (Id) {
     case PacketChunk:
       int cx, cy, cz;

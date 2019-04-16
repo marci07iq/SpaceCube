@@ -3,7 +3,7 @@
 #include "../UI/Transpose.h";
 
 extern guid_t userGUID;
-extern NetBinder* user;
+extern NetPlayer* user;
 extern NetworkC* Connection;
 
 extern int frameTime; //33ms;

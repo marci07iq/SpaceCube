@@ -2,6 +2,6 @@
 
 #include "../Terrain/Entities.h"
 
-const mpssVec3 G = {0, 0, -40};
+const mpssVec3 G = {0, 0, -20};
 
-void tickPhysics(time_type_s tickTime);
+void subtickPhysics();
