@@ -1,16 +1,16 @@
 #include "Render.h"
 
-Graphics::WinHwnd objectMainWindow;
-Graphics::PanelHwnd objectGameSubWindow;
-Graphics::CanvasHwnd objectMainGameCanvas;
-Graphics::PanelHwnd objectMenuSubWindow;
+NGin::Graphics::WinHwnd objectMainWindow;
+NGin::Graphics::PanelHwnd objectGameSubWindow;
+NGin::Graphics::CanvasHwnd objectMainGameCanvas;
+NGin::Graphics::PanelHwnd objectMenuSubWindow;
 
 bool recivePacket(DataElement* data, int id, Network* client, NetworkBinder* player);
 
 void createMainMenu() {
-  Graphics::setElements(objectMenuSubWindow, "html/main_menu.xml");
+  NGin::Graphics::setElements(objectMenuSubWindow, "html/main_menu.xml");
 
-  reinterpret_cast<Graphics::LabelBindHwnd>(Graphics::getElementById("objectMainMenuVersion"))->text =
+  static_pointer_cast<NGin::Graphics::LabelBind>(NGin::Graphics::getElementById("objectMainMenuVersion"))->text =
     new TextBind<
     TextBindVar<int>,
     TextBindVar<int>,
@@ -21,43 +21,43 @@ void createMainMenu() {
     TextBindVar<int>(&VersionC)
     );
 
-  Graphics::deleteElements(objectGameSubWindow);
+  NGin::Graphics::deleteElements(objectGameSubWindow);
 }
-void createMainMenu(Graphics::ElemHwnd e, void* data) {
+void createMainMenu(NGin::Graphics::ElemHwnd e) {
   createMainMenu();
 }
-void createMessageScreen(string message, string button, ClickCallback buttonFunc,  bool showButton, string imgname, bool showImage) {
-  Graphics::deleteElements(objectMenuSubWindow);
-  Graphics::deleteElements(objectGameSubWindow);
+void createMessageScreen(string message, string button, NGin::Graphics::ClickCallback buttonFunc,  bool showButton, string imgname, bool showImage) {
+  NGin::Graphics::deleteElements(objectMenuSubWindow);
+  NGin::Graphics::deleteElements(objectGameSubWindow);
 
-  Graphics::LabelHwnd lab = Graphics::createLabel("objectMessageText", LocationData(LinearScale(0.5),LinearScale(0.6),LinearScale(0),LinearScale(1)),getColor("label","bg"), getColor("label", "active"), getColor("label", "text"), NULL, message, 1);
-  Graphics::addElement(objectMenuSubWindow, lab);
+  NGin::Graphics::LabelHwnd lab = NGin::Graphics::createGUI_T<NGin::Graphics::Label>("objectMessageText", NGin::Graphics::LocationData(NGin::Graphics::LinearScale(0.5), NGin::Graphics::LinearScale(0.6), NGin::Graphics::LinearScale(0), NGin::Graphics::LinearScale(1)), NGin::Graphics::getColor("label","bg"), NGin::Graphics::getColor("label", "active"), NGin::Graphics::getColor("label", "text"), (void*)NULL, message, 1);
+  NGin::Graphics::addElement(objectMenuSubWindow, lab);
 
   if(showButton) {
-    Graphics::ButtonHwnd but = Graphics::createButton("objectMessageButton", LocationData(LinearScale(0.4), LinearScale(0.5), LinearScale(0), LinearScale(1)), getColor("label", "bg"), getColor("label", "active"), getColor("label", "text"), NULL, button, -1, buttonFunc);
-    Graphics::addElement(objectMenuSubWindow, but);
+    NGin::Graphics::ButtonHwnd but = NGin::Graphics::createGUI_T<NGin::Graphics::Button>("objectMessageButton", NGin::Graphics::LocationData(NGin::Graphics::LinearScale(0.4), NGin::Graphics::LinearScale(0.5), NGin::Graphics::LinearScale(0), NGin::Graphics::LinearScale(1)), NGin::Graphics::getColor("label", "bg"), NGin::Graphics::getColor("label", "active"), NGin::Graphics::getColor("label", "text"), (void*)NULL, button, -1, buttonFunc);
+    NGin::Graphics::addElement(objectMenuSubWindow, but);
   }
 
   if (showImage) {
-    Graphics::ImageHwnd img = Graphics::createImage("objectMessageImage", LocationData(LinearScale(0.6), LinearScale(0.9), LinearScale(0), LinearScale(1)), getColor("label", "bg"), getColor("label", "active"), getColor("label", "text"), NULL, imgname, 1);
-    Graphics::addElement(objectMenuSubWindow, img);
+    NGin::Graphics::ImageHwnd img = NGin::Graphics::createGUI_T<NGin::Graphics::Image>("objectMessageImage", NGin::Graphics::LocationData(NGin::Graphics::LinearScale(0.6), NGin::Graphics::LinearScale(0.9), NGin::Graphics::LinearScale(0), NGin::Graphics::LinearScale(1)), NGin::Graphics::getColor("label", "bg"), NGin::Graphics::getColor("label", "active"), NGin::Graphics::getColor("label", "text"), (void*)NULL, imgname, 1);
+    NGin::Graphics::addElement(objectMenuSubWindow, img);
   }
 }
-void createSettings(Graphics::TableHwnd& table) {
-  Graphics::deleteElements(table, true);
+void createSettings(NGin::Graphics::TableHwnd& table) {
+  NGin::Graphics::deleteElements(table);
   int i = 0;
-  for (auto&& it : keybinds) {
-    Graphics::TablerowHwnd row = Graphics::createTableRow("objectKeybindRow" + to_string(i), LocationData(LinearScale(0, 0), LinearScale(0, 30), LinearScale(0, 0), LinearScale(1, 0)), getColor("tablerow", "bgcolor"), getColor("tablerow", "activecolor"), NULL);
-    Graphics::LabelHwnd    name = Graphics::createLabel("objectKeybindLabel" + to_string(i), LocationData(LinearScale(0, 5), LinearScale(0, 25), LinearScale(0, 0), LinearScale(0.9, -50)), getColor("label", "bgcolor"), getColor("label", "activecolor"), getColor("label", "textcolor"), NULL, it.second.display, 1);
-    Graphics::ControlHwnd  ctrl = Graphics::createControl("objectKeybindInput" + to_string(i), LocationData(LinearScale(0, 5), LinearScale(0, 25), LinearScale(0.9, -45), LinearScale(1, -5)), getColor("control", "bgcolor"), getColor("control", "activecolor"), getColor("control", "textcolor"), NULL, it.second, it.first, keybindReply);
-    Graphics::addElement(row, name);
-    Graphics::addElement(row, ctrl);
-    Graphics::addElement(table, row);
+  for (auto&& it : NGin::Graphics::keybinds) {
+    NGin::Graphics::TablerowHwnd row = NGin::Graphics::createGUI_T< NGin::Graphics::TableRow>("objectKeybindRow" + to_string(i), NGin::Graphics::LocationData(NGin::Graphics::LinearScale(0, 0), NGin::Graphics::LinearScale(0, 30), NGin::Graphics::LinearScale(0, 0), NGin::Graphics::LinearScale(1, 0)), NGin::Graphics::getColor("tablerow", "bgcolor"), NGin::Graphics::getColor("tablerow", "activecolor"), (void*)NULL);
+    NGin::Graphics::LabelHwnd    name = NGin::Graphics::createGUI_T< NGin::Graphics::Label>("objectKeybindLabel" + to_string(i), NGin::Graphics::LocationData(NGin::Graphics::LinearScale(0, 5), NGin::Graphics::LinearScale(0, 25), NGin::Graphics::LinearScale(0, 0), NGin::Graphics::LinearScale(0.9, -50)), NGin::Graphics::getColor("label", "bgcolor"), NGin::Graphics::getColor("label", "activecolor"), NGin::Graphics::getColor("label", "textcolor"), (void*)NULL, it.second.display, 1);
+    NGin::Graphics::ControlHwnd  ctrl = NGin::Graphics::createGUI_T< NGin::Graphics::ControlSetting>("objectKeybindInput" + to_string(i), NGin::Graphics::LocationData(NGin::Graphics::LinearScale(0, 5), NGin::Graphics::LinearScale(0, 25), NGin::Graphics::LinearScale(0.9, -45), NGin::Graphics::LinearScale(1, -5)), NGin::Graphics::getColor("control", "bgcolor"), NGin::Graphics::getColor("control", "activecolor"), NGin::Graphics::getColor("control", "textcolor"), (void*)NULL, it.second, it.first, NGin::Graphics::keybindReply);
+    NGin::Graphics::addElement(row, name);
+    NGin::Graphics::addElement(row, ctrl);
+    NGin::Graphics::addElement(table, row);
     ++i;
   }
 }
 void connectServer(string ip, string port) {
-  Graphics::deleteElements(objectMenuSubWindow);
+  NGin::Graphics::deleteElements(objectMenuSubWindow);
 
   Connection = new NetworkC(
     ip,
@@ -92,33 +92,33 @@ void connectServer(string ip, string port) {
 }
 
 //Main
-void mainMenuSingleplayerPlayButton(Graphics::ElemHwnd e, void* data) {
+void mainMenuSingleplayerPlayButton(NGin::Graphics::ElemHwnd e) {
 
 }
-void mainMenuMultiplayerPlayButton(Graphics::ElemHwnd e, void* data) {
-  Graphics::setElements(objectMenuSubWindow, "html/multi_menu.xml");
+void mainMenuMultiplayerPlayButton(NGin::Graphics::ElemHwnd e) {
+  NGin::Graphics::setElements(objectMenuSubWindow, "html/multi_menu.xml");
 }
-void mainMenuSettingsButton(Graphics::ElemHwnd e, void* data) {
-  Graphics::setElements(objectMenuSubWindow, "html/game_settings.xml");
-  Graphics::TableHwnd table = (Graphics::TableHwnd)Graphics::getElementById("objectSettingsMenuTable");
+void mainMenuSettingsButton(NGin::Graphics::ElemHwnd e) {
+  NGin::Graphics::setElements(objectMenuSubWindow, "html/game_settings.xml");
+  NGin::Graphics::TableHwnd table = static_pointer_cast<NGin::Graphics::Table>(NGin::Graphics::getElementById("objectSettingsMenuTable"));
   createSettings(table);
 }
-void mainMenuExitButton(Graphics::ElemHwnd e, void* data) {
-  Graphics::shutdownGraphics();
+void mainMenuExitButton(NGin::Graphics::ElemHwnd e) {
+  NGin::Graphics::shutdownGraphics();
 }
 
 //Main / Multi
-void multiMenuInput(Graphics::ElemHwnd e, void* data, string& s) {
+void multiMenuInput(NGin::Graphics::ElemHwnd e, string& s) {
 
 }
-void multiMenuInputButton(Graphics::ElemHwnd e, void* data) {
+void multiMenuInputButton(NGin::Graphics::ElemHwnd e) {
 
-  string ip = reinterpret_cast<Graphics::TextInputHwnd>(Graphics::getElementById("objectMultiMenuIpInput"))->text;
-  string port = reinterpret_cast<Graphics::TextInputHwnd>(Graphics::getElementById("objectMultiMenuPortInput"))->text;
+  string ip = static_pointer_cast<NGin::Graphics::TextInput>(NGin::Graphics::getElementById("objectMultiMenuIpInput"))->text;
+  string port = static_pointer_cast<NGin::Graphics::TextInput>(NGin::Graphics::getElementById("objectMultiMenuPortInput"))->text;
 
   connectServer(ip, port);
 }
-void multiMenuBackButton(Graphics::ElemHwnd e, void* data) {
+void multiMenuBackButton(NGin::Graphics::ElemHwnd e) {
   createMainMenu();
 }
 
@@ -126,9 +126,9 @@ void multiMenuBackButton(Graphics::ElemHwnd e, void* data) {
 /*void settingsMenuInput(key nkey, int id) {
   keybindReply(nkey, id);
 }*/
-void settingsMenuBackButton(Graphics::ElemHwnd e, void* data) {
+void settingsMenuBackButton(NGin::Graphics::ElemHwnd e) {
   createMainMenu();
-  saveKeybinds();
+  NGin::Graphics::saveKeybinds();
 }
 
 
@@ -150,7 +150,7 @@ void glfwErrorCb(int i, const char* c) {
   cout << i << c << endl;
 }
 
-void mainWindowSetup(Graphics::WinHwnd win) {
+void mainWindowSetup(NGin::Graphics::WinHwnd win) {
   objectMainWindow = win;
   glewExperimental = GL_TRUE;
 
@@ -176,54 +176,54 @@ void mainWindowSetup(Graphics::WinHwnd win) {
   //glCullFace(GL_FRONT);
   //glFrontFace(GL_CCW);
 
-  Gll::gllInit("NGin/GUI/GLL_Res/");
+  NGin::Gll::gllInit("NGin/GUI/GLL_Res/");
 
   win->autoRedraw = true;
 
-  objectMenuSubWindow = Graphics::createPanel("objectMenuSubWindow", fullContainer, getColor("div", "bgcolor"), NULL);
-  Graphics::addElement(objectMainWindow, objectMenuSubWindow);
-  objectGameSubWindow = Graphics::createPanel("objectGameSubWindow", fullContainer, getColor("div", "bgcolor"), NULL);
-  Graphics::addElement(objectMainWindow, objectGameSubWindow);
+  objectMenuSubWindow = NGin::Graphics::createGUI_T< NGin::Graphics::Panel>("objectMenuSubWindow", NGin::Graphics::fullContainer, NGin::Graphics::getColor("div", "bgcolor"), (void*)NULL);
+  NGin::Graphics::addElement(objectMainWindow, objectMenuSubWindow);
+  objectGameSubWindow = NGin::Graphics::createGUI_T< NGin::Graphics::Panel>("objectGameSubWindow", NGin::Graphics::fullContainer, NGin::Graphics::getColor("div", "bgcolor"), (void*)NULL);
+  NGin::Graphics::addElement(objectMainWindow, objectGameSubWindow);
 
-  chunkShader.create("Shaders/Chunk");
-  entityShader.create("Shaders/Entity");
+  chunkShader = make_shared<NGin::Graphics::Shader_Raw>("Shaders/Chunk");
+  entityShader = make_shared<NGin::Graphics::Shader_Raw>("Shaders/Entity");
 
   int tw, th;
-  textures = png_texture_load("Textures/All.png", tw, th);
+  textures = NGin::Graphics::png_texture_load("Textures/All.png", tw, th);
   cout << "Loaded texture " << textures << endl;
 
   //createMainMenu();
 }
 void InitGraphics() {
   //Main
-  Graphics::setName<ClickCallback>("mainMenuSingleplayerPlayButton", mainMenuSingleplayerPlayButton);
-  Graphics::setName<ClickCallback>("mainMenuMultiplayerPlayButton", mainMenuMultiplayerPlayButton);
-  Graphics::setName<ClickCallback>("mainMenuSettingsButton", mainMenuSettingsButton);
-  Graphics::setName<ClickCallback>("mainMenuExitButton", mainMenuExitButton);
+  NGin::Graphics::setName<NGin::Graphics::ClickCallback>("mainMenuSingleplayerPlayButton", mainMenuSingleplayerPlayButton);
+  NGin::Graphics::setName<NGin::Graphics::ClickCallback>("mainMenuMultiplayerPlayButton", mainMenuMultiplayerPlayButton);
+  NGin::Graphics::setName<NGin::Graphics::ClickCallback>("mainMenuSettingsButton", mainMenuSettingsButton);
+  NGin::Graphics::setName<NGin::Graphics::ClickCallback>("mainMenuExitButton", mainMenuExitButton);
 
   //Main / Multiplayer
-  Graphics::setName<ClickCallback>("multiMenuInputButton", multiMenuInputButton);
-  Graphics::setName<TextInputFunc>("multiMenuInput", multiMenuInput);
-  Graphics::setName<ClickCallback>("multiMenuBackButton", multiMenuBackButton);
+  NGin::Graphics::setName<NGin::Graphics::ClickCallback>("multiMenuInputButton", multiMenuInputButton);
+  NGin::Graphics::setName<NGin::Graphics::TextInputFunc>("multiMenuInput", multiMenuInput);
+  NGin::Graphics::setName<NGin::Graphics::ClickCallback>("multiMenuBackButton", multiMenuBackButton);
 
   //Main / Settings
-  Graphics::setName<ClickCallback>("settingsMenuBackButton", settingsMenuBackButton);
+  NGin::Graphics::setName<NGin::Graphics::ClickCallback>("settingsMenuBackButton", settingsMenuBackButton);
 
 
   //Validators
-  Graphics::setName<TextValidatorFunc>("textValidator", textValidator);
-  Graphics::setName<TextValidatorFunc>("numericalValidator", numericalValidator);
-  Graphics::setName<TextValidatorFunc>("floatValidator", floatValidator);
+  NGin::Graphics::setName<NGin::Graphics::TextValidatorFunc>("textValidator", NGin::Graphics::textValidator);
+  NGin::Graphics::setName<NGin::Graphics::TextValidatorFunc>("numericalValidator", NGin::Graphics::numericalValidator);
+  NGin::Graphics::setName<NGin::Graphics::TextValidatorFunc>("floatValidator", NGin::Graphics::floatValidator);
 
 
-  Graphics::initGraphics();
+  NGin::Graphics::initGraphics();
   glfwSetErrorCallback(glfwErrorCb);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // We want OpenGL 4.3
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
 
-  Graphics::CreateMainWindow("SpaceCube", Graphics::defaultWindowManagers, 1080, 768, true, 0, 0, false, 0, NULL, mainWindowSetup);
+  NGin::Graphics::CreateMainWindow("SpaceCube", NGin::Graphics::defaultWindowManagers, 1080, 768, true, 0, 0, false, 0, NULL, mainWindowSetup);
 
-  Graphics::cleanQueues();
+  NGin::Graphics::cleanQueues();
 }

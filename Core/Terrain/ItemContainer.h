@@ -19,7 +19,7 @@ struct ContainerSlot {
 };
 
 #ifdef M_CLIENT
-class ContainerGUI : public GUIElement {
+class ContainerGUI : public NGin::Graphics::GUIElement {
 #else
 class ContainerGUI {
 #endif
@@ -29,7 +29,7 @@ public:
 
   int locateField(iVec2 at);
 #ifdef M_CLIENT
-  ContainerGUI(string lname, LocationData llocation, colorargb lbg, colorargb lactive, colorargb ltextColor) :
+  ContainerGUI(string lname, NGin::Graphics::LocationData llocation, colorargb lbg, colorargb lactive, colorargb ltextColor) :
     GUIElement(lname, llocation, lbg, lactive, ltextColor, NULL) {
   }
   /*int mouseEnter(int state);

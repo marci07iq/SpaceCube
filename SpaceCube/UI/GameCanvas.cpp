@@ -1,7 +1,7 @@
 #include "GameCanvas.h"
 
-Shader chunkShader;
-Shader entityShader;
+NGin::Graphics::Shader chunkShader;
+NGin::Graphics::Shader entityShader;
 
 
 GLuint textures;
@@ -9,7 +9,7 @@ GLuint texSampler;
 
 bool MainGameCanvas::lockMouse = 0;
 
-OpenGLData MainGameCanvas::view;
+NGin::Graphics::OpenGLData MainGameCanvas::view;
 
 uint64_t firstFrameTime;
 
@@ -23,7 +23,7 @@ int frameTime = 10; //33ms;
 void MainGameCanvas::normalizeAngles() {
 
 }
-void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, set<key_location>& down) {
+void MainGameCanvas::renderManager(NGin::Graphics::CanvasHwnd c, int ax, int ay, int bx, int by, set<NGin::Graphics::key_location>& down) {
   uint64_t thisFrameTime = chrono::duration_cast< chrono::milliseconds >(
     chrono::system_clock::now().time_since_epoch()).count();
 
@@ -31,24 +31,24 @@ void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, se
   mpsVec3 resVel = mpsVec3(0);
   if(userMove.sqrlen() > 0) {
     userMove.norm();
-    if (isDown(down, key_location(key('W', key::type_key)))) {
+    if (isDown(down, NGin::Graphics::key_location(NGin::Graphics::key('W', NGin::Graphics::key::type_key)))) {
       resVel += (userMove * user->getSpeed());
     }
-    if (isDown(down, key_location(key('D', key::type_key)))) {
+    if (isDown(down, NGin::Graphics::key_location(NGin::Graphics::key('D', NGin::Graphics::key::type_key)))) {
       resVel += (crs(userMove, {0,0,1}) * user->getSpeed());
     }
-    if (isDown(down, key_location(key('S', key::type_key)))) {
+    if (isDown(down, NGin::Graphics::key_location(NGin::Graphics::key('S', NGin::Graphics::key::type_key)))) {
       resVel += (-userMove * user->getSpeed());
     }
-    if (isDown(down, key_location(key('A', key::type_key)))) {
+    if (isDown(down, NGin::Graphics::key_location(NGin::Graphics::key('A', NGin::Graphics::key::type_key)))) {
       resVel += (-crs(userMove, { 0,0,1 }) * user->getSpeed());
     }
-    if (isDown(down, key_location(key(GLFW_KEY_LEFT_CONTROL, key::type_key)))) {
+    if (isDown(down, NGin::Graphics::key_location(NGin::Graphics::key(GLFW_KEY_LEFT_CONTROL, NGin::Graphics::key::type_key)))) {
       resVel *= 3;
     } else {
       resVel *= 1.5;
     }
-    if (isDown(down, key_location(key(' ', key::type_key)))) {
+    if (isDown(down, NGin::Graphics::key_location(NGin::Graphics::key(' ', NGin::Graphics::key::type_key)))) {
       if (user->_inWorld) { //Jump from ground
         resVel += mpsVec3(0, 0, sqrt(-2*1.5*G.z) / SC_SUBTICK_TIME);
       }
@@ -79,7 +79,7 @@ void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, se
 
   //glAlphaFunc(GL_GREATER, 0.1);
 
-  chunkShader.bind();
+  chunkShader->bind();
 
   float cameraM[16];
 
@@ -97,19 +97,19 @@ void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, se
   view.viewport[2] = bx-ax;
   view.viewport[3] = by-ay;
 
-  GLint loc = glGetUniformLocation(chunkShader._pID, "transform");
+  GLint loc = glGetUniformLocation(chunkShader->_pID, "transform");
   if (loc != -1) {
     glUniformMatrix4fv(loc, 1, false, cameraM);
   }
   loc = -1;
-  loc = glGetUniformLocation(chunkShader._pID, "frame_time");
+  loc = glGetUniformLocation(chunkShader->_pID, "frame_time");
   if (loc != -1) {
     glUniform1f(loc, (thisFrameTime - firstFrameTime) / 1000.0f );
   }
 
   //glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textures);
-  glUniform1i(glGetUniformLocation(chunkShader._pID, "myTexture"), 0); // set it manually
+  glUniform1i(glGetUniformLocation(chunkShader->_pID, "myTexture"), 0); // set it manually
 
   for (auto&& it : _fragments) {
     if(it.second) {
@@ -140,45 +140,45 @@ void MainGameCanvas::renderManager(Canvas* c, int ax, int ay, int bx, int by, se
     }
   }
 
-  chunkShader.unbind();
+  chunkShader->unbind();
 
   //glFlush();
 
-  Graphics::resetViewport();
+  NGin::Graphics::resetViewport();
 
   mVec3 head = user->getFeetCenter();
-  renderBitmapString(10,10,"Pos: " + to_string(head.x) + " " + to_string(head.y) + " " + to_string(head.z), 0xffff00ff, false);
+  NGin::Graphics::renderBitmapString(10,10,"Pos: " + to_string(head.x) + " " + to_string(head.y) + " " + to_string(head.z), 0xffff00ff, false);
 
-  setColor(0xffffffff);
-  Gll::gllBegin(Gll::GLL_QUADS);
-  Gll::gllVertex((ax + bx) / 2.0 - 10, (ay + by) / 2.0 - 1);
-  Gll::gllVertex((ax + bx) / 2.0 - 10, (ay + by) / 2.0 + 1);
-  Gll::gllVertex((ax + bx) / 2.0 + 10, (ay + by) / 2.0 - 1);
-  Gll::gllVertex((ax + bx) / 2.0 + 10, (ay + by) / 2.0 + 1);
-  Gll::gllVertex((ax + bx) / 2.0 + 1, (ay + by) / 2.0 - 10);
-  Gll::gllVertex((ax + bx) / 2.0 - 1, (ay + by) / 2.0 - 10);
-  Gll::gllVertex((ax + bx) / 2.0 - 1, (ay + by) / 2.0 + 10);
-  Gll::gllVertex((ax + bx) / 2.0 + 1, (ay + by) / 2.0 + 10);
-  Gll::gllEnd();
+  NGin::Graphics::setColor(0xffffffff);
+  NGin::Gll::gllBegin(NGin::Gll::GLL_QUADS);
+  NGin::Gll::gllVertex((ax + bx) / 2.0 - 10, (ay + by) / 2.0 - 1);
+  NGin::Gll::gllVertex((ax + bx) / 2.0 - 10, (ay + by) / 2.0 + 1);
+  NGin::Gll::gllVertex((ax + bx) / 2.0 + 10, (ay + by) / 2.0 - 1);
+  NGin::Gll::gllVertex((ax + bx) / 2.0 + 10, (ay + by) / 2.0 + 1);
+  NGin::Gll::gllVertex((ax + bx) / 2.0 + 1, (ay + by) / 2.0 - 10);
+  NGin::Gll::gllVertex((ax + bx) / 2.0 - 1, (ay + by) / 2.0 - 10);
+  NGin::Gll::gllVertex((ax + bx) / 2.0 - 1, (ay + by) / 2.0 + 10);
+  NGin::Gll::gllVertex((ax + bx) / 2.0 + 1, (ay + by) / 2.0 + 10);
+  NGin::Gll::gllEnd();
 
   glFlush();
 }
 
-int MainGameCanvas::resizeManager(Canvas* c, int x, int y) {
+int MainGameCanvas::resizeManager(NGin::Graphics::CanvasHwnd c, int x, int y) {
   return 0;
 }
-int MainGameCanvas::mouseEntryManager(Canvas* c, int state) {
+int MainGameCanvas::mouseEntryManager(NGin::Graphics::CanvasHwnd c, int state) {
   //mousebuttons = 0;
   return 0;
 }
-int MainGameCanvas::mouseMoveManager(Canvas* c, int x, int y, int ox, int oy, set<key_location>& down) {
-  int mrsx = Graphics::current->width / 2, mrsy = Graphics::current->height / 2;
+int MainGameCanvas::mouseMoveManager(NGin::Graphics::CanvasHwnd c, int x, int y, int ox, int oy, set<NGin::Graphics::key_location>& down) {
+  int mrsx = NGin::Graphics::current->width / 2, mrsy = NGin::Graphics::current->height / 2;
 
   if (x != mrsx || y != mrsy) {
     int dx = x - mrsx;
     int dy = y - mrsy;
     //glutWarpPointer(100, glutGet(GLUT_WINDOW_HEIGHT) - 100);
-    glfwSetCursorPos(Graphics::current->rawHwnd, Graphics::current->width / 2, Graphics::current->height / 2);
+    glfwSetCursorPos(NGin::Graphics::current->rawHwnd, NGin::Graphics::current->width / 2, NGin::Graphics::current->height / 2);
 
     polar_vec3 pos;
     pos.fromCartesian(user->getLook());
@@ -196,7 +196,7 @@ int MainGameCanvas::mouseMoveManager(Canvas* c, int x, int y, int ox, int oy, se
   return 0;
 }
 
-int MainGameCanvas::guiEventManager(Canvas* c, gui_event& evt, int mx, int my, set<key_location>& down) {
+int MainGameCanvas::guiEventManager(NGin::Graphics::CanvasHwnd c, NGin::Graphics::gui_event& evt, int mx, int my, set<NGin::Graphics::key_location>& down) {
   bool in = c->isIn(mx, my);
   GLdouble pos3D_ax = 0, pos3D_ay = 0, pos3D_az = 0;
 

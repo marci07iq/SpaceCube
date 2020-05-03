@@ -2,7 +2,7 @@
 
 #include "../Definitions.h"
 
-/*struct Packet {
+struct Packet {
   DataElement* e;
   int id;
 
@@ -11,7 +11,7 @@
   }
 };
 
-class PacketStream {
+/*class PacketStream {
   std::mutex m;
   std::condition_variable cv;
 
@@ -58,3 +58,65 @@ class PacketStream {
     }
   }
 };*/
+
+class PacketStream {
+
+  std::mutex mtx;
+  std::condition_variable cv;
+
+  list<Packet> packets_buffer[2];
+
+  int currentOwner = -1;
+  list<Packet>* packets;
+  list<Packet>* readPacket;
+
+  bool running = true;
+
+  thread sender;
+
+public:
+  PacketStream(Network* to) {
+    swapBuffers();
+    sender = thread(to);
+  }
+
+  void shutDown() {
+    {
+      std::unique_lock<std::mutex> lck(mtx);
+      running = false;
+    }
+  }
+
+  void pushPacket(Packet in) {
+    std::unique_lock<std::mutex> lck(mtx);
+    packets->push_back(in);
+    cv.notify_one();
+  }
+
+  bool packetsAvailable() { return packets->size != 0; }
+
+  void swapBuffers() {
+    std::unique_lock<std::mutex> lck(mtx);
+    readPacket = packets;
+    if (currentOwner == 0) {
+      currentOwner = 1;
+    } else {
+      currentOwner = 0;
+    }
+    packets = &packets_buffer[currentOwner];
+  }
+
+  void keepSending(Network* to) {
+    while (running) {
+      {
+        std::unique_lock<std::mutex> lck(mtx);
+        cv.wait(lck, packetsAvailable);
+        swapBuffers();
+      }
+      while (readPacket->size()) {
+        readPacket->front().send(to);
+        readPacket->pop_front();
+      }
+    }
+  }
+};

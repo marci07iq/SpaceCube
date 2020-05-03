@@ -1,9 +1,9 @@
 #include "UI/Render.h"
 
 void requestFrame() {
-  while (Graphics::windows.size()) {
+  while (NGin::Graphics::windows.size()) {
     this_thread::sleep_for(chrono::milliseconds(30));
-    Graphics::requestRedraw();
+    NGin::Graphics::requestRedraw();
   }
 }
 
@@ -25,33 +25,33 @@ bool recivePacket(DataElement* data, int id, Network* client, NetworkBinder* lpl
           entities[userGUID] = user;
           user->loadChunks();
 
-          Graphics::setElements(objectGameSubWindow, "html/game_screen.xml");
+          NGin::Graphics::setElements(objectGameSubWindow, "html/game_screen.xml");
 
-          objectMainGameCanvas = Graphics::createCanvas(
+          objectMainGameCanvas = NGin::Graphics::createGUI_T<NGin::Graphics::Canvas>(
             "objectMainGameCanvas",
-            fullContainer,
-            IWindowManagers {
+            NGin::Graphics::fullContainer,
+            NGin::Graphics::IWindowManagers {
               MainGameCanvas::renderManager,
               MainGameCanvas::resizeManager,
               MainGameCanvas::guiEventManager,
               MainGameCanvas::mouseEntryManager,
               MainGameCanvas::mouseMoveManager,
             },
-            NULL
+            (void*)NULL
           );
-          Graphics::addElement(
-            reinterpret_cast<Graphics::PanelHwnd>(Graphics::getElementById("objectMainGameCanvasContainer")),
+          NGin::Graphics::addElement(
+            static_pointer_cast<NGin::Graphics::Panel>(NGin::Graphics::getElementById("objectMainGameCanvasContainer")),
             objectMainGameCanvas);
 
           bindGameScreenLabels();
 
           //glut_timer_CB(0);
 
-          Graphics::requestRedraw();
+          NGin::Graphics::requestRedraw();
         } else {
           //createMainMenu();
           createMessageScreen(data->_children[1]->_core->toType<string>(), "BACK", createMainMenu, true);
-          Graphics::requestRedraw();
+          NGin::Graphics::requestRedraw();
         }
         break;
     }
@@ -63,21 +63,21 @@ bool recivePacket(DataElement* data, int id, Network* client, NetworkBinder* lpl
 }
 
 int main() {
-  Graphics::defaultMouseClickManager = Graphics::defaultMouseClickManagerNL;
-  Graphics::defaultMouseEntryManager = Graphics::defaultMouseEntryManagerNL;
-  Graphics::defaultMouseMoveManager = Graphics::defaultMouseMoveManagerNL;
-  Graphics::defaultMouseWheelManager = Graphics::defaultMouseWheelManagerNL;
-  Graphics::defaultRenderManager = Graphics::defaultRenderManagerNL;
-  Graphics::defaultResizeManager = Graphics::defaultResizeManagerNL;
-  Graphics::defaultGUIEventManager = Graphics::defaultGUIEventManagerNL;
+  NGin::Graphics::defaultMouseClickManager = NGin::Graphics::defaultMouseClickManagerNL;
+  NGin::Graphics::defaultMouseEntryManager = NGin::Graphics::defaultMouseEntryManagerNL;
+  NGin::Graphics::defaultMouseMoveManager = NGin::Graphics::defaultMouseMoveManagerNL;
+  NGin::Graphics::defaultMouseWheelManager = NGin::Graphics::defaultMouseWheelManagerNL;
+  NGin::Graphics::defaultRenderManager = NGin::Graphics::defaultRenderManagerNL;
+  NGin::Graphics::defaultResizeManager = NGin::Graphics::defaultResizeManagerNL;
+  NGin::Graphics::defaultGUIEventManager = NGin::Graphics::defaultGUIEventManagerNL;
 
 
   setlocale(LC_ALL, "");
   srand(time(NULL));
   ran1(time(NULL));
 
-  loadKeybinds();
-  loadColors();
+  NGin::Graphics::loadKeybinds();
+  NGin::Graphics::loadColors();
 
   loadBlocks();
 
@@ -89,7 +89,7 @@ int main() {
 
   //glutPostRedisplay();
   //glutMainLoop();
-  Graphics::mainLoop();
+  NGin::Graphics::mainLoop();
 
   t.join();
 }
